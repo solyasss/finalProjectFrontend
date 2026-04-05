@@ -40,3 +40,5 @@ __screenshots__/
 
 
 .vscode/
+*storybook.log
+storybook-static
