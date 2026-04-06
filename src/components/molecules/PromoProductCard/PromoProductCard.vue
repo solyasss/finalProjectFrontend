@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import Card from 'primevue/card'
 import Image from 'primevue/image'
 import Tag from 'primevue/tag'
+import PriceTag from '@/components/atoms/PriceTag/PriceTag.vue'
 
 interface Props {
   imageSrc: string
@@ -100,9 +101,7 @@ function handleSelect() {
         >
           {{ subtitle }}
         </p>
-        <p class="text-color m-0 mt-2 text-[3rem] font-bold leading-none max-sm:text-[2.25rem]">
-          {{ price }}
-        </p>
+        <PriceTag :current-price="price" />
       </div>
     </template>
   </Card>
