@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import AppFooter from '@/components/organisms/AppFooter/AppFooter.vue'
-import AppHeader from '@/components/organisms/AppHeader/AppHeader.vue'
 import CollectionOverlayCard from '@/components/molecules/CollectionOverlayCard/CollectionOverlayCard.vue'
 import HomeHero from '@/components/organisms/HomeHero/HomeHero.vue'
 import CarouselSection from '@/components/organisms/CarouselSection/CarouselSection.vue'
 import HomeCollectionCta from '@/components/organisms/HomeCollectionCta/HomeCollectionCta.vue'
 import NewArrivalGrid from '@/components/organisms/NewArrivalGrid/NewArrivalGrid.vue'
 import TopPromoBar from '@/components/organisms/TopPromoBar/TopPromoBar.vue'
+import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
 
 const promoItems = [
   {
@@ -199,10 +198,9 @@ const newArrivalItems = [
 </script>
 
 <template>
-  <div class="bg-surface-0 min-h-screen w-full">
-    <TopPromoBar />
-    <AppHeader />
-    <main class="flex flex-col items-center gap-12 w-full mb-12">
+  <TopPromoBar />
+  <DefaultTemplate>
+    <main class="bg-surface-0 flex flex-col items-center gap-12 w-full mb-12">
       <HomeHero :items="promoItems" />
       <div class="flex flex-col items-center w-[75%] gap-12">
         <div class="mx-auto w-full h-250">
@@ -255,6 +253,5 @@ const newArrivalItems = [
         </div>
       </div>
     </main>
-    <AppFooter />
-  </div>
+  </DefaultTemplate>
 </template>

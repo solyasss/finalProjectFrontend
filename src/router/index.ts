@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,15 +6,47 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('@/pages/HomePage/HomePage.vue'),
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: '/cat/:categorySlug',
+      name: 'plp',
+      component: () => import('@/pages/ProductListingPage/ProductListingPage.vue'),
+    },
+    {
+      path: '/p/:productSlug',
+      name: 'pdp',
+      component: () => import('@/pages/ProductDetailPage/ProductDetailPage.vue'),
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('@/pages/SearchPage/SearchPage.vue'),
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: () => import('@/pages/CartPage/CartPage.vue'),
+    },
+    {
+      path: '/favorites',
+      name: 'favorites',
+      component: () => import('@/pages/FavoritesPage/FavoritesPage.vue'),
+    },
+    {
+      path: '/orders',
+      name: 'orders',
+      component: () => import('@/pages/OrdersPage/OrdersPage.vue'),
+    },
+    {
+      path: '/orders/:orderId',
+      name: 'order-detail',
+      component: () => import('@/pages/OrderDetailPage/OrderDetailPage.vue'),
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: () => import('@/pages/AccountPage/AccountPage.vue'),
     },
   ],
 })
