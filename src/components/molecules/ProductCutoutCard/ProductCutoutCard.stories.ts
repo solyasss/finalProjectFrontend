@@ -10,11 +10,14 @@ const meta: Meta<typeof ProductCutoutCard> = {
     imageAlt: { control: 'text' },
     title: { control: 'text' },
     clickable: { control: 'boolean' },
-    background: { control: 'text' },
-    showTitle: { control: 'boolean' },
     actionIcon: { control: 'text' },
     actionAriaLabel: { control: 'text' },
     actionPlacement: { control: 'select', options: ['bottom', 'right', 'none'] },
+    imageFit: {
+      control: 'select',
+      options: ['crop', 'fit', 'contain', 'stretch', 'cover', 'fill', 'none', 'scale-down'],
+    },
+    fillHeight: { control: 'boolean' },
     onSelect: { action: 'select' },
   },
   args: {
@@ -23,30 +26,52 @@ const meta: Meta<typeof ProductCutoutCard> = {
     imageAlt: 'Brown sofa on neutral background',
     title: 'Our New Collection',
     clickable: true,
-    background: 'var(--color-gray-100)',
-    showTitle: true,
     actionPlacement: 'bottom',
     actionAriaLabel: 'Open collection',
+    fillHeight: false,
   },
 }
 
 export default meta
 type Story = StoryObj<typeof ProductCutoutCard>
 
-export const Default: Story = {}
+export const FooterWithTitle: Story = {}
 
 export const ActionOnTheRight: Story = {
   args: {
-    showTitle: false,
     actionPlacement: 'right',
   },
 }
 
-export const TitleWithoutAction: Story = {
+export const ImageOnly: Story = {
   args: {
-    showTitle: true,
     actionPlacement: 'none',
   },
+}
+
+export const ContainedImage: Story = {
+  args: {
+    actionPlacement: 'bottom',
+    imageFit: 'contain',
+  },
+}
+
+export const FillHeightImageOnly: Story = {
+  args: {
+    actionPlacement: 'none',
+    fillHeight: true,
+  },
+  render: (args) => ({
+    components: { ProductCutoutCard },
+    setup() {
+      return { args }
+    },
+    template: `
+      <div class="h-[24rem] max-w-[28rem]">
+        <ProductCutoutCard v-bind="args" />
+      </div>
+    `,
+  }),
 }
 
 export const NonInteractive: Story = {
@@ -55,8 +80,9 @@ export const NonInteractive: Story = {
   },
 }
 
-export const NoBackgroundTint: Story = {
+export const NonInteractiveImageOnly: Story = {
   args: {
-    background: 'var(--color-brand-white)',
+    clickable: false,
+    actionPlacement: 'none',
   },
 }
