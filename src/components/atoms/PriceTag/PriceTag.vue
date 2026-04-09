@@ -13,7 +13,7 @@ const showPreviousPrice = computed(() => Boolean(props.previousPrice))
 
 <template>
   <div class="flex items-end gap-3">
-    <span class="text-color text-[3rem] font-bold leading-none max-sm:text-[2.25rem]">
+    <span class="text-color text-4xl font-bold leading-none">
       {{ currentPrice }}
     </span>
 
