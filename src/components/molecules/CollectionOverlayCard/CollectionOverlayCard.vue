@@ -86,7 +86,7 @@ function handleClick() {
 </template>
 
 <style scoped>
-/* font-size and padding kept in scoped CSS — inline style cannot be targeted by @media queries */
+/* font-size and padding kept in scoped CSS - inline style cannot be targeted by @media queries */
 .collection-overlay-card__pill {
   font-size: 1.25rem;
   padding: 0.75rem 1.5rem;

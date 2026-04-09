@@ -11,7 +11,7 @@ interface Props {
   size?: Size
   /** Color of the spinning arc */
   color?: Color
-  /** Screen-reader label — set to '' to hide the spinner from assistive tech */
+  /** Screen-reader label - set to '' to hide the spinner from assistive tech */
   label?: string
 }
 
@@ -38,7 +38,7 @@ const COLOR_CLASSES: Record<Color, string> = {
 
 <template>
   <!--
-    Pure CSS spinner — no third-party dependency, no SVG, no PrimeVue.
+    Pure CSS spinner - no third-party dependency, no SVG, no PrimeVue.
     A simple rotating border technique: full border in the chosen color,
     top border transparent → creates the "arc" illusion.
   -->
