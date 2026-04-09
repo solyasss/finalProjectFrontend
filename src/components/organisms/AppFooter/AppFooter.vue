@@ -14,7 +14,7 @@ const socialLinks = ['Instagram', 'Pinterest', 'Facebook']
       <div class="grid gap-4">
         <p class="m-0 text-3xl font-bold uppercase text-color md:text-4xl">OLYA HOME</p>
         <p class="m-0 max-w-md text-sm leading-6 text-muted-color">
-          Створюємо простір, у який хочеться повертатися — меблі, декор та готові рішення для дому в
+          Створюємо простір, у який хочеться повертатися - меблі, декор та готові рішення для дому в
           одному місці.
         </p>
       </div>
