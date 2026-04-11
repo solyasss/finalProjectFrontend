@@ -1,8 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { getMe, setAuthToken, setRefreshHandler } from '@/api'
-import type { MeResponse } from '@/api'
-import { refreshToken } from '@/api'
+import { getMe, login, refreshToken, setAuthToken, setRefreshHandler } from '@/api'
+import type { ApiResult, LoginRequest, LoginResponse, MeResponse } from '@/api'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<MeResponse | null>(null)
@@ -42,6 +41,23 @@ export const useAuthStore = defineStore('auth', () => {
     setAuthToken(token)
   }
 
+  async function signIn(payload: LoginRequest): Promise<ApiResult<LoginResponse>> {
+    error.value = null
+
+    const res = await login(payload)
+
+    if (res.ok) {
+      setAuthToken(res.data.token)
+      user.value = res.data.user
+      return res
+    }
+
+    user.value = null
+    setAuthToken(null)
+    error.value = res.error.message
+    return res
+  }
+
   function logout() {
     user.value = null
     setAuthToken(null)
@@ -67,6 +83,7 @@ export const useAuthStore = defineStore('auth', () => {
     initialize,
     fetchMe,
     setToken,
+    signIn,
     logout,
   }
 })

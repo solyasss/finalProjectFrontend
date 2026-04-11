@@ -28,6 +28,7 @@
     "emailLabel": "Email",
     "passwordLabel": "Пароль",
     "confirmPasswordLabel": "Повторіть пароль",
+    "alreadyUserLinkLabel": "Вже маєте акаунт? Увійти",
     "termsLabel": "Я погоджуюся з умовами та правилами",
     "termsHint": "Перед завершенням реєстрації ви можете ознайомитися з умовами.",
     "termsLinkLabel": "Читати умови та правила",
@@ -57,6 +58,25 @@
       "usageBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.",
       "liabilityTitle": "Обмеження відповідальності",
       "liabilityBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit tempus porttitor. Sed posuere consectetur est at lobortis. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Etiam porta sem malesuada magna mollis euismod."
+    }
+  },
+  "authLogin": {
+    "eyebrow": "З поверненням",
+    "pageTitle": "Увійдіть, щоб продовжити з того місця, де зупинилися",
+    "pageDescription": "Отримайте доступ до свого обраного, замовлень і збережених деталей покупок в одному акаунті.",
+    "visualTitle": "Поверніться до своїх планів саме там, де призупинилися.",
+    "visualDescription": "Увійдіть, щоб знову побачити збережені добірки, обрані товари та деталі покупок, які вже почали оформлювати.",
+    "emailLabel": "Email",
+    "passwordLabel": "Пароль",
+    "submitLabel": "Увійти",
+    "submittingLabel": "Входимо...",
+    "noAccountPrompt": "Ще не маєте акаунта?",
+    "registerLinkLabel": "Створити акаунт",
+    "errors": {
+      "required": "Це поле обов'язкове.",
+      "email": "Введіть коректну email-адресу.",
+      "generic": "Сталася помилка. Спробуйте ще раз.",
+      "invalidCredentials": "Неправильний email або пароль. Спробуйте ще раз."
     }
   }
 }

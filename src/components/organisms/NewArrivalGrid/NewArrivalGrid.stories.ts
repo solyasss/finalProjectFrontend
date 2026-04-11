@@ -32,6 +32,7 @@ const meta: Meta<typeof NewArrivalGrid> = {
     items: { control: 'object' },
   },
   args: {
+    title: 'New arrivals',
     items,
   },
   render: (args) => ({
