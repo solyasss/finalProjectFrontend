@@ -1,0 +1,62 @@
+{
+  "common": {
+    "back": "Назад",
+    "continue": "Продовжити",
+    "createAccount": "Створити акаунт",
+    "submitting": "Створюємо акаунт...",
+    "home": "На головну"
+  },
+  "authRegister": {
+    "eyebrow": "Створення акаунта",
+    "pageTitle": "Збережіть свої ідеї та покупки в одному місці",
+    "pageDescription": "Акаунт допоможе швидше оформлювати покупки, зберігати обране та переглядати замовлення.",
+    "visualTitle": "Спокійний старт для кожного оновлення дому.",
+    "visualDescription": "Створіть акаунт, щоб повертатися до обраного, незавершених планів і своїх покупок у будь-який момент.",
+    "stepPersonal": "Дані",
+    "stepContact": "Email",
+    "stepSecurity": "Безпека",
+    "personalTitle": "Розкажіть трохи про себе",
+    "personalDescription": "Ці дані потрібні для створення вашого профілю.",
+    "contactTitle": "Як із вами зв'язатися?",
+    "contactDescription": "Email потрібен для підтвердження акаунта та його захисту.",
+    "securityTitle": "Захистіть свій акаунт",
+    "securityDescription": "Створіть надійний пароль і підтвердьте згоду з умовами.",
+    "deferredFieldsNote": "Країну, адресу та номер телефону можна буде додати пізніше в налаштуваннях профілю.",
+    "firstNameLabel": "Ім'я",
+    "lastNameLabel": "Прізвище",
+    "dateOfBirthLabel": "Дата народження",
+    "emailLabel": "Email",
+    "passwordLabel": "Пароль",
+    "confirmPasswordLabel": "Повторіть пароль",
+    "termsLabel": "Я погоджуюся з умовами та правилами",
+    "termsHint": "Перед завершенням реєстрації ви можете ознайомитися з умовами.",
+    "termsLinkLabel": "Читати умови та правила",
+    "successTitle": "Перевірте свою пошту",
+    "successDescription": "Запит на створення акаунта надіслано. Підтвердьте email, перш ніж увійти.",
+    "successMessageFallback": "Реєстрація успішна. Будь ласка, підтвердьте свою email-адресу.",
+    "errors": {
+      "required": "Це поле обов'язкове.",
+      "email": "Введіть коректну email-адресу.",
+      "passwordLength": "Пароль має містити щонайменше 8 символів.",
+      "passwordMismatch": "Паролі мають збігатися.",
+      "futureDate": "Дата народження не може бути в майбутньому.",
+      "minimumAge": "Вам має бути щонайменше 16 років.",
+      "termsRequired": "Потрібно погодитися з умовами та правилами.",
+      "generic": "Сталася помилка. Спробуйте ще раз.",
+      "conflict": "Акаунт із такою email-адресою вже існує."
+    }
+  },
+  "terms": {
+    "eyebrow": "Юридична інформація",
+    "title": "Умови та правила",
+    "description": "Тимчасовий юридичний текст для реєстрації, доки не буде готова фінальна версія.",
+    "sections": {
+      "acceptanceTitle": "Прийняття умов",
+      "acceptanceBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Vestibulum id ligula porta felis euismod semper. Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum.",
+      "usageTitle": "Користування сервісом",
+      "usageBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.",
+      "liabilityTitle": "Обмеження відповідальності",
+      "liabilityBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit tempus porttitor. Sed posuere consectetur est at lobortis. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Etiam porta sem malesuada magna mollis euismod."
+    }
+  }
+}

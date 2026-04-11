@@ -2,12 +2,14 @@ import type { Preview } from '@storybook/vue3-vite'
 import { setup } from '@storybook/vue3'
 import { withThemeByClassName } from '@storybook/addon-themes'
 import PrimeVue from 'primevue/config'
+import { i18n } from '../src/i18n'
 import { BrandPreset } from '../src/theme'
 
 import '../src/assets/main.css'
 
 // Register PrimeVue globally so all stories can use PrimeVue components
 setup((app) => {
+  app.use(i18n)
   app.use(PrimeVue, {
     theme: {
       preset: BrandPreset,

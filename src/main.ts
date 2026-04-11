@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import { BrandPreset } from './theme'
 import { setUnauthorizedHandler } from '@/api'
+import { i18n } from '@/i18n'
 import { useAuthStore } from '@/stores'
 
 import App from './App.vue'
@@ -15,6 +16,7 @@ const pinia = createPinia()
 
 app.use(pinia)
 app.use(router)
+app.use(i18n)
 app.use(PrimeVue, {
   theme: {
     preset: BrandPreset,
