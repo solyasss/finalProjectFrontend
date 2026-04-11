@@ -74,5 +74,11 @@ const { t } = useI18n()
         {{ errors.dateOfBirth }}
       </Message>
     </div>
+
+    <div class="flex justify-center pt-2 sm:justify-start">
+      <RouterLink to="/login" class="text-sm font-bold text-primary no-underline">
+        {{ t('authRegister.alreadyUserLinkLabel') }}
+      </RouterLink>
+    </div>
   </div>
 </template>

@@ -27,7 +27,7 @@ const items = computed<PromoItem[]>(() => props.items ?? [])
 
 <template>
   <section
-    class="bg-surface-0"
+    class="flex bg-surface-0"
     :style="{
       backgroundImage: `url(${imageSrc})`,
       backgroundPosition: 'center',
@@ -40,16 +40,17 @@ const items = computed<PromoItem[]>(() => props.items ?? [])
         <SearchBar />
       </div>
 
-      <div class="flex flex-1 flex-col items-center justify-center pt-10 md:pt-12">
+      <div class="flex flex-1 flex-col items-center justify-center pt-10 gap-6 md:pt-12">
         <h1
           class="text-color text-center text-[clamp(2.75rem,8vw,5.5rem)] font-bold uppercase leading-none md:mb-10"
         >
           {{ title }}
         </h1>
 
-        <div class="grid grid-cols-1 w-full lg:grid-cols-2 xl:grid-cols-3 md:ml-8 lg:ml-24">
+        <div class="flex w-full justify-center lg:justify-start lg:pl-24">
+          <div class="w-full lg:max-w-none lg:basis-[30%] lg:min-w-88">
             <HomeHeroCta :items="items" />
-          <div />
+          </div>
         </div>
       </div>
     </div>

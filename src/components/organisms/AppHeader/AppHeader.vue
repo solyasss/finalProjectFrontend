@@ -60,18 +60,20 @@ const navItems = [
           </span>
         </Button>
 
-        <Button
-          type="button"
-          text
-          :pt="{
-            root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
-          }"
-        >
-          <span class="text-muted-color hidden items-center gap-2 text-sm md:flex">
-            <i class="pi pi-user" aria-hidden="true" />
-            Привіт! Увійдіть в систему
-          </span>
-        </Button>
+        <RouterLink to="/register" class="no-underline">
+          <Button
+            type="button"
+            text
+            :pt="{
+              root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
+            }"
+          >
+            <span class="text-muted-color hidden items-center gap-2 text-sm md:flex">
+              <i class="pi pi-user" aria-hidden="true" />
+              Привіт! Увійдіть в систему
+            </span>
+          </Button>
+        </RouterLink>
 
         <Button
           type="button"

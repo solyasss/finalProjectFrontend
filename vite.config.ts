@@ -24,6 +24,9 @@ export default defineConfig(({ command }) => ({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  optimizeDeps: {
+    include: ['pinia'],
+  },
   test: {
     projects: [
       {

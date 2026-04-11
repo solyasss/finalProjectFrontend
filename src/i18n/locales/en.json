@@ -28,6 +28,7 @@
     "emailLabel": "Email",
     "passwordLabel": "Password",
     "confirmPasswordLabel": "Repeat password",
+    "alreadyUserLinkLabel": "Are you already a user? Sign in",
     "termsLabel": "I agree to the terms and conditions",
     "termsHint": "You can review the terms before finishing registration.",
     "termsLinkLabel": "Read terms and conditions",
@@ -57,6 +58,25 @@
       "usageBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.",
       "liabilityTitle": "Limitations of Liability",
       "liabilityBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit tempus porttitor. Sed posuere consectetur est at lobortis. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Etiam porta sem malesuada magna mollis euismod."
+    }
+  },
+  "authLogin": {
+    "eyebrow": "Welcome back",
+    "pageTitle": "Sign in to continue where you left off",
+    "pageDescription": "Access your saved favorites, orders, and shopping details with your account.",
+    "visualTitle": "Pick up your plans right where you paused.",
+    "visualDescription": "Sign in to return to your saved rooms, favorite finds, and the shopping details you already started.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "submitLabel": "Sign in",
+    "submittingLabel": "Signing in...",
+    "noAccountPrompt": "Don't have an account?",
+    "registerLinkLabel": "Create one",
+    "errors": {
+      "required": "This field is required.",
+      "email": "Enter a valid email address.",
+      "generic": "Something went wrong. Please try again.",
+      "invalidCredentials": "Email or password is incorrect. Please try again."
     }
   }
 }

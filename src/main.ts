@@ -30,10 +30,9 @@ app.use(PrimeVue, {
   },
 })
 
-// Redirect to home on unrecoverable 401.
-// TODO: replace with login route once /login is added to the router.
+// Redirect to login on unrecoverable 401.
 setUnauthorizedHandler(() => {
-  router.push({ name: 'home' })
+  router.push({ name: 'login' })
 })
 
 // Restore session

@@ -4,7 +4,7 @@ import AppFooter from '@/components/organisms/AppFooter/AppFooter.vue'
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col">
+  <div class="flex min-h-screen h-screen w-full flex-col">
     <AppHeader />
     <main class="flex-1">
       <slot />
