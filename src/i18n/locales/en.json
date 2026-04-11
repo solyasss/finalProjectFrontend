@@ -1,0 +1,62 @@
+{
+  "common": {
+    "back": "Back",
+    "continue": "Continue",
+    "createAccount": "Create account",
+    "submitting": "Creating account...",
+    "home": "Back to home"
+  },
+  "authRegister": {
+    "eyebrow": "Create your account",
+    "pageTitle": "Join and save your ideas for later",
+    "pageDescription": "A simple account gives you faster shopping, wishlists, and order visibility in one place.",
+    "visualTitle": "A calm start to every room refresh.",
+    "visualDescription": "Create your account to save favorites, return to unfinished plans, and keep your shopping details in one place.",
+    "stepPersonal": "Personal",
+    "stepContact": "Email",
+    "stepSecurity": "Security",
+    "personalTitle": "Tell us about yourself",
+    "personalDescription": "We use these details to create your account profile.",
+    "contactTitle": "Where can we reach you?",
+    "contactDescription": "Your email is required to verify your account and keep it secure.",
+    "securityTitle": "Protect your account",
+    "securityDescription": "Choose a strong password and confirm that you accept the terms.",
+    "deferredFieldsNote": "Address, country, and phone number will be added later in your profile settings.",
+    "firstNameLabel": "First name",
+    "lastNameLabel": "Last name",
+    "dateOfBirthLabel": "Date of birth",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Repeat password",
+    "termsLabel": "I agree to the terms and conditions",
+    "termsHint": "You can review the terms before finishing registration.",
+    "termsLinkLabel": "Read terms and conditions",
+    "successTitle": "Check your email",
+    "successDescription": "Your account request was received. Please verify your email address before signing in.",
+    "successMessageFallback": "Registration successful. Please verify your email address.",
+    "errors": {
+      "required": "This field is required.",
+      "email": "Enter a valid email address.",
+      "passwordLength": "Password must contain at least 8 characters.",
+      "passwordMismatch": "Passwords must match.",
+      "futureDate": "Date of birth cannot be in the future.",
+      "minimumAge": "You must be at least 16 years old.",
+      "termsRequired": "You must agree to the terms and conditions.",
+      "generic": "Something went wrong. Please try again.",
+      "conflict": "An account with this email already exists."
+    }
+  },
+  "terms": {
+    "eyebrow": "Legal",
+    "title": "Terms and Conditions",
+    "description": "Placeholder legal content for the registration flow until the final copy is ready.",
+    "sections": {
+      "acceptanceTitle": "Acceptance of Terms",
+      "acceptanceBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Vestibulum id ligula porta felis euismod semper. Donec sed odio dui. Cras mattis consectetur purus sit amet fermentum.",
+      "usageTitle": "Use of Service",
+      "usageBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.",
+      "liabilityTitle": "Limitations of Liability",
+      "liabilityBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit tempus porttitor. Sed posuere consectetur est at lobortis. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Etiam porta sem malesuada magna mollis euismod."
+    }
+  }
+}

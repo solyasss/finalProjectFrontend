@@ -76,7 +76,7 @@ const meta: Meta<typeof MoleculeCarousel> = {
     showNavigators: { control: 'boolean' },
     responsiveOptions: { control: 'object' },
     contentClass: { control: 'text' },
-    onSelectItem: { action: 'select-item' },
+    'onSelect-item': { action: 'select-item' },
   },
   args: {
     items: promoItems,

@@ -54,20 +54,24 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-import MyHeader from './Header.vue';
-import './page.css';
+import MyHeader from './Header.vue'
+import './page.css'
 
-const user = ref<{ name: string } | null>(null);
+defineOptions({
+  name: 'StoryPage',
+})
+
+const user = ref<{ name: string } | null>(null)
 
 const onLogin = () => {
-  user.value = { name: 'Jane Doe' };
-};
+  user.value = { name: 'Jane Doe' }
+}
 const onLogout = () => {
-  user.value = null;
-};
+  user.value = null
+}
 const onCreateAccount = () => {
-  user.value = { name: 'Jane Doe' };
-};
+  user.value = { name: 'Jane Doe' }
+}
 </script>
