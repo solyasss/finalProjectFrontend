@@ -6,6 +6,40 @@
     "submitting": "Створюємо акаунт...",
     "home": "На головну"
   },
+  "header": {
+    "menuTitle": "Меню",
+    "menuAriaLabel": "Відкрити меню",
+    "logoAriaLabel": "Логотип бренду",
+    "locationMenuLabel": "Адреса",
+    "locationFallback": "Додайте адресу",
+    "accountLabel": "Привіт! Увійдіть в систему",
+    "accountAriaLabel": "Акаунт",
+    "cartAriaLabel": "Кошик",
+    "favoritesAriaLabel": "Обране",
+    "nav": {
+      "products": "Товари",
+      "rooms": "Кімнати",
+      "design": "Дизайн"
+    }
+  },
+  "productCard": {
+    "reviewCount": "({count} відгуків)",
+    "variantCount": "Доступно кольорів: {count}"
+  },
+  "plp": {
+    "eyebrow": "Категорія",
+    "loading": "Завантажуємо товари...",
+    "error": "Зараз не вдалося завантажити товари.",
+    "empty": "У цій категорії ще немає товарів."
+  },
+  "search": {
+    "eyebrow": "Пошук",
+    "resultsTitle": "Результати для \"{query}\"",
+    "prompt": "Введіть пошуковий запит, щоб побачити товари.",
+    "loading": "Шукаємо товари...",
+    "error": "Зараз не вдалося завантажити результати пошуку.",
+    "empty": "Не знайдено товарів за цим запитом."
+  },
   "authRegister": {
     "eyebrow": "Створення акаунта",
     "pageTitle": "Збережіть свої ідеї та покупки в одному місці",

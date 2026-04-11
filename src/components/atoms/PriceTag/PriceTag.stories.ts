@@ -11,6 +11,7 @@ const meta: Meta<typeof PriceTag> = {
   },
   args: {
     currentPrice: '12$',
+    size: 'large',
   },
 }
 
@@ -23,5 +24,13 @@ export const WithPreviousPrice: Story = {
   args: {
     currentPrice: '30$',
     previousPrice: '45$',
+  },
+}
+
+export const Compact: Story = {
+  args: {
+    currentPrice: '₴5,999',
+    previousPrice: '₴6,999',
+    size: 'compact',
   },
 }

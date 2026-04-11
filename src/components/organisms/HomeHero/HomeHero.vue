@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import SearchBar from '@/components/molecules/SearchBar/SearchBar.vue'
 import HomeHeroCta from '@/components/organisms/HomeHeroCta/HomeHeroCta.vue'
 
@@ -19,10 +20,17 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const router = useRouter()
+const searchQuery = ref('')
 
 const title = computed(() => props.title ?? 'ВСЕ ДЛЯ ДОМУ')
 const imageSrc = computed(() => props.imageSrc ?? '/HomeHero.jpg')
 const items = computed<PromoItem[]>(() => props.items ?? [])
+
+function handleSearch(query: string) {
+  if (!query.trim()) return
+  router.push({ name: 'search', query: { q: query.trim() } })
+}
 </script>
 
 <template>
@@ -37,7 +45,7 @@ const items = computed<PromoItem[]>(() => props.items ?? [])
   >
     <div class="flex min-h-184 w-full flex-col px-4 py-6 md:px-6 lg:px-10 lg:py-10">
       <div class="mx-auto w-full max-w-230">
-        <SearchBar />
+        <SearchBar v-model="searchQuery" @submit="handleSearch" />
       </div>
 
       <div class="flex flex-1 flex-col items-center justify-center pt-10 gap-6 md:pt-12">

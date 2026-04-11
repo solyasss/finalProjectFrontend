@@ -6,6 +6,40 @@
     "submitting": "Creating account...",
     "home": "Back to home"
   },
+  "header": {
+    "menuTitle": "Menu",
+    "menuAriaLabel": "Open menu",
+    "logoAriaLabel": "Brand logo",
+    "locationMenuLabel": "Address",
+    "locationFallback": "Add ZIP code",
+    "accountLabel": "Hello! Sign in",
+    "accountAriaLabel": "Account",
+    "cartAriaLabel": "Cart",
+    "favoritesAriaLabel": "Favorites",
+    "nav": {
+      "products": "Products",
+      "rooms": "Rooms",
+      "design": "Design"
+    }
+  },
+  "productCard": {
+    "reviewCount": "({count} reviews)",
+    "variantCount": "{count} colours available"
+  },
+  "plp": {
+    "eyebrow": "Category",
+    "loading": "Loading products...",
+    "error": "We could not load the products right now.",
+    "empty": "No products found in this category yet."
+  },
+  "search": {
+    "eyebrow": "Search",
+    "resultsTitle": "Results for \"{query}\"",
+    "prompt": "Enter a search query to see matching products.",
+    "loading": "Searching products...",
+    "error": "We could not load search results right now.",
+    "empty": "No matching products were found."
+  },
   "authRegister": {
     "eyebrow": "Create your account",
     "pageTitle": "Join and save your ideas for later",

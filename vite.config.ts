@@ -25,7 +25,7 @@ export default defineConfig(({ command }) => ({
     },
   },
   optimizeDeps: {
-    include: ['pinia'],
+    include: ['pinia', 'primevue/rating'],
   },
   test: {
     projects: [
