@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import HamburgerMenu from './HamburgerMenu.vue'
 
 const sampleItems = [
-  { id: 'home', label: 'Home', icon: 'pi pi-home' },
+  { id: 'home', label: 'Home', description: 'Kyiv, 02000', icon: 'pi pi-home' },
   { id: 'search', label: 'Search', icon: 'pi pi-search' },
   { id: 'favorites', label: 'Favorites', icon: 'pi pi-heart' },
   { id: 'cart', label: 'Cart', icon: 'pi pi-shopping-cart' },

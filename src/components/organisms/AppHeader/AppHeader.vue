@@ -1,21 +1,33 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import Button from 'primevue/button'
+import { useI18n } from 'vue-i18n'
 import HamburgerMenu from '@/components/organisms/HamburgerMenu/HamburgerMenu.vue'
+import { useLocationStore } from '@/stores'
 
+const { t } = useI18n()
 const menuOpen = ref(false)
+const locationStore = useLocationStore()
 
-const menuItems = [
-  { id: 'products', label: 'Товари', icon: 'pi pi-box' },
-  { id: 'rooms', label: 'Кімнати', icon: 'pi pi-home' },
-  { id: 'design', label: 'Дизайн', icon: 'pi pi-palette' },
-]
+const locationLabel = computed(() => locationStore.zipCode || t('header.locationFallback'))
 
-const navItems = [
-  { label: 'Товари', href: '#' },
-  { label: 'Кімнати', href: '#' },
-  { label: 'Дизайн', href: '#' },
-]
+const menuItems = computed(() => [
+  {
+    id: 'location',
+    label: t('header.locationMenuLabel'),
+    description: locationLabel.value,
+    icon: 'pi pi-map-marker',
+  },
+  { id: 'products', label: t('header.nav.products'), icon: 'pi pi-box' },
+  { id: 'rooms', label: t('header.nav.rooms'), icon: 'pi pi-home' },
+  { id: 'design', label: t('header.nav.design'), icon: 'pi pi-palette' },
+])
+
+const navItems = computed(() => [
+  { label: t('header.nav.products'), href: '#' },
+  { label: t('header.nav.rooms'), href: '#' },
+  { label: t('header.nav.design'), href: '#' },
+])
 </script>
 
 <template>
@@ -23,16 +35,21 @@ const navItems = [
     <div class="flex min-h-18 items-center justify-between gap-4 px-3 md:px-6 lg:px-12">
       <div class="flex min-w-0 items-center gap-4 md:gap-6 lg:gap-8">
         <div class="md:hidden">
-          <HamburgerMenu v-model:open="menuOpen" :items="menuItems" aria-label="Відкрити меню" />
+          <HamburgerMenu
+            v-model:open="menuOpen"
+            :items="menuItems"
+            :aria-label="t('header.menuAriaLabel')"
+            :title="t('header.menuTitle')"
+          />
         </div>
 
-        <a
-          href="#"
+        <RouterLink
+          to="/"
           class="text-color flex h-10 items-center text-[2.25rem] font-bold leading-none no-underline"
-          aria-label="Логотип"
+          :aria-label="t('header.logoAriaLabel')"
         >
           BN
-        </a>
+        </RouterLink>
 
         <nav class="hidden items-center gap-6 md:flex" aria-label="Основна навігація">
           <a
@@ -47,20 +64,7 @@ const navItems = [
       </div>
 
       <div class="flex shrink-0 items-center gap-1 md:gap-2">
-        <Button
-          type="button"
-          text
-          :pt="{
-            root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
-          }"
-        >
-          <span class="text-muted-color hidden items-center gap-2 text-sm md:flex">
-            <i class="pi pi-map-marker" aria-hidden="true" />
-            Київ
-          </span>
-        </Button>
-
-        <RouterLink to="/register" class="no-underline">
+        <div class="hidden md:block">
           <Button
             type="button"
             text
@@ -68,9 +72,25 @@ const navItems = [
               root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
             }"
           >
-            <span class="text-muted-color hidden items-center gap-2 text-sm md:flex">
-              <i class="pi pi-user" aria-hidden="true" />
-              Привіт! Увійдіть в систему
+            <span class="text-muted-color flex items-center gap-2 text-sm">
+              <i class="pi pi-map-marker" aria-hidden="true" />
+              {{ locationLabel }}
+            </span>
+          </Button>
+        </div>
+
+        <RouterLink to="/register" class="no-underline">
+          <Button
+            type="button"
+            text
+            :aria-label="t('header.accountAriaLabel')"
+            :pt="{
+              root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
+            }"
+          >
+            <span class="text-muted-color flex items-center gap-2 text-sm">
+              <i class="pi pi-user text-base" aria-hidden="true" />
+              <span class="hidden md:inline">{{ t('header.accountLabel') }}</span>
             </span>
           </Button>
         </RouterLink>
@@ -78,7 +98,7 @@ const navItems = [
         <Button
           type="button"
           text
-          aria-label="Кошик"
+          :aria-label="t('header.cartAriaLabel')"
           :pt="{
             root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
           }"
@@ -89,7 +109,7 @@ const navItems = [
         <Button
           type="button"
           text
-          aria-label="Обране"
+          :aria-label="t('header.favoritesAriaLabel')"
           :pt="{
             root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
           }"
