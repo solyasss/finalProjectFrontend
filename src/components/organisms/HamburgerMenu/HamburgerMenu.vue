@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import Drawer from 'primevue/drawer'
+import { useI18n } from 'vue-i18n'
 import HamburgerToggle from '@/components/atoms/HamburgerToggle/HamburgerToggle.vue'
 
 export interface HamburgerMenuItem {
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t } = useI18n()
 
 const open = defineModel<boolean>('open', { default: false })
 
@@ -29,9 +31,9 @@ const emit = defineEmits<{
 }>()
 
 const isDisabled = computed(() => props.disabled ?? false)
-const drawerTitle = computed(() => props.title ?? 'Menu')
+const drawerTitle = computed(() => props.title ?? t('hamburgerMenu.title'))
 const shouldCloseOnSelect = computed(() => props.closeOnSelect ?? true)
-const toggleAriaLabel = computed(() => props.ariaLabel ?? 'Toggle menu')
+const toggleAriaLabel = computed(() => props.ariaLabel ?? t('hamburgerMenu.toggleAriaLabel'))
 
 function setOpen(nextState: boolean) {
   if (open.value === nextState) {
@@ -67,7 +69,7 @@ function handleSelect(item: HamburgerMenuItem) {
       :header="drawerTitle"
       @update:visible="setOpen"
     >
-      <nav class="hamburger-menu-list" aria-label="Main menu">
+      <nav class="hamburger-menu-list" :aria-label="t('hamburgerMenu.navAriaLabel')">
         <button
           v-for="item in props.items"
           :key="item.id"

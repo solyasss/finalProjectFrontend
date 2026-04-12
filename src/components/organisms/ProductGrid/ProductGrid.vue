@@ -4,7 +4,6 @@ import type { ProductCard as ApiProductCard } from '@/api'
 
 interface Props {
   products: ApiProductCard[]
-  clickable?: boolean
 }
 
 const props = defineProps<Props>()
@@ -24,7 +23,7 @@ function handleSelect(product: ApiProductCard) {
       v-for="product in props.products"
       :key="product.productId"
       :product="product"
-      :clickable="props.clickable"
+      :clickable="true"
       @select="handleSelect"
     />
   </div>

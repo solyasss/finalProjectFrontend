@@ -38,6 +38,7 @@ function handleSelectItem(index: number) {
 </script>
 
 <template>
+  <!-- TODO: Improve Ipad Render-->
   <section class="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-6" :aria-label="title">
     <h2 class="text-color m-0 text-3xl font-bold uppercase leading-tight md:text-4xl">
       {{ title }}

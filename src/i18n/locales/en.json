@@ -16,10 +16,70 @@
     "accountAriaLabel": "Account",
     "cartAriaLabel": "Cart",
     "favoritesAriaLabel": "Favorites",
+    "languageAriaLabel": "Switch language",
+    "navAriaLabel": "Main navigation",
     "nav": {
       "products": "Products",
       "rooms": "Rooms",
       "design": "Design"
+    }
+  },
+  "hamburgerMenu": {
+    "title": "Menu",
+    "toggleAriaLabel": "Toggle menu",
+    "navAriaLabel": "Main menu"
+  },
+  "topPromoBar": {
+    "ariaLabel": "Promotional banner",
+    "item1": "#everything_for_home",
+    "item2": "#fast_and_easy",
+    "item3": "#buy now"
+  },
+  "homeHero": {
+    "title": "EVERYTHING FOR YOUR HOME"
+  },
+  "homeHeroCta": {
+    "ariaLabel": "Home promo block",
+    "primaryAction": "CREATE ACCOUNT AND START!",
+    "secondaryAction": "CATALOGUE",
+    "promoPrefix": "CATCH THE MOMENT {'|'} ",
+    "promoHighlight": "Up to 60% off",
+    "promoBadgeFallback": "TOP",
+    "promoSuffix": "on selected product categories!"
+  },
+  "homePage": {
+    "collectionsTitle": "Collections",
+    "recommendationTitle": "Recommendation",
+    "bestSetsTitle": "Best sets",
+    "newArrivalsTitle": "New arrivals"
+  },
+  "newArrivalGrid": {
+    "sectionAriaLabel": "New arrivals grid"
+  },
+  "productCutoutCard": {
+    "openCollectionAriaLabel": "Open collection"
+  },
+  "searchBar": {
+    "placeholder": "Search"
+  },
+  "footer": {
+    "tagline": "Creating a space you want to come back to — furniture, décor, and complete home solutions in one place.",
+    "navHeading": "Navigation",
+    "supportHeading": "Support",
+    "socialHeading": "Social",
+    "copyright": "© 2026 Olya Home. All rights reserved.",
+    "legalLinks": "Privacy Policy · Terms of Use",
+    "nav": {
+      "catalogue": "Catalogue",
+      "newArrivals": "New Arrivals",
+      "bestOffers": "Best Offers",
+      "collections": "Collections"
+    },
+    "support": {
+      "deliveryPayment": "Delivery & Payment",
+      "returns": "Returns",
+      "contacts": "Contacts",
+      "faq": "FAQ"
     }
   },
   "productCard": {

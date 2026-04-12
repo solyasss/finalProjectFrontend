@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import Button from 'primevue/button'
 import Carousel from 'primevue/carousel'
+import { useI18n } from 'vue-i18n'
 import PromoProductCard from '@/components/molecules/PromoProductCard/PromoProductCard.vue'
 
 interface PromoItem {
@@ -23,6 +24,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t } = useI18n()
 
 const emit = defineEmits<{
   (event: 'primary-click'): void
@@ -30,12 +32,16 @@ const emit = defineEmits<{
   (event: 'select-item', index: number): void
 }>()
 
-const primaryActionLabel = computed(() => props.primaryActionLabel ?? 'СТВОРИТИ АКАУНТ ТА ПОЧАТИ!')
-const secondaryActionLabel = computed(() => props.secondaryActionLabel ?? 'КАТАЛОГ')
+const primaryActionLabel = computed(
+  () => props.primaryActionLabel ?? t('homeHeroCta.primaryAction'),
+)
+const secondaryActionLabel = computed(
+  () => props.secondaryActionLabel ?? t('homeHeroCta.secondaryAction'),
+)
 const items = computed<PromoItem[]>(() => props.items ?? [])
-const promoPrefix = computed(() => props.promoPrefix ?? 'ЛОВИ МОМЕНТ | ')
-const promoHighlight = computed(() => props.promoHighlight ?? 'Знижки до 60%')
-const promoSuffix = computed(() => props.promoSuffix ?? 'на вибрані категорії товарів!')
+const promoPrefix = computed(() => props.promoPrefix ?? t('homeHeroCta.promoPrefix'))
+const promoHighlight = computed(() => props.promoHighlight ?? t('homeHeroCta.promoHighlight'))
+const promoSuffix = computed(() => props.promoSuffix ?? t('homeHeroCta.promoSuffix'))
 
 function handleSelectItem(index: number) {
   emit('select-item', index)
@@ -43,7 +49,8 @@ function handleSelectItem(index: number) {
 </script>
 
 <template>
-  <section class="grid grid-cols-1 gap-4" aria-label="Промо блок для дому">
+  <!-- TODO: Improve Mobile Render -->
+  <section class="grid grid-cols-1 gap-4" :aria-label="t('homeHeroCta.ariaLabel')">
     <div class="flex flex-col flex-wrap items-center gap-6 mb-2 md:flex-row">
       <div>
         <Button
@@ -72,7 +79,6 @@ function handleSelectItem(index: number) {
           @click="emit('primary-click')"
         />
       </div>
-
 
       <div class="hidden md:block">
         <Button
@@ -111,14 +117,14 @@ function handleSelectItem(index: number) {
         <template #item="{ data, index }">
           <div class="px-1">
             <PromoProductCard
-            :image-src="data.imageSrc"
-            :image-alt="data.imageAlt"
-            :title="data.title"
-            :subtitle="data.subtitle"
-            :price="data.price"
-            :badge-text="data.badgeText ?? 'TOP'"
-            clickable
-            @select="handleSelectItem(index)"
+              :image-src="data.imageSrc"
+              :image-alt="data.imageAlt"
+              :title="data.title"
+              :subtitle="data.subtitle"
+              :price="data.price"
+              :badge-text="data.badgeText ?? t('homeHeroCta.promoBadgeFallback')"
+              clickable
+              @select="handleSelectItem(index)"
             />
           </div>
         </template>
@@ -135,7 +141,7 @@ function handleSelectItem(index: number) {
         :title="item.title"
         :subtitle="item.subtitle"
         :price="item.price"
-        :badge-text="item.badgeText ?? 'TOP'"
+        :badge-text="item.badgeText ?? t('homeHeroCta.promoBadgeFallback')"
         clickable
         @select="handleSelectItem(index)"
       />

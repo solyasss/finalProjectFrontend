@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import CollectionOverlayCard from '@/components/molecules/CollectionOverlayCard/CollectionOverlayCard.vue'
 import HomeHero from '@/components/organisms/HomeHero/HomeHero.vue'
 import CarouselSection from '@/components/organisms/CarouselSection/CarouselSection.vue'
@@ -6,6 +7,8 @@ import HomeCollectionCta from '@/components/organisms/HomeCollectionCta/HomeColl
 import NewArrivalGrid from '@/components/organisms/NewArrivalGrid/NewArrivalGrid.vue'
 import TopPromoBar from '@/components/organisms/TopPromoBar/TopPromoBar.vue'
 import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
+
+const { t } = useI18n()
 
 const promoItems = [
   {
@@ -205,14 +208,14 @@ const newArrivalItems = [
       <div class="flex flex-col items-center w-[75%] gap-12">
         <div class="mx-auto w-full h-250">
           <HomeCollectionCta
-            title="Колекції"
+            :title="t('homePage.collectionsTitle')"
             :items="promoItems"
             @select-item="(index) => console.log('Selected item index:', index)"
           />
         </div>
         <div>
           <CarouselSection
-            title="Recommendation"
+            :title="t('homePage.recommendationTitle')"
             :items="recommendationItems"
             :item-component="CollectionOverlayCard"
             :item-props="{ clickable: true }"
@@ -229,7 +232,7 @@ const newArrivalItems = [
         </div>
         <div>
           <CarouselSection
-            title="Best sets"
+            :title="t('homePage.bestSetsTitle')"
             :items="bestSetItems"
             :item-component="CollectionOverlayCard"
             :item-props="{ clickable: true }"
@@ -246,7 +249,7 @@ const newArrivalItems = [
         </div>
         <div class="mx-auto h-250">
           <NewArrivalGrid
-            title="New arrivals"
+            :title="t('homePage.newArrivalsTitle')"
             :items="newArrivalItems"
             @select-item="(index) => console.log('New arrival item index:', index)"
           />
