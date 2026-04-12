@@ -7,11 +7,11 @@ export type AppLocale = 'uk' | 'en'
 const DEFAULT_LOCALE: AppLocale = 'uk'
 
 function getSavedLocale(): AppLocale {
-  if (typeof window === 'undefined') {
+  if (typeof globalThis === 'undefined' || !('localStorage' in globalThis)) {
     return DEFAULT_LOCALE
   }
 
-  const locale = window.localStorage.getItem('locale')
+  const locale = globalThis.localStorage.getItem('locale')
   return locale === 'en' || locale === 'uk' ? locale : DEFAULT_LOCALE
 }
 

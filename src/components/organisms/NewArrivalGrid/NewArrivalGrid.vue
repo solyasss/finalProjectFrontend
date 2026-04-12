@@ -4,8 +4,12 @@ import { useI18n } from 'vue-i18n'
 import ProductCutoutCard from '@/components/molecules/ProductCutoutCard/ProductCutoutCard.vue'
 
 interface NewArrivalItem {
-  imageSrc: string
-  imageAlt: string
+  image: {
+    url: string
+    alt: string
+    width: number
+    height: number
+  }
   clickable?: boolean
 }
 
@@ -40,12 +44,11 @@ function handleSelectItem(index: number) {
       <div class="grid min-h-0 grid-cols-[1fr_2fr] gap-4">
         <div
           v-for="(item, index) in visibleItems.slice(0, 2)"
-          :key="`${item.imageAlt}-${index}`"
+          :key="`${item.image.alt}-${index}`"
           class="h-full min-h-0 min-w-0"
         >
           <ProductCutoutCard
-            :image-src="item.imageSrc"
-            :image-alt="item.imageAlt"
+            :image="item.image"
             image-fit="cover"
             action-placement="none"
             fill-height
@@ -58,12 +61,11 @@ function handleSelectItem(index: number) {
       <div class="grid min-h-0 grid-cols-[2fr_1fr] gap-4">
         <div
           v-for="(item, index) in visibleItems.slice(2, 4)"
-          :key="`${item.imageAlt}-${index + 2}`"
+          :key="`${item.image.alt}-${index + 2}`"
           class="h-full min-h-0 min-w-0"
         >
           <ProductCutoutCard
-            :image-src="item.imageSrc"
-            :image-alt="item.imageAlt"
+            :image="item.image"
             image-fit="cover"
             action-placement="none"
             fill-height

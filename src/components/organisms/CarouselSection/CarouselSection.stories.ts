@@ -67,8 +67,6 @@ const meta: Meta<typeof CarouselSection> = {
   argTypes: {
     title: { control: 'text' },
     items: { control: 'object' },
-    itemComponent: { control: false },
-    itemProps: { control: 'object' },
     itemKey: { control: 'text' },
     numVisible: { control: 'number' },
     numScroll: { control: 'number' },
@@ -81,8 +79,6 @@ const meta: Meta<typeof CarouselSection> = {
   args: {
     title: 'Featured Products',
     items: promoItems,
-    itemComponent: PromoProductCard,
-    itemProps: { clickable: true },
     itemKey: 'id',
     numVisible: 1,
     numScroll: 1,
@@ -93,13 +89,17 @@ const meta: Meta<typeof CarouselSection> = {
     contentClass: 'px-2',
   },
   render: (args) => ({
-    components: { CarouselSection },
+    components: { CarouselSection, PromoProductCard },
     setup() {
       return { args }
     },
     template: `
       <div class="mx-auto max-w-5xl px-4 py-8">
-        <CarouselSection v-bind="args" />
+        <CarouselSection v-bind="args">
+          <template #default="{ item, select }">
+            <PromoProductCard v-bind="item" clickable @select="select" />
+          </template>
+        </CarouselSection>
       </div>
     `,
   }),
@@ -114,8 +114,6 @@ export const PromoProducts: Story = {
   args: {
     title: 'Trending Now',
     items: promoItems,
-    itemComponent: PromoProductCard,
-    itemProps: { clickable: true },
   },
 }
 
@@ -123,17 +121,19 @@ export const CollectionCards: Story = {
   args: {
     title: 'Shop by Room',
     items: collectionItems,
-    itemComponent: CollectionOverlayCard,
-    itemProps: { clickable: true },
   },
   render: (args) => ({
-    components: { CarouselSection },
+    components: { CarouselSection, CollectionOverlayCard },
     setup() {
       return { args }
     },
     template: `
       <div class="mx-auto max-w-[24rem] px-4 py-8">
-        <CarouselSection v-bind="args" />
+        <CarouselSection v-bind="args">
+          <template #default="{ item, select }">
+            <CollectionOverlayCard v-bind="item" clickable @select="select" />
+          </template>
+        </CarouselSection>
       </div>
     `,
   }),

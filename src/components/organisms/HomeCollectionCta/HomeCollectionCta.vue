@@ -3,8 +3,12 @@ import { computed } from 'vue'
 import ProductCutoutCard from '@/components/molecules/ProductCutoutCard/ProductCutoutCard.vue'
 
 interface CollectionItem {
-  imageSrc: string
-  imageAlt: string
+  image: {
+    url: string
+    alt: string
+    width: number
+    height: number
+  }
   title: string
   actionIcon?: string
   actionAriaLabel?: string
@@ -49,8 +53,7 @@ function handleSelectItem(index: number) {
         <ProductCutoutCard
           v-for="(item, index) in topItems"
           :key="`${item.title}-${index}`"
-          :image-src="item.imageSrc"
-          :image-alt="item.imageAlt"
+          :image="item.image"
           :title="item.title"
           :action-icon="item.actionIcon"
           :action-aria-label="item.actionAriaLabel"
@@ -64,8 +67,7 @@ function handleSelectItem(index: number) {
 
       <ProductCutoutCard
         v-if="bottomItem"
-        :image-src="bottomItem.imageSrc"
-        :image-alt="bottomItem.imageAlt"
+        :image="bottomItem.image"
         :title="bottomItem.title"
         :action-icon="bottomItem.actionIcon"
         :action-aria-label="bottomItem.actionAriaLabel"

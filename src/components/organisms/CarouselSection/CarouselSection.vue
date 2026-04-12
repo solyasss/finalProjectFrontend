@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
 import MoleculeCarousel from '@/components/molecules/MoleculeCarousel/MoleculeCarousel.vue'
 
 type CarouselItem = Record<string, unknown>
@@ -13,8 +12,6 @@ interface ResponsiveOption {
 interface Props {
   title: string
   items: CarouselItem[]
-  itemComponent: Component
-  itemProps?: Record<string, unknown>
   itemKey?: string
   numVisible?: number
   numScroll?: number
@@ -40,8 +37,6 @@ const emit = defineEmits<{
 
     <MoleculeCarousel
       :items="items"
-      :item-component="itemComponent"
-      :item-props="itemProps"
       :item-key="itemKey"
       :num-visible="numVisible"
       :num-scroll="numScroll"
@@ -51,6 +46,10 @@ const emit = defineEmits<{
       :responsive-options="responsiveOptions"
       :content-class="contentClass"
       @select-item="emit('select-item', $event)"
-    />
+    >
+      <template #default="{ item, index, select }">
+        <slot :item="item" :index="index" :select="select" />
+      </template>
+    </MoleculeCarousel>
   </section>
 </template>

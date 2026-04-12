@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Component } from 'vue'
 import Carousel from 'primevue/carousel'
 
 type CarouselItem = Record<string, unknown>
@@ -13,8 +12,6 @@ interface ResponsiveOption {
 
 interface Props {
   items: CarouselItem[]
-  itemComponent: Component
-  itemProps?: Record<string, unknown>
   itemKey?: string
   numVisible?: number
   numScroll?: number
@@ -32,7 +29,6 @@ const emit = defineEmits<{
 }>()
 
 const items = computed(() => props.items ?? [])
-const itemProps = computed(() => props.itemProps ?? {})
 const itemKey = computed(() => props.itemKey ?? 'id')
 const numVisible = computed(() => props.numVisible ?? 1)
 const numScroll = computed(() => props.numScroll ?? 1)
@@ -44,13 +40,6 @@ const responsiveOptions = computed(() => props.responsiveOptions ?? [])
 function resolveItemKey(item: CarouselItem, index: number) {
   const key = item[itemKey.value]
   return typeof key === 'string' || typeof key === 'number' ? key : index
-}
-
-function resolveItemProps(item: CarouselItem) {
-  return {
-    ...itemProps.value,
-    ...item,
-  }
 }
 
 function handleSelect(index: number, item: CarouselItem) {
@@ -67,15 +56,33 @@ function handleSelect(index: number, item: CarouselItem) {
     :show-indicators="showIndicators"
     :show-navigators="showNavigators"
     :responsive-options="responsiveOptions"
+    :pt="{
+      root: {
+        style: {
+          height: '100%',
+        },
+      },
+      contentContainer: {
+        style: {
+          height: '100%',
+        },
+      },
+      itemList: {
+        style: {
+          height: '100%',
+          alignItems: 'stretch',
+        },
+      },
+      item: {
+        style: {
+          height: '100%',
+        },
+      },
+    }"
   >
     <template #item="{ data, index }">
-      <div :key="resolveItemKey(data, index)" :class="contentClass">
-        <component
-          :is="itemComponent"
-          :key="resolveItemKey(data, index)"
-          v-bind="resolveItemProps(data)"
-          @select="handleSelect(index, data)"
-        />
+      <div :key="resolveItemKey(data, index)" :class="contentClass" class="h-full">
+        <slot :item="data" :index="index" :select="() => handleSelect(index, data)" />
       </div>
     </template>
   </Carousel>

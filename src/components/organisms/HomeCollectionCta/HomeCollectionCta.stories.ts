@@ -2,8 +2,12 @@ import type { Meta, StoryObj } from '@storybook/vue3'
 import HomeCollectionCta from './HomeCollectionCta.vue'
 
 type StoryItem = {
-  imageSrc: string
-  imageAlt: string
+  image: {
+    url: string
+    alt: string
+    width: number
+    height: number
+  }
   title: string
   actionIcon?: string
   actionAriaLabel?: string
@@ -13,23 +17,32 @@ type StoryItem = {
 
 const demoItems: StoryItem[] = [
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-    imageAlt: 'Woven chair near a side table',
+    image: {
+      url: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Woven chair near a side table',
+      width: 1200,
+      height: 1200,
+    },
     title: 'НАША НОВА КОЛЕКЦІЯ',
     actionAriaLabel: 'Відкрити нову колекцію',
   },
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
-    imageAlt: 'Decorative frame and indoor plants',
+    image: {
+      url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Decorative frame and indoor plants',
+      width: 1200,
+      height: 1200,
+    },
     title: 'НАШІ НАЙКРАЩІ ПРОПОЗИЦІЇ',
     actionAriaLabel: 'Відкрити найкращі пропозиції',
   },
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1600&q=80',
-    imageAlt: 'Warm brown sofa in a bright room',
+    image: {
+      url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1600&q=80',
+      alt: 'Warm brown sofa in a bright room',
+      width: 1600,
+      height: 1600,
+    },
     title: 'МЕБЛІ ДЛЯ ВІТАЛЬНІ',
     actionPlacement: 'right',
     actionAriaLabel: 'Відкрити меблі для вітальні',
