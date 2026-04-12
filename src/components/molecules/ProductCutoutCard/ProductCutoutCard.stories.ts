@@ -6,8 +6,7 @@ const meta: Meta<typeof ProductCutoutCard> = {
   component: ProductCutoutCard,
   tags: ['autodocs'],
   argTypes: {
-    imageSrc: { control: 'text' },
-    imageAlt: { control: 'text' },
+    image: { control: 'object' },
     title: { control: 'text' },
     clickable: { control: 'boolean' },
     actionIcon: { control: 'text' },
@@ -21,9 +20,12 @@ const meta: Meta<typeof ProductCutoutCard> = {
     onSelect: { action: 'select' },
   },
   args: {
-    imageSrc:
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Brown sofa on neutral background',
+    image: {
+      url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
+      alt: 'Brown sofa on neutral background',
+      width: 900,
+      height: 900,
+    },
     title: 'Our New Collection',
     clickable: true,
     actionPlacement: 'bottom',

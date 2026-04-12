@@ -6,17 +6,17 @@ import Tag from 'primevue/tag'
 import { useI18n } from 'vue-i18n'
 import PriceTag from '@/components/atoms/PriceTag/PriceTag.vue'
 import RatingDisplay from '@/components/molecules/RatingDisplay/RatingDisplay.vue'
-import type { Badge, ProductCard as ApiProductCard } from '@/api'
+import type { Badge, ProductCard } from '@/api'
 
 interface Props {
-  product: ApiProductCard
+  product: ProductCard
   clickable?: boolean
 }
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  (event: 'select', product: ApiProductCard): void
+  (event: 'select', product: ProductCard): void
 }>()
 
 const { t } = useI18n()
@@ -62,8 +62,8 @@ function handleSelect() {
           borderRadius: '0.5rem',
         },
       },
-      body: { style: { padding: '0', height: '100%' } },
-      content: { style: { padding: '0', height: '100%' } },
+      body: { style: { padding: '0', height: '100%'  } },
+      content: { style: { padding: '0', height: '100%'   } },
     }"
     @click="handleSelect"
   >

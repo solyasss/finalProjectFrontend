@@ -172,5 +172,32 @@
       "generic": "Сталася помилка. Спробуйте ще раз.",
       "invalidCredentials": "Неправильний email або пароль. Спробуйте ще раз."
     }
+  },
+  "pdp": {
+    "home": "Головна",
+    "breadcrumbAriaLabel": "Хлібні крихти товару",
+    "loading": "Завантажуємо інформацію про товар...",
+    "error": "Зараз не вдалося завантажити цей товар.",
+    "detailsTitle": "Деталі товару",
+    "detailsEmpty": "Для цього товару ще немає детальної інформації.",
+    "documentsTitle": "Документи",
+    "relatedProductsTitle": "Схожі товари",
+    "accessoriesTitle": "Доповніть покупку",
+    "fulfillmentTitle": "Як отримати",
+    "availabilityLoading": "Оновлюємо наявність...",
+    "availabilityError": "Зараз не вдалося оновити інформацію про отримання.",
+    "availabilityAvailable": "Доступно",
+    "availabilityUnavailable": "Недоступно",
+    "quantity": "Кількість",
+    "quantityDecrease": "Зменшити кількість",
+    "quantityIncrease": "Збільшити кількість",
+    "addToCart": "Додати до кошика",
+    "addingToCart": "Додаємо до кошика...",
+    "addToCartSuccess": "Товар додано до кошика.",
+    "fulfillmentTypes": {
+      "DELIVERY": "Доставка",
+      "CLICK_AND_COLLECT": "Самовивіз",
+      "STORE_PICKUP": "Забрати в магазині"
+    }
   }
 }

@@ -66,8 +66,6 @@ const meta: Meta<typeof MoleculeCarousel> = {
   tags: ['autodocs'],
   argTypes: {
     items: { control: 'object' },
-    itemComponent: { control: false },
-    itemProps: { control: 'object' },
     itemKey: { control: 'text' },
     numVisible: { control: 'number' },
     numScroll: { control: 'number' },
@@ -80,8 +78,6 @@ const meta: Meta<typeof MoleculeCarousel> = {
   },
   args: {
     items: promoItems,
-    itemComponent: PromoProductCard,
-    itemProps: { clickable: true },
     itemKey: 'id',
     numVisible: 1,
     numScroll: 1,
@@ -92,13 +88,17 @@ const meta: Meta<typeof MoleculeCarousel> = {
     contentClass: 'px-2',
   },
   render: (args) => ({
-    components: { MoleculeCarousel },
+    components: { MoleculeCarousel, PromoProductCard },
     setup() {
       return { args }
     },
     template: `
       <div class="mx-auto max-w-[28rem] px-4 py-8">
-        <MoleculeCarousel v-bind="args" />
+        <MoleculeCarousel v-bind="args">
+          <template #default="{ item, select }">
+            <PromoProductCard v-bind="item" clickable @select="select" />
+          </template>
+        </MoleculeCarousel>
       </div>
     `,
   }),
@@ -112,8 +112,6 @@ export const Default: Story = {}
 export const PromoCards: Story = {
   args: {
     items: promoItems,
-    itemComponent: PromoProductCard,
-    itemProps: { clickable: true },
     contentClass: 'px-2',
   },
 }
@@ -121,18 +119,20 @@ export const PromoCards: Story = {
 export const CollectionCards: Story = {
   args: {
     items: collectionItems,
-    itemComponent: CollectionOverlayCard,
-    itemProps: { clickable: true },
     contentClass: 'px-2',
   },
   render: (args) => ({
-    components: { MoleculeCarousel },
+    components: { MoleculeCarousel, CollectionOverlayCard },
     setup() {
       return { args }
     },
     template: `
       <div class="mx-auto max-w-[22rem] px-4 py-8">
-        <MoleculeCarousel v-bind="args" />
+        <MoleculeCarousel v-bind="args">
+          <template #default="{ item, select }">
+            <CollectionOverlayCard v-bind="item" clickable @select="select" />
+          </template>
+        </MoleculeCarousel>
       </div>
     `,
   }),
@@ -141,8 +141,6 @@ export const CollectionCards: Story = {
 export const TwoUpWithIndicators: Story = {
   args: {
     items: promoItems,
-    itemComponent: PromoProductCard,
-    itemProps: { clickable: true },
     numVisible: 2,
     numScroll: 1,
     showIndicators: true,
@@ -161,13 +159,17 @@ export const TwoUpWithIndicators: Story = {
     contentClass: 'px-3',
   },
   render: (args) => ({
-    components: { MoleculeCarousel },
+    components: { MoleculeCarousel, PromoProductCard },
     setup() {
       return { args }
     },
     template: `
       <div class="mx-auto max-w-5xl px-6 py-8">
-        <MoleculeCarousel v-bind="args" />
+        <MoleculeCarousel v-bind="args">
+          <template #default="{ item, select }">
+            <PromoProductCard v-bind="item" clickable @select="select" />
+          </template>
+        </MoleculeCarousel>
       </div>
     `,
   }),

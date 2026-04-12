@@ -3,24 +3,36 @@ import NewArrivalGrid from './NewArrivalGrid.vue'
 
 const items = [
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
-    imageAlt: 'Soft beige bedroom with layered textiles',
+    image: {
+      url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Soft beige bedroom with layered textiles',
+      width: 1200,
+      height: 1200,
+    },
   },
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
-    imageAlt: 'Bright living room with a neutral sofa',
+    image: {
+      url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Bright living room with a neutral sofa',
+      width: 1200,
+      height: 1200,
+    },
   },
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?auto=format&fit=crop&w=1200&q=80',
-    imageAlt: 'Dining room with warm wood furniture',
+    image: {
+      url: 'https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Dining room with warm wood furniture',
+      width: 1200,
+      height: 1200,
+    },
   },
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=1200&q=80',
-    imageAlt: 'Minimal living area with modern chairs',
+    image: {
+      url: 'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=1200&q=80',
+      alt: 'Minimal living area with modern chairs',
+      width: 1200,
+      height: 1200,
+    },
   },
 ]
 

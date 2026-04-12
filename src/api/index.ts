@@ -64,6 +64,9 @@ export type {
   VariantPreview,
   ProductCard,
   ProductVariant,
+  VariantAttributePresentation,
+  ProductVariantAttributeOption,
+  ProductVariantAttributeGroup,
   DetailsSectionKey,
   DetailsSection,
   ProductDocumentType,
@@ -71,6 +74,7 @@ export type {
   FulfillmentType,
   FulfillmentOption,
   ProductDetails,
+  ProductBreadcrumbItem,
   // Catalog
   Category,
   FilterOption,

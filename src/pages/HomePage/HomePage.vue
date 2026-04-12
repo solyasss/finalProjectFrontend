@@ -40,6 +40,37 @@ const promoItems = [
   },
 ]
 
+const collectionItems = [
+  {
+    image: {
+      url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
+      alt: 'Soft decorative pillows on a sofa',
+      width: 900,
+      height: 900,
+    },
+    title: 'ПОДУШКИ',
+  },
+  {
+    image: {
+      url: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80',
+      alt: 'Folded grey blanket on a sofa',
+      width: 900,
+      height: 900,
+    },
+    title: 'КОВДРА',
+  },
+  {
+    image: {
+      url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
+      alt: 'Beige bed in a neutral bedroom',
+      width: 900,
+      height: 900,
+    },
+    title: 'ЛІЖКО',
+    actionPlacement: 'right' as const,
+  },
+]
+
 const recommendationItems = [
   {
     id: 1,
@@ -178,24 +209,36 @@ const sectionResponsiveOptions = [
 
 const newArrivalItems = [
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Soft beige bedroom with layered textiles',
+    image: {
+      url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
+      alt: 'Soft beige bedroom with layered textiles',
+      width: 900,
+      height: 900,
+    },
   },
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Bright living room with a neutral sofa',
+    image: {
+      url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
+      alt: 'Bright living room with a neutral sofa',
+      width: 900,
+      height: 900,
+    },
   },
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Dining room with warm wood furniture',
+    image: {
+      url: 'https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?auto=format&fit=crop&w=900&q=80',
+      alt: 'Dining room with warm wood furniture',
+      width: 900,
+      height: 900,
+    },
   },
   {
-    imageSrc:
-      'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Minimal living area with modern chairs',
+    image: {
+      url: 'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=900&q=80',
+      alt: 'Minimal living area with modern chairs',
+      width: 900,
+      height: 900,
+    },
   },
 ]
 </script>
@@ -209,7 +252,7 @@ const newArrivalItems = [
         <div class="mx-auto w-full h-250">
           <HomeCollectionCta
             :title="t('homePage.collectionsTitle')"
-            :items="promoItems"
+            :items="collectionItems"
             @select-item="(index) => console.log('Selected item index:', index)"
           />
         </div>
@@ -217,8 +260,6 @@ const newArrivalItems = [
           <CarouselSection
             :title="t('homePage.recommendationTitle')"
             :items="recommendationItems"
-            :item-component="CollectionOverlayCard"
-            :item-props="{ clickable: true }"
             item-key="id"
             :num-visible="6"
             :num-scroll="1"
@@ -228,14 +269,16 @@ const newArrivalItems = [
             content-class="px-3"
             @select-item="({ index }) => console.log('Recommendation item index:', index)"
             circular
-          />
+          >
+            <template #default="{ item, select }">
+              <CollectionOverlayCard v-bind="item" clickable @select="select" />
+            </template>
+          </CarouselSection>
         </div>
         <div>
           <CarouselSection
             :title="t('homePage.bestSetsTitle')"
             :items="bestSetItems"
-            :item-component="CollectionOverlayCard"
-            :item-props="{ clickable: true }"
             item-key="id"
             :num-visible="6"
             :num-scroll="1"
@@ -245,7 +288,11 @@ const newArrivalItems = [
             content-class="px-3"
             @select-item="({ index }) => console.log('Best set item index:', index)"
             circular
-          />
+          >
+            <template #default="{ item, select }">
+              <CollectionOverlayCard v-bind="item" clickable @select="select" />
+            </template>
+          </CarouselSection>
         </div>
         <div class="mx-auto h-250">
           <NewArrivalGrid

@@ -136,12 +136,28 @@ export interface ProductVariant {
   previousPrice?: Money | null
 }
 
+export type VariantAttributePresentation = 'swatch' | 'text'
+
+export interface ProductVariantAttributeOption {
+  value: string
+  label: string
+  hex?: string | null
+  image?: string | null
+}
+
+export interface ProductVariantAttributeGroup {
+  key: string
+  label: string
+  presentation: VariantAttributePresentation
+  options: ProductVariantAttributeOption[]
+}
+
 export type DetailsSectionKey = 'DETAILS' | 'MEASUREMENTS' | 'MATERIALS_CARE' | 'SAFETY'
 
 export interface DetailsSection {
   key: DetailsSectionKey
   title: string
-  markdown: string
+  content: string
 }
 
 export type ProductDocumentType = 'ASSEMBLY' | 'MANUAL' | 'SAFETY'
@@ -172,9 +188,15 @@ export interface ProductDetails {
   rating?: RatingSummary | null
   variants: ProductVariant[]
   selectedVariantId: string
+  variantAttributes?: ProductVariantAttributeGroup[] | null
   detailsSections: DetailsSection[]
   documents: ProductDocument[]
   fulfillment: FulfillmentOption[]
+}
+
+export interface ProductBreadcrumbItem {
+  label: string
+  slug?: string | null
 }
 
 // Catalog
@@ -333,6 +355,7 @@ export interface ProductCompareResponse {
 
 export interface ProductDetailsResponse {
   product: ProductDetails
+  breadcrumbs?: ProductBreadcrumbItem[] | null
   relatedProducts: ProductCard[]
   accessories: ProductCard[]
 }
@@ -420,10 +443,12 @@ export interface GetCategoryProductsParams {
 
 export interface GetProductParams {
   variantId?: string
+  zipCode?: string
 }
 
 export interface GetProductAvailabilityParams {
   variantId?: string
+  zipCode?: string
 }
 
 export interface GetProductQuestionsParams {

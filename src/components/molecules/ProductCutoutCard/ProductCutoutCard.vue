@@ -4,10 +4,10 @@ import Button from 'primevue/button'
 import Card from 'primevue/card'
 import Image from 'primevue/image'
 import { useI18n } from 'vue-i18n'
+import type { ImageAsset } from '@/api'
 
 interface Props {
-  imageSrc: string
-  imageAlt: string
+  image: ImageAsset
   title?: string
   clickable?: boolean
   actionIcon?: string
@@ -34,6 +34,8 @@ const imageFit = computed(() => props.imageFit ?? 'fill')
 const showBottomFooter = computed(() => actionPlacement.value === 'bottom')
 const showRightRail = computed(() => actionPlacement.value === 'right')
 const showImageOnly = computed(() => actionPlacement.value === 'none')
+const imageSrc = computed(() => props.image.url)
+const imageAlt = computed(() => props.image.alt)
 
 const cardRootStyle = computed(() => ({
   display: 'grid',

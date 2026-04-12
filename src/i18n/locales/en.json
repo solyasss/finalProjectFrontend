@@ -172,5 +172,32 @@
       "generic": "Something went wrong. Please try again.",
       "invalidCredentials": "Email or password is incorrect. Please try again."
     }
+  },
+  "pdp": {
+    "home": "Home",
+    "breadcrumbAriaLabel": "Product breadcrumb",
+    "loading": "Loading product details...",
+    "error": "We could not load this product right now.",
+    "detailsTitle": "Product details",
+    "detailsEmpty": "Product details are not available for this item yet.",
+    "documentsTitle": "Documents",
+    "relatedProductsTitle": "Related products",
+    "accessoriesTitle": "Complete the look",
+    "fulfillmentTitle": "How to get it",
+    "availabilityLoading": "Refreshing availability...",
+    "availabilityError": "We could not refresh fulfillment information right now.",
+    "availabilityAvailable": "Available",
+    "availabilityUnavailable": "Unavailable",
+    "quantity": "Quantity",
+    "quantityDecrease": "Decrease quantity",
+    "quantityIncrease": "Increase quantity",
+    "addToCart": "Add to basket",
+    "addingToCart": "Adding to basket...",
+    "addToCartSuccess": "Added to your basket.",
+    "fulfillmentTypes": {
+      "DELIVERY": "Delivery",
+      "CLICK_AND_COLLECT": "Click & collect",
+      "STORE_PICKUP": "Store pickup"
+    }
   }
 }
