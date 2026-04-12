@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import InputText from 'primevue/inputtext'
+import { useI18n } from 'vue-i18n'
 
 interface Props {
   placeholder?: string
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t } = useI18n()
 
 const model = defineModel<string>({ default: '' })
 
@@ -17,10 +19,10 @@ const emit = defineEmits<{
   (event: 'submit', value: string): void
 }>()
 
-const placeholder = computed(() => props.placeholder ?? 'Пошук')
+const placeholder = computed(() => props.placeholder ?? t('searchBar.placeholder'))
 const disabled = computed(() => props.disabled ?? false)
 
-  function handleSubmit() {
+function handleSubmit() {
   emit('submit', model.value.trim())
 }
 </script>

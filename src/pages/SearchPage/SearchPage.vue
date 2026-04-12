@@ -79,7 +79,7 @@ watch(
       <Message v-else-if="!products.length" severity="secondary" variant="simple">
         {{ t('search.empty') }}
       </Message>
-      <ProductGrid v-else :products="products" @select-product="handleSelectProduct" />
+      <ProductGrid v-else :products="products" @select-product="handleSelectProduct"/>
     </section>
   </DefaultTemplate>
 </template>

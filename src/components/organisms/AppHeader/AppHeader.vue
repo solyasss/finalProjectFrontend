@@ -5,9 +5,15 @@ import { useI18n } from 'vue-i18n'
 import HamburgerMenu from '@/components/organisms/HamburgerMenu/HamburgerMenu.vue'
 import { useLocationStore } from '@/stores'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const menuOpen = ref(false)
 const locationStore = useLocationStore()
+
+function toggleLocale() {
+  const next = locale.value === 'uk' ? 'en' : 'uk'
+  locale.value = next
+  localStorage.setItem('locale', next)
+}
 
 const locationLabel = computed(() => locationStore.zipCode || t('header.locationFallback'))
 
@@ -31,7 +37,7 @@ const navItems = computed(() => [
 </script>
 
 <template>
-  <header class="bg-surface-0 border-b border-surface">
+  <header class="bg-surface-0 border-b border-surface md:sticky top-0 z-50">
     <div class="flex min-h-18 items-center justify-between gap-4 px-3 md:px-6 lg:px-12">
       <div class="flex min-w-0 items-center gap-4 md:gap-6 lg:gap-8">
         <div class="md:hidden">
@@ -51,7 +57,7 @@ const navItems = computed(() => [
           BN
         </RouterLink>
 
-        <nav class="hidden items-center gap-6 md:flex" aria-label="Основна навігація">
+        <nav class="hidden items-center gap-6 md:flex" :aria-label="t('header.navAriaLabel')">
           <a
             v-for="item in navItems"
             :key="item.label"
@@ -115,6 +121,20 @@ const navItems = computed(() => [
           }"
         >
           <i class="pi pi-heart text-muted-color text-base" aria-hidden="true" />
+        </Button>
+
+        <Button
+          type="button"
+          text
+          :aria-label="t('header.languageAriaLabel')"
+          :pt="{
+            root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
+          }"
+          @click="toggleLocale"
+        >
+          <span class="text-muted-color text-xs font-semibold uppercase tracking-wide">
+            {{ locale === 'uk' ? 'EN' : 'UK' }}
+          </span>
         </Button>
       </div>
     </div>

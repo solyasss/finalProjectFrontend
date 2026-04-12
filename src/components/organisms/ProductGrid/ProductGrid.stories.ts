@@ -135,20 +135,22 @@ const meta: Meta<typeof ProductGrid> = {
   title: 'Organisms/ProductGrid',
   component: ProductGrid,
   tags: ['autodocs'],
+  parameters: {
+    actions: {
+      handles: ['select-product'],
+    },
+  },
   argTypes: {
     products: { control: 'object' },
-    clickable: { control: 'boolean' },
-    onSelectProduct: { action: 'select-product' },
   },
   args: {
     products: PRODUCTS,
-    clickable: true,
   },
 }
 
 export default meta
 
-type Story = StoryObj<typeof ProductGrid>
+type Story = StoryObj<typeof meta>
 
 // ---------------------------------------------------------------------------
 // Stories
@@ -160,7 +162,7 @@ export const Default: Story = {}
 /** Single product — useful for checking card stretching in a 4-col grid */
 export const SingleItem: Story = {
   args: {
-    products: [PRODUCTS[0]],
+    products: PRODUCTS.slice(0, 1),
   },
 }
 
@@ -168,13 +170,6 @@ export const SingleItem: Story = {
 export const TwoItems: Story = {
   args: {
     products: PRODUCTS.slice(0, 2),
-  },
-}
-
-/** Cards are display-only — no pointer cursor, click does nothing */
-export const NonInteractive: Story = {
-  args: {
-    clickable: false,
   },
 }
 

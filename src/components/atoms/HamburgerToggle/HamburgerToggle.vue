@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import Button from 'primevue/button'
+import { useI18n } from 'vue-i18n'
 
 interface Props {
   open?: boolean
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t } = useI18n()
 
 const emit = defineEmits<{
   (event: 'toggle', nextState: boolean): void
@@ -16,7 +18,7 @@ const emit = defineEmits<{
 
 const isOpen = computed(() => props.open ?? false)
 const isDisabled = computed(() => props.disabled ?? false)
-const ariaLabel = computed(() => props.ariaLabel ?? 'Toggle menu')
+const ariaLabel = computed(() => props.ariaLabel ?? t('hamburgerMenu.toggleAriaLabel'))
 const icon = computed(() => (isOpen.value ? 'pi pi-times' : 'pi pi-bars'))
 
 function handleClick() {

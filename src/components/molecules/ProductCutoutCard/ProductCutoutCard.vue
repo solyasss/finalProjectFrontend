@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
 import Image from 'primevue/image'
+import { useI18n } from 'vue-i18n'
 
 interface Props {
   imageSrc: string
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t } = useI18n()
 
 const emit = defineEmits<{
   (event: 'select'): void
@@ -24,7 +26,9 @@ const emit = defineEmits<{
 
 const isClickable = computed(() => props.clickable ?? false)
 const actionIcon = computed(() => props.actionIcon ?? 'pi pi-arrow-right')
-const actionAriaLabel = computed(() => props.actionAriaLabel ?? 'Open collection')
+const actionAriaLabel = computed(
+  () => props.actionAriaLabel ?? t('productCutoutCard.openCollectionAriaLabel'),
+)
 const actionPlacement = computed(() => props.actionPlacement ?? 'right')
 const imageFit = computed(() => props.imageFit ?? 'fill')
 const showBottomFooter = computed(() => actionPlacement.value === 'bottom')

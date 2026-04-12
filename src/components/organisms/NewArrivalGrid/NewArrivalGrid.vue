@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import ProductCutoutCard from '@/components/molecules/ProductCutoutCard/ProductCutoutCard.vue'
 
 interface NewArrivalItem {
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t } = useI18n()
 
 const emit = defineEmits<{
   (event: 'select-item', index: number): void
@@ -33,7 +35,7 @@ function handleSelectItem(index: number) {
     </h2>
     <section
       class="grid min-h-0 flex-1 grid-rows-[1fr_2fr] gap-4 overflow-hidden"
-      aria-label="New arrivals"
+      :aria-label="t('newArrivalGrid.sectionAriaLabel')"
     >
       <div class="grid min-h-0 grid-cols-[1fr_2fr] gap-4">
         <div

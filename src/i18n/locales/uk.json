@@ -16,10 +16,70 @@
     "accountAriaLabel": "Акаунт",
     "cartAriaLabel": "Кошик",
     "favoritesAriaLabel": "Обране",
+    "languageAriaLabel": "Змінити мову",
+    "navAriaLabel": "Основна навігація",
     "nav": {
       "products": "Товари",
       "rooms": "Кімнати",
       "design": "Дизайн"
+    }
+  },
+  "hamburgerMenu": {
+    "title": "Меню",
+    "toggleAriaLabel": "Відкрити/закрити меню",
+    "navAriaLabel": "Головне меню"
+  },
+  "topPromoBar": {
+    "ariaLabel": "Промо рядок",
+    "item1": "#все_для_дому",
+    "item2": "#швидкотазручно",
+    "item3": "#купуй зараз"
+  },
+  "homeHero": {
+    "title": "ВСЕ ДЛЯ ДОМУ"
+  },
+  "homeHeroCta": {
+    "ariaLabel": "Промо блок для дому",
+    "primaryAction": "СТВОРИТИ АКАУНТ ТА ПОЧАТИ!",
+    "secondaryAction": "КАТАЛОГ",
+    "promoPrefix": "ЛОВИ МОМЕНТ {'|'} ",
+    "promoHighlight": "Знижки до 60%",
+    "promoBadgeFallback": "ТОП",
+    "promoSuffix": "на вибрані категорії товарів!"
+  },
+  "homePage": {
+    "collectionsTitle": "Колекції",
+    "recommendationTitle": "Рекомендації",
+    "bestSetsTitle": "Кращі набори",
+    "newArrivalsTitle": "Нові надходження"
+  },
+  "newArrivalGrid": {
+    "sectionAriaLabel": "Сітка нових надходжень"
+  },
+  "productCutoutCard": {
+    "openCollectionAriaLabel": "Відкрити колекцію"
+  },
+  "searchBar": {
+    "placeholder": "Пошук"
+  },
+  "footer": {
+    "tagline": "Створюємо простір, у який хочеться повертатися — меблі, декор та готові рішення для дому в одному місці.",
+    "navHeading": "Навігація",
+    "supportHeading": "Підтримка",
+    "socialHeading": "Соцмережі",
+    "copyright": "© 2026 Olya Home. Всі права захищено.",
+    "legalLinks": "Політика конфіденційності · Умови користування",
+    "nav": {
+      "catalogue": "Каталог",
+      "newArrivals": "Новинки",
+      "bestOffers": "Найкращі пропозиції",
+      "collections": "Колекції"
+    },
+    "support": {
+      "deliveryPayment": "Доставка та оплата",
+      "returns": "Повернення",
+      "contacts": "Контакти",
+      "faq": "FAQ"
     }
   },
   "productCard": {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import SearchBar from '@/components/molecules/SearchBar/SearchBar.vue'
 import HomeHeroCta from '@/components/organisms/HomeHeroCta/HomeHeroCta.vue'
 
@@ -21,9 +22,10 @@ interface Props {
 
 const props = defineProps<Props>()
 const router = useRouter()
+const { t } = useI18n()
 const searchQuery = ref('')
 
-const title = computed(() => props.title ?? 'ВСЕ ДЛЯ ДОМУ')
+const title = computed(() => props.title ?? t('homeHero.title'))
 const imageSrc = computed(() => props.imageSrc ?? '/HomeHero.jpg')
 const items = computed<PromoItem[]>(() => props.items ?? [])
 
