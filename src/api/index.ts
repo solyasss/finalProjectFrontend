@@ -7,6 +7,8 @@ export { getCategories, getCategoryProducts, compareProducts } from './catalog'
 export {
   getProduct,
   getProductAvailability,
+  createProductReview,
+  getProductReviews,
   getProductReviewsSummary,
   getProductQuestions,
 } from './products'
@@ -106,7 +108,11 @@ export type {
   ProductCompareResponse,
   ProductDetailsResponse,
   ProductAvailabilityResponse,
+  ProductReview,
+  ProductReviewListResponse,
   ReviewHistogramEntry,
+  CreateProductReviewRequest,
+  CreateProductReviewResponse,
   ProductReviewsSummaryResponse,
   ProductQuestionsResponse,
   SearchResponse,
@@ -122,6 +128,7 @@ export type {
   GetCategoryProductsParams,
   GetProductParams,
   GetProductAvailabilityParams,
+  GetProductReviewsParams,
   GetProductQuestionsParams,
   CompareProductsParams,
   SearchParams,

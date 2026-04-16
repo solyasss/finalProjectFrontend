@@ -1,13 +1,17 @@
 import { request } from './client'
 import type {
   ApiResult,
+  CreateProductReviewRequest,
+  CreateProductReviewResponse,
   ProductDetailsResponse,
   ProductAvailabilityResponse,
+  ProductReviewListResponse,
   ProductReviewsSummaryResponse,
   ProductQuestionsResponse,
   GetProductParams,
   GetProductAvailabilityParams,
   GetProductQuestionsParams,
+  GetProductReviewsParams,
 } from './types'
 
 export function getProduct(
@@ -32,6 +36,26 @@ export function getProductReviewsSummary(
   productId: string,
 ): Promise<ApiResult<ProductReviewsSummaryResponse>> {
   return request(`/products/${productId}/reviews/summary`)
+}
+
+export function getProductReviews(
+  productId: string,
+  params?: GetProductReviewsParams,
+): Promise<ApiResult<ProductReviewListResponse>> {
+  return request(`/products/${productId}/reviews`, {
+    query: { page: params?.page, limit: params?.limit },
+  })
+}
+
+export function createProductReview(
+  productId: string,
+  body: CreateProductReviewRequest,
+): Promise<ApiResult<CreateProductReviewResponse>> {
+  return request(`/products/${productId}/reviews`, {
+    method: 'POST',
+    body,
+    auth: true,
+  })
 }
 
 export function getProductQuestions(

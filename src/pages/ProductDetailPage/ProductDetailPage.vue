@@ -9,6 +9,7 @@ import ProductCard from '@/components/molecules/ProductCard/ProductCard.vue'
 import ProductDetailsAccordion from '@/components/organisms/ProductDetailsAccordion/ProductDetailsAccordion.vue'
 import ProductGallery from '@/components/organisms/ProductGallery/ProductGallery.vue'
 import ProductPurchasePanel from '@/components/organisms/ProductPurchasePanel/ProductPurchasePanel.vue'
+import ReviewSection from '@/components/organisms/ReviewSection/ReviewSection.vue'
 import CarouselSection from '@/components/organisms/CarouselSection/CarouselSection.vue'
 import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
 
@@ -23,21 +24,33 @@ const {
   relatedProducts,
   accessories,
   breadcrumbs,
+  reviewsSummary,
+  reviewHistogram,
+  reviews,
+  reviewsPagination,
   selectedVariant,
   selectorGroups,
   galleryImages,
   availability,
   quantity,
   loadingAvailability,
+  loadingReviews,
   addingToCart,
+  submittingReview,
+  canLoadMoreReviews,
   canAddToCart,
+  isAuthenticated,
   ctaMessage,
+  reviewsError,
+  submitReviewError,
+  submitReviewSuccess,
   selectOption,
   setQuantity,
   addToCart,
+  loadMoreReviews,
+  requestReviewAuth,
+  submitReview,
 } = useProductDetailPage()
-
-console.log('Related products:', relatedProducts) // Debug log to inspect related products
 
 function handleSelectProduct(card: ApiProductCard) {
   router.push({ name: 'pdp', params: { productSlug: card.slug } })
@@ -91,44 +104,61 @@ function handleSelectProduct(card: ApiProductCard) {
           :documents="product.documents"
         />
 
-          <CarouselSection
-            v-if="relatedProducts.length"
-            :title="t('pdp.relatedProductsTitle')"
-            :items="relatedProducts"
-            item-key="productId"
-            :num-visible="4"
-            :num-scroll="1"
-            :responsive-options="[
-              { breakpoint: '1199px', numVisible: 3, numScroll: 1 },
-              { breakpoint: '767px', numVisible: 2, numScroll: 1 },
-              { breakpoint: '575px', numVisible: 1, numScroll: 1 },
-            ]"
-            content-class="px-2"
-            @select-item="handleSelectProduct($event.item as unknown as ApiProductCard)"
-          >
-            <template #default="{ item, select }">
-              <ProductCard :product="item as ApiProductCard" clickable @select="select" />
-            </template>
-          </CarouselSection>
-          <CarouselSection
-            v-if="accessories.length"
-            :title="t('pdp.accessoriesTitle')"
-            :items="accessories"
-            item-key="productId"
-            :num-visible="4"
-            :num-scroll="1"
-            :responsive-options="[
-              { breakpoint: '1199px', numVisible: 3, numScroll: 1 },
-              { breakpoint: '767px', numVisible: 2, numScroll: 1 },
-              { breakpoint: '575px', numVisible: 1, numScroll: 1 },
-            ]"
-            content-class="px-2"
-            @select-item="handleSelectProduct($event.item as unknown as ApiProductCard)"
-          >
-            <template #default="{ item, select }">
-              <ProductCard :product="item as ApiProductCard" clickable @select="select" />
-            </template>
-          </CarouselSection>
+        <ReviewSection
+          :summary="reviewsSummary"
+          :histogram="reviewHistogram"
+          :reviews="reviews"
+          :pagination="reviewsPagination"
+          :loading="loadingReviews"
+          :error="reviewsError"
+          :authenticated="isAuthenticated"
+          :submitting="submittingReview"
+          :submit-error="submitReviewError"
+          :submit-success="submitReviewSuccess"
+          :can-load-more="canLoadMoreReviews"
+          @request-auth="requestReviewAuth"
+          @submit-review="submitReview"
+          @load-more="loadMoreReviews"
+        />
+
+        <CarouselSection
+          v-if="relatedProducts.length"
+          :title="t('pdp.relatedProductsTitle')"
+          :items="relatedProducts"
+          item-key="productId"
+          :num-visible="4"
+          :num-scroll="1"
+          :responsive-options="[
+            { breakpoint: '1199px', numVisible: 3, numScroll: 1 },
+            { breakpoint: '767px', numVisible: 2, numScroll: 1 },
+            { breakpoint: '575px', numVisible: 1, numScroll: 1 },
+          ]"
+          content-class="px-2"
+          @select-item="handleSelectProduct($event.item as unknown as ApiProductCard)"
+        >
+          <template #default="{ item, select }">
+            <ProductCard :product="item as ApiProductCard" clickable @select="select" />
+          </template>
+        </CarouselSection>
+        <CarouselSection
+          v-if="accessories.length"
+          :title="t('pdp.accessoriesTitle')"
+          :items="accessories"
+          item-key="productId"
+          :num-visible="4"
+          :num-scroll="1"
+          :responsive-options="[
+            { breakpoint: '1199px', numVisible: 3, numScroll: 1 },
+            { breakpoint: '767px', numVisible: 2, numScroll: 1 },
+            { breakpoint: '575px', numVisible: 1, numScroll: 1 },
+          ]"
+          content-class="px-2"
+          @select-item="handleSelectProduct($event.item as unknown as ApiProductCard)"
+        >
+          <template #default="{ item, select }">
+            <ProductCard :product="item as ApiProductCard" clickable @select="select" />
+          </template>
+        </CarouselSection>
       </template>
     </section>
   </DefaultTemplate>

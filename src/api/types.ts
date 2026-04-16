@@ -371,10 +371,37 @@ export interface ReviewHistogramEntry {
   count: number
 }
 
+export interface ProductReview {
+  reviewId: string
+  rating: number
+  title?: string | null
+  body: string
+  authorName: string
+  createdAt: string
+  verifiedPurchase?: boolean
+}
+
 export interface ProductReviewsSummaryResponse {
   productId: string
   summary: RatingSummary
   histogram: ReviewHistogramEntry[]
+}
+
+export interface ProductReviewListResponse {
+  productId: string
+  items: ProductReview[]
+  pagination: Pagination
+}
+
+export interface CreateProductReviewRequest {
+  rating: number
+  title?: string
+  body: string
+}
+
+export interface CreateProductReviewResponse {
+  productId: string
+  review: ProductReview
 }
 
 export interface ProductQuestionsResponse {
@@ -428,11 +455,7 @@ export interface StoreDetailsResponse {
 // Query param types
 export type SortOption = 'relevance' | 'price_asc' | 'price_desc' | 'rating' | 'newest'
 
-export interface ProductFilters {
-  color?: string
-  price?: string
-  availability?: 'in_stock'
-}
+export type ProductFilters = Partial<Record<string, string>>
 
 export interface GetCategoryProductsParams {
   page?: number
@@ -452,6 +475,11 @@ export interface GetProductAvailabilityParams {
 }
 
 export interface GetProductQuestionsParams {
+  page?: number
+  limit?: number
+}
+
+export interface GetProductReviewsParams {
   page?: number
   limit?: number
 }
