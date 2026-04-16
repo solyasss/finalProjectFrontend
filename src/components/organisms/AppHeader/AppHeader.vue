@@ -1,13 +1,28 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import Button from 'primevue/button'
 import { useI18n } from 'vue-i18n'
 import HamburgerMenu from '@/components/organisms/HamburgerMenu/HamburgerMenu.vue'
-import { useLocationStore } from '@/stores'
+import LocationPicker from '@/components/organisms/LocationPicker/LocationPicker.vue'
+import { useLocationPicker } from '@/composables/useLocationPicker'
 
 const { t, locale } = useI18n()
 const menuOpen = ref(false)
-const locationStore = useLocationStore()
+const locationPickerRef = ref<InstanceType<typeof LocationPicker> | null>(null)
+const {
+  query,
+  filteredCities,
+  currentLabel,
+  detecting,
+  errorKey,
+  runAutoDetectionOnLoad,
+  requestCurrentLocation,
+  selectCity,
+} = useLocationPicker()
+
+onMounted(() => {
+  runAutoDetectionOnLoad()
+})
 
 function toggleLocale() {
   const next = locale.value === 'uk' ? 'en' : 'uk'
@@ -15,13 +30,11 @@ function toggleLocale() {
   localStorage.setItem('locale', next)
 }
 
-const locationLabel = computed(() => locationStore.zipCode || t('header.locationFallback'))
-
 const menuItems = computed(() => [
   {
     id: 'location',
     label: t('header.locationMenuLabel'),
-    description: locationLabel.value,
+    description: currentLabel.value,
     icon: 'pi pi-map-marker',
   },
   { id: 'products', label: t('header.nav.products'), icon: 'pi pi-box' },
@@ -34,6 +47,12 @@ const navItems = computed(() => [
   { label: t('header.nav.rooms'), href: '#' },
   { label: t('header.nav.design'), href: '#' },
 ])
+
+function handleMenuSelect(item: { id: string }) {
+  if (item.id === 'location') {
+    locationPickerRef.value?.openChooser()
+  }
+}
 </script>
 
 <template>
@@ -46,6 +65,7 @@ const navItems = computed(() => [
             :items="menuItems"
             :aria-label="t('header.menuAriaLabel')"
             :title="t('header.menuTitle')"
+            @select="handleMenuSelect"
           />
         </div>
 
@@ -70,20 +90,17 @@ const navItems = computed(() => [
       </div>
 
       <div class="flex shrink-0 items-center gap-1 md:gap-2">
-        <div class="hidden md:block">
-          <Button
-            type="button"
-            text
-            :pt="{
-              root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
-            }"
-          >
-            <span class="text-muted-color flex items-center gap-2 text-sm">
-              <i class="pi pi-map-marker" aria-hidden="true" />
-              {{ locationLabel }}
-            </span>
-          </Button>
-        </div>
+        <LocationPicker
+          ref="locationPickerRef"
+          :current-label="currentLabel"
+          :query="query"
+          :cities="filteredCities"
+          :detecting="detecting"
+          :error-key="errorKey"
+          @update:query="query = $event"
+          @retry-detect="requestCurrentLocation('auto')"
+          @select-city="selectCity($event, 'manual')"
+        />
 
         <RouterLink to="/register" class="no-underline">
           <Button
