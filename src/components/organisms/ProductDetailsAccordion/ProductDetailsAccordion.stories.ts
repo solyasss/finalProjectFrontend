@@ -31,6 +31,8 @@ export const Default: Story = {
     const button = canvas.getByRole('button', { name: 'Measurements' })
 
     await userEvent.click(button)
-    await expect(canvas.getByText('Width: 160 cm')).toBeInTheDocument()
+    await expect(canvas.getByRole('region', { name: 'Measurements' })).toHaveTextContent(
+      'Width: 160 cm',
+    )
   },
 }

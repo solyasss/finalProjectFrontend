@@ -21,7 +21,6 @@ const iconSize = computed(() => (props.size === 'detail' ? '1rem' : '0.75rem'))
   <Rating
     :model-value="displayValue"
     readonly
-    :cancel="false"
     :pt="{
       root: { style: { gap: '0.125rem' } },
     }"
