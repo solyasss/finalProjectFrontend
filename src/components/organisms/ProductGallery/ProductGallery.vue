@@ -49,6 +49,7 @@ watch(
 
     <Galleria
       v-else
+      v-model:activeIndex="activeIndex"
       :value="galleryImages"
       :num-visible="numVisible"
       :show-item-navigators="showThumbnails"

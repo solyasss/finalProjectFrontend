@@ -5,8 +5,14 @@ import type { ProductFilters } from './types'
 export function buildFilterQuery(filters?: ProductFilters): Record<string, string | undefined> {
   const result: Record<string, string | undefined> = {}
   if (!filters) return result
-  if (filters.color) result['filters[color]'] = filters.color
-  if (filters.price) result['filters[price]'] = filters.price
-  if (filters.availability) result['filters[availability]'] = filters.availability
+
+  for (const [key, value] of Object.entries(filters)) {
+    if (!value) {
+      continue
+    }
+
+    result[`filters[${key}]`] = value
+  }
+
   return result
 }

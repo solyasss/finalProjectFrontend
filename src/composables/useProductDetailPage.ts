@@ -2,13 +2,21 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import {
+  createProductReview,
   getProduct,
   getProductAvailability,
+  getProductReviews,
+  getProductReviewsSummary,
+  type CreateProductReviewRequest,
   type FulfillmentOption,
+  type Pagination,
   type ProductBreadcrumbItem,
   type ProductCard,
   type ProductDetails,
+  type ProductReview,
   type ProductVariant,
+  type RatingSummary,
+  type ReviewHistogramEntry,
   type VariantAttributePresentation,
 } from '@/api'
 import { useAuthStore, useCartStore, useLocationStore } from '@/stores'
@@ -37,6 +45,7 @@ export interface CtaMessage {
 
 const DEFAULT_MIN_QUANTITY = 1
 const DEFAULT_MAX_QUANTITY = 99
+const DEFAULT_REVIEWS_LIMIT = 4
 
 export function clampQuantity(
   next: number,
@@ -156,6 +165,18 @@ export function buildSelectorGroups(
   })
 }
 
+export function normalizeReviewHistogram(histogram: ReviewHistogramEntry[] = []) {
+  return Array.from({ length: 5 }, (_, index) => {
+    const stars = 5 - index
+    const entry = histogram.find((item) => item.stars === stars)
+
+    return {
+      stars,
+      count: Math.max(0, entry?.count ?? 0),
+    }
+  })
+}
+
 export function useProductDetailPage() {
   // Owns PDP route state, variant selection, availability refresh, and add-to-cart behavior.
   const { t } = useI18n()
@@ -174,10 +195,19 @@ export function useProductDetailPage() {
   const relatedProducts = ref<ProductCard[]>([])
   const accessories = ref<ProductCard[]>([])
   const breadcrumbs = ref<ProductBreadcrumbItem[]>([])
+  const reviewsSummary = ref<RatingSummary | null>(null)
+  const reviewHistogram = ref<ReviewHistogramEntry[]>([])
+  const reviews = ref<ProductReview[]>([])
+  const reviewsPagination = ref<Pagination | null>(null)
   const availability = ref<FulfillmentOption[]>([])
   const quantity = ref(DEFAULT_MIN_QUANTITY)
   const selectedVariantId = ref('')
   const ctaMessage = ref<CtaMessage | null>(null)
+  const loadingReviews = ref(false)
+  const reviewsError = ref<string | null>(null)
+  const submittingReview = ref(false)
+  const submitReviewError = ref<string | null>(null)
+  const submitReviewSuccess = ref(false)
 
   const routeVariantSync = ref<string | null>(null)
 
@@ -208,6 +238,37 @@ export function useProductDetailPage() {
   const canAddToCart = computed(() => {
     return Boolean(product.value && selectedVariant.value && !addingToCart.value)
   })
+
+  const isAuthenticated = computed(() => authStore.isAuthenticated)
+
+  const canLoadMoreReviews = computed(() => {
+    if (!reviewsPagination.value) {
+      return false
+    }
+
+    const { page, limit, total } = reviewsPagination.value
+    return page * limit < total
+  })
+
+  function resetReviewState() {
+    reviewsSummary.value = null
+    reviewHistogram.value = []
+    reviews.value = []
+    reviewsPagination.value = null
+    reviewsError.value = null
+    submitReviewError.value = null
+    submitReviewSuccess.value = false
+  }
+
+  async function redirectToLogin() {
+    const redirect = route.fullPath
+    const safeRedirect = redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/'
+
+    await router.push({
+      name: 'login',
+      query: { redirect: safeRedirect },
+    })
+  }
 
   async function syncVariantQuery(variantId: string) {
     // Updates the route query after variant changes so the selected configuration is shareable.
@@ -244,6 +305,98 @@ export function useProductDetailPage() {
     availability.value = result.data.options
   }
 
+  async function loadReviewsSummary(productId: string) {
+    const result = await getProductReviewsSummary(productId)
+
+    if (!result.ok) {
+      reviewsError.value = result.error.message || t('pdp.reviewsError')
+      reviewsSummary.value = null
+      reviewHistogram.value = []
+      return false
+    }
+
+    reviewsSummary.value = result.data.summary
+    reviewHistogram.value = normalizeReviewHistogram(result.data.histogram)
+
+    if (product.value) {
+      product.value.rating = result.data.summary
+    }
+
+    return true
+  }
+
+  async function loadReviews(productId: string, page = 1) {
+    loadingReviews.value = true
+
+    if (page === 1) {
+      reviewsError.value = null
+    }
+
+    const result = await getProductReviews(productId, { page, limit: DEFAULT_REVIEWS_LIMIT })
+
+    loadingReviews.value = false
+
+    if (!result.ok) {
+      reviewsError.value = result.error.message || t('pdp.reviewsError')
+
+      if (page === 1) {
+        reviews.value = []
+        reviewsPagination.value = null
+      }
+
+      return false
+    }
+
+    reviews.value = page === 1 ? result.data.items : [...reviews.value, ...result.data.items]
+    reviewsPagination.value = result.data.pagination
+    return true
+  }
+
+  async function loadMoreReviews() {
+    if (!product.value || !reviewsPagination.value || !canLoadMoreReviews.value) {
+      return false
+    }
+
+    return loadReviews(product.value.productId, reviewsPagination.value.page + 1)
+  }
+
+  async function submitReview(payload: CreateProductReviewRequest) {
+    if (!product.value || submittingReview.value) {
+      return false
+    }
+
+    submitReviewError.value = null
+    submitReviewSuccess.value = false
+
+    if (!authStore.isAuthenticated) {
+      await redirectToLogin()
+      return false
+    }
+
+    submittingReview.value = true
+    const result = await createProductReview(product.value.productId, payload)
+    submittingReview.value = false
+
+    if (!result.ok) {
+      submitReviewError.value = result.error.message || t('pdp.reviewForm.genericError')
+
+      if (result.error.code === 'UNAUTHORIZED') {
+        await redirectToLogin()
+      }
+
+      return false
+    }
+
+    submitReviewSuccess.value = true
+    await loadReviewsSummary(product.value.productId)
+    await loadReviews(product.value.productId, 1)
+    return true
+  }
+
+  async function requestReviewAuth() {
+    await redirectToLogin()
+  }
+
   async function applySelectedVariant(nextVariant: ProductVariant, syncRoute = true) {
     // Applies a resolved variant, then refreshes URL and availability for that selection.
     selectedVariantId.value = nextVariant.variantId
@@ -268,6 +421,7 @@ export function useProductDetailPage() {
       accessories.value = []
       availability.value = []
       breadcrumbs.value = []
+      resetReviewState()
       return
     }
 
@@ -276,10 +430,9 @@ export function useProductDetailPage() {
     availabilityError.value = null
     ctaMessage.value = null
     quantity.value = DEFAULT_MIN_QUANTITY
+    resetReviewState()
 
     const result = await getProduct(productSlug.value)
-
-    console.log('getProduct result', result) // TODO: Debug log to inspect the API response
 
     loading.value = false
 
@@ -290,6 +443,7 @@ export function useProductDetailPage() {
       accessories.value = []
       availability.value = []
       breadcrumbs.value = []
+      resetReviewState()
       return
     }
 
@@ -298,6 +452,9 @@ export function useProductDetailPage() {
     accessories.value = result.data.accessories
     breadcrumbs.value = result.data.breadcrumbs ?? []
     availability.value = result.data.product.fulfillment
+
+    await loadReviewsSummary(result.data.product.productId)
+    await loadReviews(result.data.product.productId, 1)
 
     const initialVariant = resolveInitialVariant(result.data.product, queryVariantId.value)
 
@@ -343,12 +500,7 @@ export function useProductDetailPage() {
     ctaMessage.value = null
 
     if (!authStore.isAuthenticated) {
-      const redirect = route.fullPath
-      const safeRedirect = redirect.startsWith('/') && !redirect.startsWith('//') ? redirect : '/'
-      await router.push({
-        name: 'login',
-        query: { redirect: safeRedirect },
-      })
+      await redirectToLogin()
       return false
     }
 
@@ -421,6 +573,10 @@ export function useProductDetailPage() {
     relatedProducts,
     accessories,
     breadcrumbs,
+    reviewsSummary,
+    reviewHistogram,
+    reviews,
+    reviewsPagination,
     selectedVariantId,
     selectedVariant,
     selectorGroups,
@@ -428,12 +584,23 @@ export function useProductDetailPage() {
     availability,
     quantity,
     loadingAvailability,
+    loadingReviews,
     addingToCart,
+    submittingReview,
     canAddToCart,
+    canLoadMoreReviews,
+    isAuthenticated,
     ctaMessage,
+    reviewsError,
+    submitReviewError,
+    submitReviewSuccess,
     selectOption,
     setQuantity,
     addToCart,
+    loadReviews,
+    loadMoreReviews,
+    requestReviewAuth,
+    submitReview,
     reload,
   }
 }
