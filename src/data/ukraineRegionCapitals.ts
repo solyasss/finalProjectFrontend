@@ -8,6 +8,7 @@ export interface UkraineCity {
   longitude: number
 }
 
+// TODO: Replace this static list with store locations fetched from the backend API if the backend exposes a stores/locations endpoint.
 export const UKRAINE_REGION_CAPITALS: UkraineCity[] = [
   { id: 'kyiv', labelUk: 'Київ', labelEn: 'Kyiv', latitude: 50.4501, longitude: 30.5234 },
   {
