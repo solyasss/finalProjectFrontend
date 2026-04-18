@@ -86,6 +86,8 @@ export interface RequestOptions {
   query?: Record<string, string | number | boolean | undefined>
   // Whether to attach the Authorization header for this request
   auth?: boolean
+  // Whether a 401 should trigger the global unauthorized redirect handler
+  notifyOnUnauthorized?: boolean
 }
 
 async function executeRequest(
@@ -99,7 +101,7 @@ async function executeRequest(
       method,
       headers,
       body: body !== undefined ? JSON.stringify(body) : undefined,
-      // cookies are included so the HttpOnly refresh-token cookie is sent automatically 
+      // cookies are included so the HttpOnly refresh-token cookie is sent automatically
       credentials: 'same-origin',
     })
   } catch {
@@ -111,7 +113,7 @@ export async function request<T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<ApiResult<T>> {
-  const { method = 'GET', body, query, auth = false } = options
+  const { method = 'GET', body, query, auth = false, notifyOnUnauthorized = true } = options
 
   const qs = query ? buildQueryString(query) : ''
   const url = `${BASE_URL}${path}${qs}`
@@ -151,7 +153,9 @@ export async function request<T>(
 
   if (response.status === 401) {
     _token = null
-    _onUnauthorized?.()
+    if (notifyOnUnauthorized) {
+      _onUnauthorized?.()
+    }
     return {
       ok: false,
       error: { code: 'UNAUTHORIZED', message: 'Session expired - please log in again' },

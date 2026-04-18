@@ -31,5 +31,5 @@ export function resendVerification(
 // which the browser sends automatically for same-origin requests.
 // The server validates the cookie and returns a fresh access token + user.
 export function refreshToken(): Promise<ApiResult<LoginResponse>> {
-  return request('/auth/refresh', { method: 'POST' })
+  return request('/auth/refresh', { method: 'POST', notifyOnUnauthorized: false })
 }

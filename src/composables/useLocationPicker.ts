@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
   UKRAINE_REGION_CAPITALS,
@@ -7,6 +7,7 @@ import {
 } from '@/data/ukraineRegionCapitals'
 import type { AppLocale } from '@/i18n'
 import { useLocationStore } from '@/stores'
+import { useAuthStore } from '@/stores/auth'
 
 type SelectionSource = 'auto' | 'manual'
 type PermissionStateValue = PermissionState | 'unsupported' | 'unknown'
@@ -25,6 +26,7 @@ const GEOLOCATION_OPTIONS: PositionOptions = {
 export function useLocationPicker() {
   const { t, locale } = useI18n()
   const locationStore = useLocationStore()
+  const authStore = useAuthStore()
   const currentLocale = computed(() => locale.value as AppLocale)
 
   const query = ref('')
@@ -130,9 +132,30 @@ export function useLocationPicker() {
     return true
   }
 
+  function matchCityFromString(cityName: string): string | null {
+    const normalized = cityName.trim().toLocaleLowerCase()
+    const match = UKRAINE_REGION_CAPITALS.find(
+      (city) =>
+        city.labelUk.toLocaleLowerCase() === normalized ||
+        city.labelEn.toLocaleLowerCase() === normalized,
+    )
+    return match?.id ?? null
+  }
+
   async function runAutoDetectionOnLoad() {
     if (locationStore.selectionSource === 'manual') {
       return
+    }
+
+    // If the authenticated user has a city on their profile, try to match it first
+    const userCity = authStore.user?.address?.city
+    if (userCity) {
+      const matchedId = matchCityFromString(userCity)
+      if (matchedId) {
+        selectCity(matchedId, 'auto')
+        return
+      }
+      // City from profile doesn't match any known Ukrainian city — fall through to geo-detection
     }
 
     const permissionsApi = globalThis.navigator?.permissions
@@ -161,6 +184,19 @@ export function useLocationPicker() {
       await requestCurrentLocation('auto')
     }
   }
+
+  // Re-apply city from profile whenever the authenticated user changes
+  // (e.g. after login or session restore), unless the user already made a manual choice
+  watch(
+    () => authStore.user?.address?.city,
+    (userCity) => {
+      if (locationStore.selectionSource === 'manual' || !userCity) return
+      const matchedId = matchCityFromString(userCity)
+      if (matchedId) {
+        selectCity(matchedId, 'auto')
+      }
+    },
+  )
 
   return {
     query,

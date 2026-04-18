@@ -4,7 +4,11 @@
     "continue": "Continue",
     "createAccount": "Create account",
     "submitting": "Creating account...",
-    "home": "Back to home"
+    "home": "Back to home",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "close": "Close"
   },
   "header": {
     "menuTitle": "Menu",
@@ -24,6 +28,7 @@
     "locationNoResults": "No matching cities found.",
     "locationManualHint": "Select city manually or retry current location.",
     "accountLabel": "Hello! Sign in",
+    "accountGreeting": "Hello, {name}!",
     "accountAriaLabel": "Account",
     "cartAriaLabel": "Cart",
     "favoritesAriaLabel": "Favorites",
@@ -203,6 +208,68 @@
       "email": "Enter a valid email address.",
       "generic": "Something went wrong. Please try again.",
       "invalidCredentials": "Email or password is incorrect. Please try again."
+    }
+  },
+  "notFound": {
+    "eyebrow": "Page not found",
+    "title": "This page does not exist",
+    "description": "The link may be outdated or the page may have been moved. Return to the home page and continue browsing from there.",
+    "primaryAction": "Go to home page"
+  },
+  "accountPage": {
+    "eyebrow": "My account",
+    "title": "Manage your account details",
+    "description": "Update your personal details, delivery address, password, and account access from one place.",
+    "emptyState": "We could not load your account details right now.",
+    "navAriaLabel": "Account navigation",
+    "navPurchases": "Purchases",
+    "navAccountDetails": "Account details",
+    "navDataPrivacy": "Data and privacy",
+    "cardSave": "Save",
+    "personalInfoTitle": "Personal information",
+    "personalInfoDescription": "Keep your name and birth date up to date for a smoother checkout and support experience.",
+    "personalInfoSuccess": "Personal information updated.",
+    "addressTitle": "Address",
+    "addressDescription": "Save your usual delivery address so location-aware shopping stays in sync.",
+    "addressSuccess": "Address updated.",
+    "emailTitle": "Email",
+    "emailDescription": "Your email is used to sign in and secure your account.",
+    "emailReadonlyNote": "Email updates are not available yet because the required backend endpoint is not ready.",
+    "passwordTitle": "Password",
+    "passwordDescription": "Choose a new password to keep your account secure.",
+    "passwordSuccess": "Password updated.",
+    "deleteAccountTitle": "Delete account",
+    "deleteAccountDescription": "Permanently remove your account and its saved shopping details.",
+    "deleteAccountCta": "Delete account",
+    "deleteAccountDialogTitle": "Confirm account deletion",
+    "deleteAccountDialogDescription": "Enter your current password to permanently delete your account. This action cannot be undone.",
+    "deleteAccountConfirm": "Delete permanently",
+    "deleteAccountSuccess": "Your account has been deleted.",
+    "dataPrivacy": {
+      "title": "Data and privacy",
+      "description": "Privacy controls and export options are planned for a future release.",
+      "message": "Coming soon. Requirements and legal flows for this section are still being defined."
+    },
+    "fields": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "dateOfBirth": "Date of birth",
+      "email": "Email",
+      "street": "Street",
+      "city": "City",
+      "postalCode": "Postal code",
+      "region": "Region",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "deletePassword": "Password confirmation"
+    },
+    "errors": {
+      "required": "This field is required.",
+      "date": "Enter a valid date in YYYY-MM-DD format.",
+      "passwordLength": "Password must contain at least 8 characters.",
+      "passwordMismatch": "Passwords must match.",
+      "generic": "Something went wrong. Please try again."
     }
   },
   "pdp": {
