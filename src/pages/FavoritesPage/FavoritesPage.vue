@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// TODO: implement FavoritesPage page
+import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
 </script>
 
 <template>
-  <div>FavoritesPage</div>
+  <DefaultTemplate />
 </template>

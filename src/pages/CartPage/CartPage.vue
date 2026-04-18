@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// TODO: implement CartPage page
+import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
 </script>
 
 <template>
-  <div>CartPage</div>
+  <DefaultTemplate />
 </template>

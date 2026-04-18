@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,26 +28,31 @@ const router = createRouter({
       path: '/cart',
       name: 'cart',
       component: () => import('@/pages/CartPage/CartPage.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/favorites',
       name: 'favorites',
       component: () => import('@/pages/FavoritesPage/FavoritesPage.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/orders',
       name: 'orders',
       component: () => import('@/pages/OrdersPage/OrdersPage.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/orders/:orderId',
       name: 'order-detail',
       component: () => import('@/pages/OrderDetailPage/OrderDetailPage.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/account',
       name: 'account',
       component: () => import('@/pages/AccountPage/AccountPage.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/register',
@@ -63,7 +69,25 @@ const router = createRouter({
       name: 'terms-and-conditions',
       component: () => import('@/pages/TermsAndConditionsPage/TermsAndConditionsPage.vue'),
     },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/pages/NotFoundPage/NotFoundPage.vue'),
+    },
   ],
+})
+
+router.beforeEach((to) => {
+  const authStore = useAuthStore()
+
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    return {
+      name: 'login',
+      query: { redirect: to.fullPath },
+    }
+  }
+
+  return true
 })
 
 export default router
