@@ -17,6 +17,8 @@ setup((app) => {
       { path: '/', name: 'home', component: { template: '<div />' } },
       { path: '/cat/:categorySlug', name: 'plp', component: { template: '<div />' } },
       { path: '/p/:productSlug', name: 'pdp', component: { template: '<div />' } },
+      { path: '/account', name: 'account', component: { template: '<div />' } },
+      { path: '/orders', name: 'orders', component: { template: '<div />' } },
       { path: '/login', name: 'login', component: { template: '<div />' } },
     ],
   })

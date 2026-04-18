@@ -41,6 +41,14 @@ export const useAuthStore = defineStore('auth', () => {
     setAuthToken(token)
   }
 
+  function setUser(nextUser: MeResponse | null) {
+    user.value = nextUser
+  }
+
+  function applyProfileUpdate(nextUser: MeResponse) {
+    user.value = nextUser
+  }
+
   async function signIn(payload: LoginRequest): Promise<ApiResult<LoginResponse>> {
     error.value = null
 
@@ -59,7 +67,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function logout() {
-    user.value = null
+    setUser(null)
     setAuthToken(null)
   }
 
@@ -83,6 +91,8 @@ export const useAuthStore = defineStore('auth', () => {
     initialize,
     fetchMe,
     setToken,
+    setUser,
+    applyProfileUpdate,
     signIn,
     logout,
   }

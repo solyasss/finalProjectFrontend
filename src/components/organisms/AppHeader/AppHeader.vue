@@ -5,8 +5,10 @@ import { useI18n } from 'vue-i18n'
 import HamburgerMenu from '@/components/organisms/HamburgerMenu/HamburgerMenu.vue'
 import LocationPicker from '@/components/organisms/LocationPicker/LocationPicker.vue'
 import { useLocationPicker } from '@/composables/useLocationPicker'
+import { useAuthStore } from '@/stores/auth'
 
 const { t, locale } = useI18n()
+const authStore = useAuthStore()
 const menuOpen = ref(false)
 const locationPickerRef = ref<InstanceType<typeof LocationPicker> | null>(null)
 const {
@@ -102,7 +104,7 @@ function handleMenuSelect(item: { id: string }) {
           @select-city="selectCity($event, 'manual')"
         />
 
-        <RouterLink to="/register" class="no-underline">
+        <RouterLink v-if="!authStore.isAuthenticated" to="/register" class="no-underline">
           <Button
             type="button"
             text
@@ -118,27 +120,60 @@ function handleMenuSelect(item: { id: string }) {
           </Button>
         </RouterLink>
 
-        <Button
-          type="button"
-          text
-          :aria-label="t('header.cartAriaLabel')"
-          :pt="{
-            root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
-          }"
+        <RouterLink
+          v-else
+          to="/account"
+          class="no-underline"
+          :aria-label="t('header.accountAriaLabel')"
         >
-          <i class="pi pi-shopping-bag text-muted-color text-base" aria-hidden="true" />
-        </Button>
+          <Button
+            type="button"
+            text
+            :aria-label="t('header.accountAriaLabel')"
+            :pt="{
+              root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
+            }"
+          >
+            <span
+              class="text-muted-color flex items-center gap-2 text-sm transition-colors hover:text-color"
+            >
+              <i class="pi pi-user text-base" aria-hidden="true" />
+              <span class="hidden md:inline">{{
+                t('header.accountGreeting', { name: authStore.firstName })
+              }}</span>
+            </span>
+          </Button>
+        </RouterLink>
 
-        <Button
-          type="button"
-          text
+        <RouterLink to="/cart" class="no-underline" :aria-label="t('header.cartAriaLabel')">
+          <Button
+            type="button"
+            text
+            :aria-label="t('header.cartAriaLabel')"
+            :pt="{
+              root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
+            }"
+          >
+            <i class="pi pi-shopping-bag text-muted-color text-base" aria-hidden="true" />
+          </Button>
+        </RouterLink>
+
+        <RouterLink
+          to="/favorites"
+          class="no-underline"
           :aria-label="t('header.favoritesAriaLabel')"
-          :pt="{
-            root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
-          }"
         >
-          <i class="pi pi-heart text-muted-color text-base" aria-hidden="true" />
-        </Button>
+          <Button
+            type="button"
+            text
+            :aria-label="t('header.favoritesAriaLabel')"
+            :pt="{
+              root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
+            }"
+          >
+            <i class="pi pi-heart text-muted-color text-base" aria-hidden="true" />
+          </Button>
+        </RouterLink>
 
         <Button
           type="button"
