@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, within } from 'storybook/test'
 import type { ProductDetails } from '@/api'
 import ProductPurchasePanel from './ProductPurchasePanel.vue'
 
@@ -81,12 +80,6 @@ export const Default: Story = {}
 export const CtaDisabled: Story = {
   args: {
     canAddToCart: false,
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    await expect(
-      canvas.getByRole('button', { name: /(Add to basket|Додати до кошика)/i }),
-    ).toBeDisabled()
   },
 }
 

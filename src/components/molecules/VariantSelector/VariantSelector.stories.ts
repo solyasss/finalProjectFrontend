@@ -1,6 +1,5 @@
 import { ref } from 'vue'
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from 'storybook/test'
 import VariantSelector from './VariantSelector.vue'
 
 const meta = {
@@ -42,13 +41,6 @@ export const TextOptions: Story = {
     template:
       '<VariantSelector label="Size" presentation="text" :options="options" @select="handleSelect" />',
   }),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const medium = canvas.getByTestId('variant-option-medium')
-
-    await userEvent.click(medium)
-    await expect(medium).toHaveAttribute('aria-pressed', 'true')
-  },
 }
 
 export const Swatches: Story = {

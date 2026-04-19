@@ -272,6 +272,63 @@
       "generic": "Something went wrong. Please try again."
     }
   },
+  "ordersPage": {
+    "eyebrow": "My purchases",
+    "title": "Order history",
+    "description": "Review past purchases, check delivery progress, and reopen order details whenever you need them.",
+    "loading": "Loading orders...",
+    "error": "We could not load your orders right now.",
+    "empty": "You haven't placed any orders yet.",
+    "viewDetails": "View details",
+    "orderNumber": "Order number",
+    "orderNumberValue": "Order #{orderId}",
+    "orderPlacedOn": "Placed on {date}",
+    "orderDate": "Order date",
+    "orderTotal": "Total",
+    "itemCountLabel": "Items",
+    "itemCountValue": "{count} items",
+    "paginationSummary": "Page {page} of {total}"
+  },
+  "orderDetailPage": {
+    "eyebrow": "My purchases",
+    "title": "Order #{orderId}",
+    "titleFallback": "Order details",
+    "description": "Review purchased items, shipping destination, and the latest delivery progress for this order.",
+    "loading": "Loading order...",
+    "error": "We could not load this order right now.",
+    "invalidOrder": "This order link is invalid.",
+    "backToOrders": "Back to orders",
+    "itemsTitle": "Items in this order",
+    "itemsDescription": "Check the products, quantities, and totals included in this purchase.",
+    "quantityValue": "Quantity: {quantity}",
+    "unitPrice": "Unit price",
+    "lineTotal": "Line total",
+    "shippingTitle": "Shipping address",
+    "shippingDescription": "Delivery details provided when the order was placed.",
+    "shippingEmpty": "No shipping address is available for this order.",
+    "shippingFields": {
+      "street": "Street",
+      "city": "City",
+      "postalCode": "Postal code",
+      "region": "Region"
+    },
+    "trackingTitle": "Tracking timeline",
+    "trackingDescription": "Follow the latest shipping milestones in the order they happened.",
+    "trackingLoading": "Loading tracking updates...",
+    "trackingError": "Tracking details are temporarily unavailable. Please try again later.",
+    "trackingUnavailable": "Tracking updates are not available for this order yet.",
+    "trackingUpdatedAt": "Updated {date}",
+    "currentStatus": "Current status"
+  },
+  "orderStatus": {
+    "PLACED": "Order placed",
+    "PROCESSING": "Processing",
+    "SHIPPED": "Shipped",
+    "READY_FOR_PICKUP": "Ready for pickup",
+    "DELIVERED": "Delivered",
+    "CANCELLED": "Cancelled",
+    "UNKNOWN": "Status unavailable"
+  },
   "pdp": {
     "home": "Home",
     "breadcrumbAriaLabel": "Product breadcrumb",

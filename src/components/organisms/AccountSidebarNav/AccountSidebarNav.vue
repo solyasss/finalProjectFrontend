@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AccountNavItem } from '@/composables/useAccountSections'
+import type { AccountNavItem } from '@/composables/useAccountNavigation'
 
 interface Props {
   items: AccountNavItem[]

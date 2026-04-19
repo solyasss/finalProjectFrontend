@@ -7,18 +7,35 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<MeResponse | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
+  const initialized = ref(false)
+  let initializePromise: Promise<void> | null = null
 
   const isAuthenticated = computed(() => user.value !== null)
   const firstName = computed(() => user.value?.firstName ?? null)
 
   // Runs before app mount to restore session
   async function initialize() {
-    const res = await refreshToken()
-    if (res.ok) {
-      setAuthToken(res.data.token)
-      user.value = res.data.user
+    if (initialized.value) {
+      return
     }
-    // User starts unauthenticated
+
+    initializePromise ??= (async () => {
+      const res = await refreshToken()
+
+      if (res.ok) {
+        setAuthToken(res.data.token)
+        user.value = res.data.user
+      } else {
+        user.value = null
+        setAuthToken(null)
+      }
+
+      initialized.value = true
+    })().finally(() => {
+      initializePromise = null
+    })
+
+    await initializePromise
   }
 
   async function fetchMe() {
@@ -86,6 +103,7 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     loading,
     error,
+    initialized,
     isAuthenticated,
     firstName,
     initialize,
