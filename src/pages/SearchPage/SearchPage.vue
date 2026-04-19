@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import Message from 'primevue/message'
 import { useI18n } from 'vue-i18n'
+import ProductFilterDrawer from '@/components/organisms/ProductFilterDrawer/ProductFilterDrawer.vue'
 import ProductFilters from '@/components/organisms/ProductFilters/ProductFilters.vue'
 import SortControl from '@/components/molecules/SortControl/SortControl.vue'
 import ProductGrid from '@/components/organisms/ProductGrid/ProductGrid.vue'
@@ -54,8 +55,8 @@ const resultCount = computed(() => pagination.value?.total ?? products.value.len
       <Message v-else-if="!products.length" severity="secondary" variant="simple">
         {{ t('search.empty') }}
       </Message>
-      <div v-else class="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
-        <aside class="lg:sticky lg:top-24 lg:self-start">
+      <div v-else class="grid gap-6 md:grid-cols-[18rem_minmax(0,1fr)] md:items-start">
+        <aside class="hidden md:sticky md:top-24 md:block">
           <ProductFilters
             :filters="filters"
             :selected-filters="selectedFilters"
@@ -67,13 +68,25 @@ const resultCount = computed(() => pagination.value?.total ?? products.value.len
         </aside>
 
         <div class="grid gap-4">
-          <div class="flex justify-start lg:justify-end">
-            <SortControl
-              :model-value="sort"
-              :options="sortOptions"
-              :disabled="loading"
-              @update:model-value="listing.setSort"
-            />
+          <div class="flex items-end justify-between gap-3">
+            <div class="md:hidden self-end">
+              <ProductFilterDrawer
+                :filters="filters"
+                :selected-filters="selectedFilters"
+                :active-chips="activeFilterChips"
+                :result-count="resultCount"
+                :loading="loading"
+                @apply-filters="listing.applyFilters"
+              />
+            </div>
+            <div class="flex justify-end md:ml-auto">
+              <SortControl
+                :model-value="sort"
+                :options="sortOptions"
+                :disabled="loading"
+                @update:model-value="listing.setSort"
+              />
+            </div>
           </div>
 
           <ProductGrid :products="products" @select-product="listing.selectProduct" />

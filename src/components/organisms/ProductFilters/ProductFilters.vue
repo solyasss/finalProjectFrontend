@@ -188,7 +188,7 @@ function buildDraftChips(
 
 <template>
   <section
-    class="grid max-h-[calc(100vh-8rem)] gap-4 overflow-hidden rounded-3xl border border-surface bg-surface-0 p-4 md:p-5"
+    class="grid min-h-0 max-h-[calc(100vh-8rem)] grid-rows-[auto_auto_minmax(0,1fr)] gap-4 overflow-hidden rounded-3xl border border-surface bg-surface-0 p-4 md:p-5"
   >
     <header class="grid gap-3">
       <div class="space-y-1">
@@ -233,7 +233,7 @@ function buildDraftChips(
       {{ t('listingControls.noActiveFilters') }}
     </p>
 
-    <div class="grid gap-4 overflow-y-auto pr-1">
+    <div class="grid min-h-0 gap-4 overflow-y-auto pr-1">
       <section
         v-for="filter in props.filters"
         :key="filter.key"
