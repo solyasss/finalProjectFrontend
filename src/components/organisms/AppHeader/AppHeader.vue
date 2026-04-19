@@ -2,12 +2,15 @@
 import { computed, onMounted, ref } from 'vue'
 import Button from 'primevue/button'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import HamburgerMenu from '@/components/organisms/HamburgerMenu/HamburgerMenu.vue'
+import HeaderCategoryMenu from '@/components/organisms/HeaderCategoryMenu/HeaderCategoryMenu.vue'
 import LocationPicker from '@/components/organisms/LocationPicker/LocationPicker.vue'
 import { useLocationPicker } from '@/composables/useLocationPicker'
 import { useAuthStore } from '@/stores/auth'
 
 const { t, locale } = useI18n()
+const router = useRouter()
 const authStore = useAuthStore()
 const menuOpen = ref(false)
 const locationPickerRef = ref<InstanceType<typeof LocationPicker> | null>(null)
@@ -45,14 +48,32 @@ const menuItems = computed(() => [
 ])
 
 const navItems = computed(() => [
-  { label: t('header.nav.products'), href: '#' },
-  { label: t('header.nav.rooms'), href: '#' },
-  { label: t('header.nav.design'), href: '#' },
+  { label: t('header.nav.products'), to: { name: 'plp', params: { categorySlug: 'living-room' } } },
+  { label: t('header.nav.rooms'), to: { name: 'plp', params: { categorySlug: 'bedroom' } } },
+  { label: t('header.nav.design'), to: { name: 'plp', params: { categorySlug: 'lighting' } } },
 ])
 
 function handleMenuSelect(item: { id: string }) {
   if (item.id === 'location') {
     locationPickerRef.value?.openChooser()
+    return
+  }
+
+  if (item.id === 'products') {
+    router.push({ name: 'plp', params: { categorySlug: 'living-room' } })
+    menuOpen.value = false
+    return
+  }
+
+  if (item.id === 'rooms') {
+    router.push({ name: 'plp', params: { categorySlug: 'bedroom' } })
+    menuOpen.value = false
+    return
+  }
+
+  if (item.id === 'design') {
+    router.push({ name: 'plp', params: { categorySlug: 'lighting' } })
+    menuOpen.value = false
   }
 }
 </script>
@@ -80,19 +101,22 @@ function handleMenuSelect(item: { id: string }) {
         </RouterLink>
 
         <nav class="hidden items-center gap-6 md:flex" :aria-label="t('header.navAriaLabel')">
-          <a
+          <RouterLink
             v-for="item in navItems"
             :key="item.label"
-            :href="item.href"
+            :to="item.to"
             class="text-muted-color hover:text-color text-sm font-medium no-underline transition-colors"
           >
             {{ item.label }}
-          </a>
+          </RouterLink>
+
+          <HeaderCategoryMenu />
         </nav>
       </div>
 
       <div class="flex shrink-0 items-center gap-1 md:gap-2">
         <LocationPicker
+          class="hidden md:block"
           ref="locationPickerRef"
           :current-label="currentLabel"
           :query="query"

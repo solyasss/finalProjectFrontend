@@ -25,6 +25,13 @@ const router = useRouter()
 const { t } = useI18n()
 const searchQuery = ref('')
 
+// TODO: Remove
+const emit = defineEmits<{
+  (event: 'primary-click'): void
+  (event: 'secondary-click'): void
+  (event: 'select-item', index: number): void
+}>()
+
 const title = computed(() => props.title ?? t('homeHero.title'))
 const imageSrc = computed(() => props.imageSrc ?? '/HomeHero.jpg')
 const items = computed<PromoItem[]>(() => props.items ?? [])
@@ -59,7 +66,12 @@ function handleSearch(query: string) {
 
         <div class="flex w-full justify-center lg:justify-start lg:pl-24">
           <div class="w-full lg:max-w-none lg:basis-[30%] lg:min-w-88">
-            <HomeHeroCta :items="items" />
+            <HomeHeroCta
+              :items="items"
+              @primary-click="emit('primary-click')"
+              @secondary-click="emit('secondary-click')"
+              @select-item="emit('select-item', $event)"
+            />
           </div>
         </div>
       </div>

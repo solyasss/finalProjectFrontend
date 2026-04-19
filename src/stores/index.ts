@@ -1,4 +1,5 @@
 export { useCartStore } from './cart'
 export { useWishlistStore } from './wishlist'
 export { useAuthStore } from './auth'
+export { useCatalogStore } from './catalog'
 export { useLocationStore } from './location'

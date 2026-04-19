@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import CollectionOverlayCard from '@/components/molecules/CollectionOverlayCard/CollectionOverlayCard.vue'
 import HomeHero from '@/components/organisms/HomeHero/HomeHero.vue'
 import CarouselSection from '@/components/organisms/CarouselSection/CarouselSection.vue'
@@ -9,6 +10,65 @@ import TopPromoBar from '@/components/organisms/TopPromoBar/TopPromoBar.vue'
 import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
 
 const { t } = useI18n()
+const router = useRouter()
+
+const DEFAULT_PLP_ROUTE = {
+  name: 'plp' as const,
+  params: { categorySlug: 'living-room' },
+}
+
+const heroCategoryRoutes = [
+  { name: 'plp' as const, params: { categorySlug: 'sofas' } },
+  { name: 'plp' as const, params: { categorySlug: 'bedroom' } },
+  { name: 'plp' as const, params: { categorySlug: 'beds' } },
+]
+
+const collectionCategoryRoutes = [
+  { name: 'plp' as const, params: { categorySlug: 'sofas' } },
+  { name: 'plp' as const, params: { categorySlug: 'bedroom' } },
+  { name: 'plp' as const, params: { categorySlug: 'beds' } },
+]
+
+const recommendationCategoryRoutes = [
+  { name: 'plp' as const, params: { categorySlug: 'living-room' } },
+  { name: 'plp' as const, params: { categorySlug: 'bedroom' } },
+  { name: 'plp' as const, params: { categorySlug: 'lighting' } },
+  { name: 'plp' as const, params: { categorySlug: 'living-room' } },
+  { name: 'plp' as const, params: { categorySlug: 'living-room' } },
+  { name: 'plp' as const, params: { categorySlug: 'bedroom' } },
+  { name: 'plp' as const, params: { categorySlug: 'lighting' } },
+  { name: 'plp' as const, params: { categorySlug: 'living-room' } },
+]
+
+const bestSetCategoryRoutes = [
+  { name: 'plp' as const, params: { categorySlug: 'living-room' } },
+  { name: 'plp' as const, params: { categorySlug: 'bedroom' } },
+  { name: 'plp' as const, params: { categorySlug: 'lighting' } },
+  { name: 'plp' as const, params: { categorySlug: 'living-room' } },
+  { name: 'plp' as const, params: { categorySlug: 'living-room' } },
+  { name: 'plp' as const, params: { categorySlug: 'bedroom' } },
+  { name: 'plp' as const, params: { categorySlug: 'lighting' } },
+  { name: 'plp' as const, params: { categorySlug: 'living-room' } },
+]
+
+const newArrivalCategoryRoutes = [
+  { name: 'plp' as const, params: { categorySlug: 'bedroom' } },
+  { name: 'plp' as const, params: { categorySlug: 'living-room' } },
+  { name: 'plp' as const, params: { categorySlug: 'lighting' } },
+  { name: 'plp' as const, params: { categorySlug: 'living-room' } },
+]
+
+function navigateToIndexedCategory(index: number, routes: typeof heroCategoryRoutes) {
+  return router.push(routes[index] ?? DEFAULT_PLP_ROUTE)
+}
+
+function handleCreateAccountClick() {
+  return router.push({ name: 'register' })
+}
+
+function handleCatalogueClick() {
+  return router.push(DEFAULT_PLP_ROUTE)
+}
 
 const promoItems = [
   {
@@ -247,13 +307,18 @@ const newArrivalItems = [
   <TopPromoBar />
   <DefaultTemplate>
     <main class="bg-surface-0 flex flex-col items-center gap-12 w-full mb-12">
-      <HomeHero :items="promoItems" />
+      <HomeHero
+        :items="promoItems"
+        @primary-click="handleCreateAccountClick"
+        @secondary-click="handleCatalogueClick"
+        @select-item="(index) => navigateToIndexedCategory(index, heroCategoryRoutes)"
+      />
       <div class="flex flex-col items-center w-[75%] gap-12">
         <div class="mx-auto w-full h-250">
           <HomeCollectionCta
             :title="t('homePage.collectionsTitle')"
             :items="collectionItems"
-            @select-item="(index) => console.log('Selected item index:', index)"
+            @select-item="(index) => navigateToIndexedCategory(index, collectionCategoryRoutes)"
           />
         </div>
         <div>
@@ -267,7 +332,9 @@ const newArrivalItems = [
             :show-navigators="true"
             :responsive-options="sectionResponsiveOptions"
             content-class="px-3"
-            @select-item="({ index }) => console.log('Recommendation item index:', index)"
+            @select-item="
+              ({ index }) => navigateToIndexedCategory(index, recommendationCategoryRoutes)
+            "
             circular
           >
             <template #default="{ item, select }">
@@ -286,7 +353,7 @@ const newArrivalItems = [
             :show-navigators="true"
             :responsive-options="sectionResponsiveOptions"
             content-class="px-3"
-            @select-item="({ index }) => console.log('Best set item index:', index)"
+            @select-item="({ index }) => navigateToIndexedCategory(index, bestSetCategoryRoutes)"
             circular
           >
             <template #default="{ item, select }">
@@ -298,7 +365,7 @@ const newArrivalItems = [
           <NewArrivalGrid
             :title="t('homePage.newArrivalsTitle')"
             :items="newArrivalItems"
-            @select-item="(index) => console.log('New arrival item index:', index)"
+            @select-item="(index) => navigateToIndexedCategory(index, newArrivalCategoryRoutes)"
           />
         </div>
       </div>

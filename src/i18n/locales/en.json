@@ -33,11 +33,19 @@
     "cartAriaLabel": "Cart",
     "favoritesAriaLabel": "Favorites",
     "languageAriaLabel": "Switch language",
+    "categoryMenuAriaLabel": "Browse categories",
+    "categoryMenuTitle": "Browse categories",
+    "categoryMenuLoading": "Loading categories...",
+    "categoryMenuError": "We could not load categories right now.",
+    "categoryMenuRetry": "Try again",
+    "categoryMenuEmpty": "No categories are available right now.",
+    "categoryMenuBrowseAll": "Browse all {category}",
     "navAriaLabel": "Main navigation",
     "nav": {
       "products": "Products",
       "rooms": "Rooms",
-      "design": "Design"
+      "design": "Design",
+      "categories": "Categories"
     }
   },
   "hamburgerMenu": {
