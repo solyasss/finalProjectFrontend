@@ -33,11 +33,19 @@
     "cartAriaLabel": "Кошик",
     "favoritesAriaLabel": "Обране",
     "languageAriaLabel": "Змінити мову",
+    "categoryMenuAriaLabel": "Переглянути категорії",
+    "categoryMenuTitle": "Категорії",
+    "categoryMenuLoading": "Завантажуємо категорії...",
+    "categoryMenuError": "Зараз не вдалося завантажити категорії.",
+    "categoryMenuRetry": "Спробувати ще раз",
+    "categoryMenuEmpty": "Зараз категорії недоступні.",
+    "categoryMenuBrowseAll": "Переглянути все в категорії {category}",
     "navAriaLabel": "Основна навігація",
     "nav": {
       "products": "Товари",
       "rooms": "Кімнати",
-      "design": "Дизайн"
+      "design": "Дизайн",
+      "categories": "Категорії"
     }
   },
   "hamburgerMenu": {

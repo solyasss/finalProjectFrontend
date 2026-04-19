@@ -201,11 +201,20 @@ export interface ProductBreadcrumbItem {
 
 // Catalog
 export interface Category {
-  categoryId: string
-  slug: string
+  id: number
   name: string
-  parentId?: string | null
+  slug: string
+  description: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+  deletedAt?: string | null
+  imageUrl?: string | null
+  sortOrder: number
+  children?: Category[] | null
 }
+
+export interface CategoryTreeNode extends Category {}
 
 export interface FilterOption {
   value: string
@@ -337,7 +346,7 @@ export interface QuestionItem {
 
 // Responses
 export interface CategoriesResponse {
-  categories: Category[]
+  categories: CategoryTreeNode[]
 }
 
 export interface ProductListResponse {

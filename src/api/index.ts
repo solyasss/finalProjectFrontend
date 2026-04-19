@@ -79,6 +79,7 @@ export type {
   ProductBreadcrumbItem,
   // Catalog
   Category,
+  CategoryTreeNode,
   FilterOption,
   FilterRange,
   FilterType,
