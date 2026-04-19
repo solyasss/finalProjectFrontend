@@ -15,7 +15,6 @@ const app = createApp(App)
 const pinia = createPinia()
 
 app.use(pinia)
-app.use(router)
 app.use(i18n)
 app.use(PrimeVue, {
   theme: {
@@ -38,5 +37,8 @@ setUnauthorizedHandler(() => {
 // Restore session
 const authStore = useAuthStore()
 await authStore.initialize()
+
+app.use(router)
+await router.isReady()
 
 app.mount('#app')

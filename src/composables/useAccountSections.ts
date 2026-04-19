@@ -1,44 +1,24 @@
-import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
-
-export type AccountSection = 'accountDetails' | 'dataPrivacy'
-export type AccountNavAction = 'route' | 'section'
-
-export interface AccountNavItem {
-  id: 'purchases' | 'accountDetails' | 'dataPrivacy'
-  label: string
-  action: AccountNavAction
-  routeName?: 'orders'
-  section?: AccountSection
-}
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  ACCOUNT_DEFAULT_SECTION,
+  isAccountSection,
+  useAccountNavigation,
+  type AccountNavItem,
+  type AccountSection,
+} from './useAccountNavigation'
 
 export function useAccountSections() {
-  const { t } = useI18n()
+  const route = useRoute()
   const router = useRouter()
-  const activeSection = ref<AccountSection>('accountDetails')
+  const { items } = useAccountNavigation()
 
-  const items = computed<AccountNavItem[]>(() => [
-    // TODO: consider refactoring to constant config
-    {
-      id: 'purchases',
-      label: t('accountPage.navPurchases'),
-      action: 'route',
-      routeName: 'orders',
-    },
-    {
-      id: 'accountDetails',
-      label: t('accountPage.navAccountDetails'),
-      action: 'section',
-      section: 'accountDetails',
-    },
-    {
-      id: 'dataPrivacy',
-      label: t('accountPage.navDataPrivacy'),
-      action: 'section',
-      section: 'dataPrivacy',
-    },
-  ])
+  const activeSection = computed<AccountSection>(() => {
+    const section = route.query.section
+    return typeof section === 'string' && isAccountSection(section)
+      ? section
+      : ACCOUNT_DEFAULT_SECTION
+  })
 
   const activeNavItemId = computed(() =>
     activeSection.value === 'accountDetails' ? 'accountDetails' : 'dataPrivacy',
@@ -57,7 +37,18 @@ export function useAccountSections() {
     }
 
     if (item.section) {
-      activeSection.value = item.section
+      const nextQuery = { ...route.query }
+
+      if (item.section === ACCOUNT_DEFAULT_SECTION) {
+        delete nextQuery.section
+      } else {
+        nextQuery.section = item.section
+      }
+
+      await router.replace({
+        name: 'account',
+        query: nextQuery,
+      })
     }
   }
 

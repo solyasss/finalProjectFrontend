@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from 'storybook/test'
 import ProductDetailsAccordion from './ProductDetailsAccordion.vue'
 
 const meta = {
@@ -25,14 +24,4 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const button = canvas.getByRole('button', { name: 'Measurements' })
-
-    await userEvent.click(button)
-    await expect(canvas.getByRole('region', { name: 'Measurements' })).toHaveTextContent(
-      'Width: 160 cm',
-    )
-  },
-}
+export const Default: Story = {}

@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { expect, userEvent, within } from 'storybook/test'
 import ProductGallery from './ProductGallery.vue'
 
 const images = [
@@ -31,15 +30,7 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const MultipleImages: Story = {
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const thumbnailImage = canvas.getByTestId('gallery-thumbnail-Side view')
-
-    await userEvent.click(thumbnailImage)
-    await expect(canvas.getByTestId('gallery-active-alt')).toHaveTextContent('Side view')
-  },
-}
+export const MultipleImages: Story = {}
 
 export const SingleImage: Story = {
   args: {

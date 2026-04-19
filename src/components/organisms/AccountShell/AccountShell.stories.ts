@@ -18,9 +18,16 @@ const meta: Meta<typeof AccountShell> = {
         id: 'accountDetails',
         label: 'Account details',
         action: 'section',
+        routeName: 'account',
         section: 'accountDetails',
       },
-      { id: 'dataPrivacy', label: 'Data and privacy', action: 'section', section: 'dataPrivacy' },
+      {
+        id: 'dataPrivacy',
+        label: 'Data and privacy',
+        action: 'section',
+        routeName: 'account',
+        section: 'dataPrivacy',
+      },
     ],
   },
 }
@@ -33,7 +40,7 @@ function renderShell(args: Record<string, unknown>) {
   return {
     components: { AccountShell, AccountDeferredPanel },
     setup() {
-      const activeItemId = ref(args.activeItemId as 'accountDetails' | 'dataPrivacy')
+      const activeItemId = ref(args.activeItemId as 'purchases' | 'accountDetails' | 'dataPrivacy')
 
       function handleSelect(nextId: 'purchases' | 'accountDetails' | 'dataPrivacy') {
         if (nextId === 'purchases') {

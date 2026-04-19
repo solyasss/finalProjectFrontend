@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite'
 
-import { fn } from 'storybook/test'
-
 import MyHeader from './Header.vue'
 
 const meta = {
@@ -21,11 +19,6 @@ const meta = {
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
     layout: 'fullscreen',
-  },
-  args: {
-    onLogin: fn(),
-    onLogout: fn(),
-    onCreateAccount: fn(),
   },
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],

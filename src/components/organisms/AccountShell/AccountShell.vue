@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import AccountSidebarNav from '@/components/organisms/AccountSidebarNav/AccountSidebarNav.vue'
-import type { AccountNavItem } from '@/composables/useAccountSections'
+import type { AccountNavItem } from '@/composables/useAccountNavigation'
 
 interface Props {
   eyebrow: string
