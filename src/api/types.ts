@@ -218,7 +218,7 @@ export interface Category {
   children?: Category[] | null
 }
 
-export interface CategoryTreeNode extends Category {}
+export type CategoryTreeNode = Category
 
 export interface FilterOption {
   value: string
@@ -479,12 +479,12 @@ export interface GetCategoryProductsParams {
 
 export interface GetProductParams {
   variantId?: string
-  zipCode?: string
+  cityId?: string
 }
 
 export interface GetProductAvailabilityParams {
   variantId?: string
-  zipCode?: string
+  cityId?: string
 }
 
 export interface GetProductQuestionsParams {

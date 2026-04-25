@@ -23,10 +23,7 @@ export function updateProfile(body: UpdateProfileRequest): Promise<ApiResult<MeR
   })
 }
 
-// TODO: `openapi.json` currently documents `/users/me` delete, but does not define a
-// password-confirmation request body. The frontend still requires password confirmation.
-// Keep the UX for now and align the final contract with the backend team before removing it.
-export async function deleteAccount(_body: { password: string }): Promise<ApiResult<void>> {
+export async function deleteAccount(): Promise<ApiResult<void>> {
   const result = await request<unknown>('/users/me', {
     method: 'DELETE',
     auth: true,
@@ -43,7 +40,7 @@ export async function deleteAccount(_body: { password: string }): Promise<ApiRes
 // TODO: no dedicated location endpoint in the current API spec.
 // When the backend exposes it, replace this stub with the real request.
 export function updateLocation(_payload: {
-  zipCode?: string
+  cityId?: string
   storeId?: string
 }): Promise<ApiResult<void>> {
   return Promise.resolve({ ok: true, data: undefined })

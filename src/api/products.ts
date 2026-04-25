@@ -19,7 +19,7 @@ export function getProduct(
   params?: GetProductParams,
 ): Promise<ApiResult<ProductDetailsResponse>> {
   return request(`/products/${productSlug}`, {
-    query: { variantId: params?.variantId, zipCode: params?.zipCode },
+    query: { variantId: params?.variantId, cityId: params?.cityId },
   })
 }
 
@@ -28,7 +28,7 @@ export function getProductAvailability(
   params?: GetProductAvailabilityParams,
 ): Promise<ApiResult<ProductAvailabilityResponse>> {
   return request(`/products/${productId}/availability`, {
-    query: { variantId: params?.variantId, zipCode: params?.zipCode },
+    query: { variantId: params?.variantId, cityId: params?.cityId },
   })
 }
 

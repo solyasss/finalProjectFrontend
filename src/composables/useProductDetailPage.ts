@@ -216,7 +216,7 @@ export function useProductDetailPage() {
     const variant = route.query.variant
     return typeof variant === 'string' ? variant : ''
   })
-  const zipCode = computed(() => locationStore.getContext().zipCode)
+  const cityId = computed(() => locationStore.getContext().cityId)
 
   const selectedVariant = computed(() => {
     return (
@@ -286,13 +286,13 @@ export function useProductDetailPage() {
   }
 
   async function loadAvailability(productId: string, variantId: string) {
-    // Loads fulfillment data after initial PDP load and whenever variant or ZIP changes.
+    // Loads fulfillment data after initial PDP load and whenever variant or city changes.
     loadingAvailability.value = true
     availabilityError.value = null
 
     const result = await getProductAvailability(productId, {
       variantId,
-      zipCode: zipCode.value,
+      cityId: cityId.value,
     })
 
     loadingAvailability.value = false
@@ -556,7 +556,7 @@ export function useProductDetailPage() {
     applySelectedVariant(nextVariant, false)
   })
 
-  watch(zipCode, () => {
+  watch(cityId, () => {
     // Refresh fulfillment messaging when the shopper changes delivery location.
     if (!product.value || !selectedVariant.value) {
       return

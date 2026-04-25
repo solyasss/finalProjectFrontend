@@ -46,10 +46,6 @@ export function useLocationPicker() {
       return getCityLabel(selectedCity.value, currentLocale.value)
     }
 
-    if (locationStore.zipCode) {
-      return locationStore.zipCode
-    }
-
     return t('header.locationFallback')
   })
 
@@ -147,7 +143,7 @@ export function useLocationPicker() {
       return
     }
 
-    // If the authenticated user has a city on their profile, try to match it first
+    // TODO: Keep original profile-city fallback until `/auth/me` response is finalized for the new contract.
     const userCity = authStore.user?.address?.city
     if (userCity) {
       const matchedId = matchCityFromString(userCity)
@@ -155,7 +151,6 @@ export function useLocationPicker() {
         selectCity(matchedId, 'auto')
         return
       }
-      // City from profile doesn't match any known Ukrainian city — fall through to geo-detection
     }
 
     const permissionsApi = globalThis.navigator?.permissions

@@ -14,11 +14,13 @@ const {
   successMessage,
   submitting,
   markTouched,
-  submitChangePassword,
+  // submitChangePassword,
 } = useChangePasswordForm()
 
+// TODO: Re-enable password updates when the new API exposes a supported endpoint.
 async function handleSubmit() {
-  await submitChangePassword()
+  // await submitChangePassword()
+  return
 }
 </script>
 
@@ -30,6 +32,8 @@ async function handleSubmit() {
       :success-message="successMessage"
       :error-message="formError"
     >
+      <p class="text-sm leading-6 text-muted-color">Available in a future release.</p>
+
       <div class="grid gap-5">
         <div>
           <label for="account-current-password" class="mb-2 block text-sm font-bold text-color">
@@ -43,6 +47,7 @@ async function handleSubmit() {
             :feedback="false"
             autocomplete="current-password"
             :invalid="Boolean(fieldErrors.currentPassword)"
+            disabled
             @blur="markTouched('currentPassword')"
           />
           <Message
@@ -67,6 +72,7 @@ async function handleSubmit() {
             :feedback="false"
             autocomplete="new-password"
             :invalid="Boolean(fieldErrors.newPassword)"
+            disabled
             @blur="markTouched('newPassword')"
           />
           <Message v-if="fieldErrors.newPassword" severity="error" size="small" variant="simple">
@@ -86,6 +92,7 @@ async function handleSubmit() {
             :feedback="false"
             autocomplete="new-password"
             :invalid="Boolean(fieldErrors.confirmPassword)"
+            disabled
             @blur="markTouched('confirmPassword')"
           />
           <Message
@@ -104,6 +111,7 @@ async function handleSubmit() {
           type="submit"
           :loading="submitting"
           :label="submitting ? t('common.submitting') : t('accountPage.cardSave')"
+          disabled
         />
       </template>
     </AccountInfoCard>

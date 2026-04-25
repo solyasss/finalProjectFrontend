@@ -106,6 +106,7 @@ const dateOfBirthValue = computed<Date | null>({
           <label for="account-date-of-birth" class="mb-2 block text-sm font-bold text-color">
             {{ t('accountPage.fields.dateOfBirth') }}
           </label>
+          <!-- TODO: Re-enable date of birth editing when `/users/me` supports it in the new API contract. -->
           <DatePicker
             input-id="account-date-of-birth"
             v-model="dateOfBirthValue"
@@ -115,8 +116,10 @@ const dateOfBirthValue = computed<Date | null>({
             :manual-input="false"
             :max-date="new Date()"
             :invalid="Boolean(fieldErrors.dateOfBirth)"
+            disabled
             @blur="markTouched('dateOfBirth')"
           />
+          <p class="mt-2 text-sm leading-6 text-muted-color">Available in a future release.</p>
           <Message v-if="fieldErrors.dateOfBirth" severity="error" size="small" variant="simple">
             {{ fieldErrors.dateOfBirth }}
           </Message>
