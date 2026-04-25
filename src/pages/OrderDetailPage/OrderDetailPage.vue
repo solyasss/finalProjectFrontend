@@ -13,17 +13,7 @@ import { useOrderDetailPage } from '@/composables/useOrderDetailPage'
 const { t } = useI18n()
 const router = useRouter()
 const { items } = useAccountNavigation()
-const {
-  loading,
-  pageError,
-  trackingError,
-  order,
-  lines,
-  shippingAddress,
-  trackingStatus,
-  trackingSteps,
-  goBackToOrders,
-} = useOrderDetailPage()
+const { loading, pageError, order, lines, shippingAddress, goBackToOrders } = useOrderDetailPage()
 
 const pageTitle = computed(() =>
   order.value
@@ -85,9 +75,6 @@ async function handleNavSelect(itemId: 'purchases' | 'accountDetails' | 'dataPri
         :order="order"
         :lines="lines"
         :shipping-address="shippingAddress"
-        :tracking-status="trackingStatus"
-        :tracking-steps="trackingSteps"
-        :tracking-error="trackingError"
         @back="goBackToOrders"
       />
     </AccountShell>

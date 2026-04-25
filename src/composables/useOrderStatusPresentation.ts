@@ -8,6 +8,8 @@ interface OrderStatusConfig {
 }
 
 const ORDER_STATUS_CONFIG: Record<OrderStatus, OrderStatusConfig> = {
+  PENDING: { severity: 'secondary' },
+  PAID: { severity: 'info' },
   PLACED: { severity: 'secondary' },
   PROCESSING: { severity: 'info' },
   SHIPPED: { severity: 'warn' },

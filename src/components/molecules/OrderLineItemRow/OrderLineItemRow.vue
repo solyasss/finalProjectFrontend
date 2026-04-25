@@ -18,8 +18,8 @@ const { t } = useI18n()
   >
     <div class="overflow-hidden rounded-lg bg-surface-100">
       <Image
-        :src="line.image.url"
-        :alt="line.image.alt"
+        :src="line.image?.url"
+        :alt="line.image?.alt ?? line.name"
         :pt="{
           root: { style: { display: 'block', width: '100%', height: '100%' } },
           image: {
