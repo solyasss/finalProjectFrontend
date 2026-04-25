@@ -1,6 +1,6 @@
 export { setAuthToken, setUnauthorizedHandler, setRefreshHandler } from './client'
 
-export { register, login, verifyEmail, resendVerification, refreshToken } from './auth'
+export { register, login, verifyEmail, resendVerification, refreshToken, logout } from './auth'
 
 export { getCategories, getCategoryProducts, compareProducts } from './catalog'
 

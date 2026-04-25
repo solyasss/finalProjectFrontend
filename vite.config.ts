@@ -17,6 +17,11 @@ export default defineConfig(({ command }) => ({
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
       },
+      '/backend': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/backend/, '/api'),
+      },
     },
   },
   resolve: {

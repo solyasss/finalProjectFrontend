@@ -86,6 +86,9 @@ export function useAccountProfileForm(options: AccountProfileFormOptions) {
         return source.trim() ? undefined : t('accountPage.errors.required')
       }
       case 'dateOfBirth':
+        // TODO: Frontend currently requires `dateOfBirth`, but the backend OpenAPI profile
+        // contract does not clearly guarantee it. Keep existing validation for now and align
+        // with the backend team before relaxing the field in account UX.
         if (!personalDraft.dateOfBirth.trim()) {
           return t('accountPage.errors.required')
         }

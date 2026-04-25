@@ -58,7 +58,7 @@ async function handleDeleteAccount() {
   if (result.ok) {
     successMessage.value = t('accountPage.deleteAccountSuccess')
     closeDialog()
-    authStore.logout()
+    await authStore.logout()
     await router.push({ name: 'home' })
     return
   }

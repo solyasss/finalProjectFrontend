@@ -1,6 +1,7 @@
 import type { ApiError, ApiResult } from './types'
 
-const BASE_URL = '/api/v1'
+const LEGACY_API_BASE_URL = '/api/v1'
+const NEW_API_BASE_URL = '/backend'
 
 // In-memory token
 let _token: string | null = null
@@ -29,6 +30,124 @@ export function setUnauthorizedHandler(handler: () => void): void {
 // Prevents multiple concurrent requests from each triggering a refresh race
 let _refreshPromise: Promise<boolean> | null = null
 
+type RawApiError = Partial<ApiError> & {
+  code?: string
+  message?: string
+  path?: string
+  timestamp?: string
+  error?: Partial<ApiError> & {
+    code?: string
+    message?: string
+    path?: string
+    timestamp?: string
+  }
+  success?: boolean
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function normalizeErrorCode(rawCode: unknown, status: number): ApiError['code'] {
+  if (typeof rawCode === 'string') {
+    switch (rawCode) {
+      case 'VALIDATION_ERROR':
+      case 'NOT_FOUND':
+      case 'UNAUTHORIZED':
+      case 'FORBIDDEN':
+      case 'CONFLICT':
+      case 'RATE_LIMITED':
+      case 'INTERNAL_ERROR':
+        return rawCode
+      case 'ERR_400':
+      case 'ERR_422':
+        return 'VALIDATION_ERROR'
+      case 'ERR_401':
+        return 'UNAUTHORIZED'
+      case 'ERR_403':
+        return 'FORBIDDEN'
+      case 'ERR_404':
+        return 'NOT_FOUND'
+      case 'ERR_409':
+        return 'CONFLICT'
+      case 'ERR_429':
+        return 'RATE_LIMITED'
+      default:
+        break
+    }
+  }
+
+  switch (status) {
+    case 400:
+    case 422:
+      return 'VALIDATION_ERROR'
+    case 401:
+      return 'UNAUTHORIZED'
+    case 403:
+      return 'FORBIDDEN'
+    case 404:
+      return 'NOT_FOUND'
+    case 409:
+      return 'CONFLICT'
+    case 429:
+      return 'RATE_LIMITED'
+    default:
+      return 'INTERNAL_ERROR'
+  }
+}
+
+function extractApiError(body: unknown, status: number): ApiError {
+  // TODO: When moved to new API, rework
+  const payload = isRecord(body) ? (body as RawApiError) : null
+  const nestedError = payload && isRecord(payload.error) ? payload.error : null
+
+  const rawCode =
+    typeof nestedError?.code === 'string'
+      ? nestedError.code
+      : typeof payload?.code === 'string'
+        ? payload.code
+        : null
+
+  const message =
+    typeof nestedError?.message === 'string'
+      ? nestedError.message
+      : typeof payload?.message === 'string'
+        ? payload.message
+        : 'An unexpected error occurred'
+
+  const fieldsSource = nestedError?.fields ?? payload?.fields
+  const fields = isRecord(fieldsSource)
+    ? Object.fromEntries(
+        Object.entries(fieldsSource).filter(([, value]) => typeof value === 'string') as Array<
+          [string, string]
+        >,
+      )
+    : null
+
+  const path =
+    typeof nestedError?.path === 'string'
+      ? nestedError.path
+      : typeof payload?.path === 'string'
+        ? payload.path
+        : null
+
+  const timestamp =
+    typeof nestedError?.timestamp === 'string'
+      ? nestedError.timestamp
+      : typeof payload?.timestamp === 'string'
+        ? payload.timestamp
+        : null
+
+  return {
+    code: normalizeErrorCode(rawCode, status),
+    rawCode,
+    message,
+    path,
+    timestamp,
+    fields,
+  }
+}
+
 function buildQueryString(params: Record<string, string | number | boolean | undefined>): string {
   const sp = new URLSearchParams()
   for (const [key, value] of Object.entries(params)) {
@@ -55,10 +174,24 @@ async function parseResponse<T>(response: Response): Promise<ApiResult<T>> {
     return { ok: true, data: undefined as T }
   }
 
+  const contentLength = response.headers.get('content-length')
+  if (contentLength === '0') {
+    return response.ok
+      ? { ok: true, data: undefined as T }
+      : {
+          ok: false,
+          error: { code: 'INTERNAL_ERROR', message: 'Unexpected empty error response from server' },
+        }
+  }
+
   let body: unknown
   try {
     body = await response.json()
   } catch {
+    if (response.ok) {
+      return { ok: true, data: undefined as T }
+    }
+
     return {
       ok: false,
       error: { code: 'INTERNAL_ERROR', message: 'Invalid response from server' },
@@ -69,14 +202,9 @@ async function parseResponse<T>(response: Response): Promise<ApiResult<T>> {
     return { ok: true, data: body as T }
   }
 
-  const err = body as Partial<ApiError>
   return {
     ok: false,
-    error: {
-      code: err.code ?? 'INTERNAL_ERROR',
-      message: err.message ?? 'An unexpected error occurred',
-      fields: err.fields ?? null,
-    },
+    error: extractApiError(body, response.status),
   }
 }
 
@@ -84,6 +212,7 @@ export interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   body?: unknown
   query?: Record<string, string | number | boolean | undefined>
+  baseUrl?: 'legacy' | 'root'
   // Whether to attach the Authorization header for this request
   auth?: boolean
   // Whether a 401 should trigger the global unauthorized redirect handler
@@ -109,14 +238,30 @@ async function executeRequest(
   }
 }
 
+function getRequestUrl(
+  path: string,
+  query: Record<string, string | number | boolean | undefined> | undefined,
+  baseUrl: RequestOptions['baseUrl'],
+): string {
+  const qs = query ? buildQueryString(query) : ''
+  const resolvedBaseUrl = baseUrl === 'root' ? NEW_API_BASE_URL : LEGACY_API_BASE_URL
+  return `${resolvedBaseUrl}${path}${qs}`
+}
+
 export async function request<T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<ApiResult<T>> {
-  const { method = 'GET', body, query, auth = false, notifyOnUnauthorized = true } = options
+  const {
+    method = 'GET',
+    body,
+    query,
+    baseUrl = 'legacy',
+    auth = false,
+    notifyOnUnauthorized = true,
+  } = options
 
-  const qs = query ? buildQueryString(query) : ''
-  const url = `${BASE_URL}${path}${qs}`
+  const url = getRequestUrl(path, query, baseUrl)
 
   const response = await executeRequest(url, method, buildHeaders(auth), body)
 
@@ -144,21 +289,15 @@ export async function request<T>(
     }
 
     // Refresh failed - session is gone
+    _token = null
     _onUnauthorized?.()
-    return {
-      ok: false,
-      error: { code: 'UNAUTHORIZED', message: 'Session expired - please log in again' },
-    }
+    return parseResponse<T>(response)
   }
 
-  if (response.status === 401) {
+  if (response.status === 401 && auth) {
     _token = null
     if (notifyOnUnauthorized) {
       _onUnauthorized?.()
-    }
-    return {
-      ok: false,
-      error: { code: 'UNAUTHORIZED', message: 'Session expired - please log in again' },
     }
   }
 
