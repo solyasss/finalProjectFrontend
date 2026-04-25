@@ -1,34 +1,32 @@
 import { request } from './client'
-import type {
-  ApiResult,
-  Cart,
-  AddCartLineRequest,
-  UpdateCartLineRequest,
-  ValidateFulfillmentRequest,
-  ValidateFulfillmentResponse,
-} from './types'
+import type { ApiResult, Cart, AddCartLineRequest } from './types'
+
+async function requestCart(path: string, options: Parameters<typeof request<Cart>>[1] = {}) {
+  return request<Cart>(path, {
+    ...options,
+    auth: true,
+    baseUrl: 'root',
+  })
+}
 
 export function getCart(): Promise<ApiResult<Cart>> {
-  return request('/cart', { auth: true })
+  return requestCart('/sales/carts/my')
 }
 
 export function addCartLine(body: AddCartLineRequest): Promise<ApiResult<Cart>> {
-  return request('/cart/lines', { method: 'POST', body, auth: true })
+  return requestCart('/sales/carts/my/items', { method: 'POST', body })
 }
 
-export function updateCartLine(
-  lineId: string,
-  body: UpdateCartLineRequest,
-): Promise<ApiResult<Cart>> {
-  return request(`/cart/lines/${lineId}`, { method: 'PATCH', body, auth: true })
+export function updateCartLine(itemId: number, quantity: number): Promise<ApiResult<Cart>> {
+  return requestCart(`/sales/carts/my/items/${itemId}`, {
+    method: 'PATCH',
+    body: { quantity },
+  })
 }
 
-export function removeCartLine(lineId: string): Promise<ApiResult<Cart>> {
-  return request(`/cart/lines/${lineId}`, { method: 'DELETE', auth: true })
+export function removeCartLine(itemId: number): Promise<ApiResult<Cart>> {
+  return requestCart(`/sales/carts/my/items/${itemId}`, { method: 'DELETE' })
 }
 
-export function validateCartFulfillment(
-  body: ValidateFulfillmentRequest,
-): Promise<ApiResult<ValidateFulfillmentResponse>> {
-  return request('/cart/validate-fulfillment', { method: 'POST', body, auth: true })
-}
+// TODO: Restore fulfillment validation when the backend documents it in OpenAPI.
+// export function validateCartFulfillment() {}
