@@ -15,7 +15,7 @@ const router = createRouter({
       component: () => import('@/pages/ProductListingPage/ProductListingPage.vue'),
     },
     {
-      path: '/p/:productSlug',
+      path: '/p/:productId',
       name: 'pdp',
       component: () => import('@/pages/ProductDetailPage/ProductDetailPage.vue'),
     },
