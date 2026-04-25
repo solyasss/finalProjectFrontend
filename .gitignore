@@ -42,13 +42,3 @@ __screenshots__/
 .vscode/
 *storybook.log
 storybook-static
-vault/
-.opencode/
-openapi.yaml
-openapi.json
-opencode.jsonc
-scalar-ui.html
-.agents
-*.py
-__pycache__/
-skills-lock.json
