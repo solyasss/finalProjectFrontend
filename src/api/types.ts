@@ -118,26 +118,28 @@ export interface VariantPreview {
 }
 
 export interface ProductCard {
-  productId: string
-  slug: string
+  id: number
   name: string
-  shortDescription?: string | null
-  heroImage: ImageAsset
-  price: Money
-  previousPrice?: Money | null
-  badges: Badge[]
-  rating?: RatingSummary | null
-  variantPreview?: VariantPreview | null
+  slug: string
+  description?: string | null
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+  deletedAt?: string | null
+  baseImageUrl: string | null
+  ratingAverage?: number | null
+  ratingCount?: number | null
 }
 
 export interface ProductVariant {
-  variantId: string
+  id: string
   sku: string
-  name: string
-  attributes: Record<string, string>
-  images: ImageAsset[]
-  price: Money
-  previousPrice?: Money | null
+  color?: string | null
+  price: string
+  stock: number
+  images: string[]
+  createdAt: string
+  updatedAt: string
 }
 
 export type VariantAttributePresentation = 'swatch' | 'text'
@@ -172,6 +174,9 @@ export interface ProductDocument {
   url: string
 }
 
+// TODO: Fulfillment/delivery options are not supported by the backend API yet.
+// To enable once backend supports it.
+// These types are retained for UI components that will be wired up when backend is ready.
 export type FulfillmentType = 'DELIVERY' | 'CLICK_AND_COLLECT' | 'STORE_PICKUP'
 
 export interface FulfillmentOption {
@@ -183,19 +188,19 @@ export interface FulfillmentOption {
 }
 
 export interface ProductDetails {
-  productId: string
-  slug: string
+  id: number
   name: string
+  slug: string
   description: string
-  series?: string | null
-  badges: Badge[]
-  rating?: RatingSummary | null
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+  deletedAt?: string | null
+  baseImageUrl: string | null
   variants: ProductVariant[]
-  selectedVariantId: string
-  variantAttributes?: ProductVariantAttributeGroup[] | null
-  detailsSections: DetailsSection[]
-  documents: ProductDocument[]
-  fulfillment: FulfillmentOption[]
+  ratingAverage?: number | null
+  ratingCount?: number | null
+  categories: Category[]
 }
 
 export interface ProductBreadcrumbItem {
@@ -243,29 +248,48 @@ export interface FilterDefinition {
 }
 
 // Cart
-export interface CartLine {
-  lineId: string
-  productId: string
-  variantId: string
+export interface CartItemProduct {
+  id: number
   name: string
-  image: ImageAsset
-  unitPrice: Money
+  slug: string
+  description?: string
+  isActive: boolean
+  baseImageUrl: string | null
+}
+
+export interface CartItemVariant {
+  id: string
+  sku: string
+  color?: string
+  price: string
+  stock: number
+  images: string[]
+  product: CartItemProduct
+}
+
+export interface CartItem {
+  id: number
   quantity: number
-  maxQuantity: number
-  lineTotal: Money
+  variant: CartItemVariant
+  variantId: string
+  dynamicPrice: number
+  basePrice: number
+  discountAmount: number
+  appliedPromotionId: number | null
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Cart {
-  cartId: string
-  lines: CartLine[]
-  subtotal: Money
-  discountTotal: Money
-  grandTotal: Money
-  itemCount: number
+  id: number
+  userId: number
+  items: CartItem[]
+  createdAt: string
+  updatedAt: string
+  deletedAt: string | null
 }
 
 export interface AddCartLineRequest {
-  productId: string
   variantId: string
   quantity: number
 }
@@ -274,25 +298,12 @@ export interface UpdateCartLineRequest {
   quantity: number
 }
 
-export interface ValidateFulfillmentLineRequest {
-  lineId: string
-  mode: FulfillmentType
-}
-
-export interface ValidateFulfillmentRequest {
-  lines: ValidateFulfillmentLineRequest[]
-}
-
-export interface ValidateFulfillmentIssue {
-  lineId: string
-  code: string
-  message: string
-}
-
-export interface ValidateFulfillmentResponse {
-  valid: boolean
-  issues: ValidateFulfillmentIssue[]
-}
+// TODO: Fulfillment validation is not supported by the backend API yet.
+// To enable once backend supports it.
+// export interface ValidateFulfillmentLineRequest { ... }
+// export interface ValidateFulfillmentRequest { ... }
+// export interface ValidateFulfillmentIssue { ... }
+// export interface ValidateFulfillmentResponse { ... }
 
 // Wishlist
 export interface WishlistItem {
@@ -312,6 +323,8 @@ export interface AddWishlistItemRequest {
 
 // Orders
 export type OrderStatus =
+  | 'PENDING'
+  | 'PAID'
   | 'PLACED'
   | 'PROCESSING'
   | 'SHIPPED'
@@ -349,67 +362,93 @@ export interface QuestionItem {
 }
 
 // Responses
-export interface CategoriesResponse {
-  categories: CategoryTreeNode[]
+export type CategoriesResponse = CategoryTreeNode[]
+
+export interface ProductListMeta {
+  totalItems: number
+  itemsPerPage: number
+  currentPage: number
+  totalPages: number
 }
 
 export interface ProductListResponse {
-  category: Category
-  breadcrumbs: Category[]
-  filters: FilterDefinition[]
-  products: ProductCard[]
-  pagination: Pagination
+  data: ProductCard[]
+  meta: ProductListMeta
 }
 
-export interface ProductCompareResponse {
-  products: ProductDetails[]
-  compareAttributes: string[]
-}
+// TODO: Product compare is not supported by the backend API yet.
+// To enable once backend supports it.
+// export interface ProductCompareResponse {
+//   products: ProductDetails[]
+//   compareAttributes: string[]
+// }
 
-export interface ProductDetailsResponse {
-  product: ProductDetails
-  breadcrumbs?: ProductBreadcrumbItem[] | null
-  relatedProducts: ProductCard[]
-  accessories: ProductCard[]
-}
+// Backend returns the product object directly (not wrapped)
+export type ProductDetailsResponse = ProductDetails
 
-export interface ProductAvailabilityResponse {
-  productId: string
-  variantId?: string | null
-  options: FulfillmentOption[]
-}
+// TODO: Related products/accessories/breadcrumbs are not supported by the backend API yet.
+// To enable once backend supports it.
+// relatedProducts: ProductCard[]
+// accessories: ProductCard[]
+// breadcrumbs?: ProductBreadcrumbItem[] | null
 
+// TODO: Product availability is not supported by the backend API yet.
+// To enable once backend supports it.
+// export interface ProductAvailabilityResponse {
+//   productId: string
+//   variantId?: string | null
+//   options: FulfillmentOption[]
+// }
+
+// TODO: Review histogram is not supported by the backend API yet.
+// To enable once backend supports it.
+// Retained for ReviewSection UI component that will be wired up when backend is ready.
 export interface ReviewHistogramEntry {
   stars: number
   count: number
 }
 
 export interface ProductReview {
-  reviewId: string
+  id: number
   rating: number
-  title?: string | null
-  body: string
-  authorName: string
+  text: string
+  status: string
+  userId: number
+  productId: number
   createdAt: string
+  updatedAt: string
+  deletedAt: string | null
+  // legacy optional fields kept for UI compat
+  title?: string | null
+  authorName?: string
   verifiedPurchase?: boolean
 }
 
-export interface ProductReviewsSummaryResponse {
-  productId: string
-  summary: RatingSummary
-  histogram: ReviewHistogramEntry[]
+// TODO: Product reviews summary/histogram is not supported by the backend API yet.
+// To enable once backend supports it.
+// export interface ProductReviewsSummaryResponse {
+//   productId: string
+//   summary: RatingSummary
+//   histogram: ReviewHistogramEntry[]
+// }
+
+export interface ProductReviewListMeta {
+  totalItems: number
+  itemsPerPage: string | number
+  currentPage: string | number
+  totalPages: number
 }
 
 export interface ProductReviewListResponse {
-  productId: string
-  items: ProductReview[]
-  pagination: Pagination
+  data: ProductReview[]
+  meta: ProductReviewListMeta
 }
 
+// CreateReviewDto shape per OpenAPI: { rating, text, productId }
 export interface CreateProductReviewRequest {
   rating: number
-  title?: string
-  body: string
+  text: string
+  productId: number
 }
 
 export interface CreateProductReviewResponse {
@@ -417,10 +456,9 @@ export interface CreateProductReviewResponse {
   review: ProductReview
 }
 
-export interface ProductQuestionsResponse {
-  items: QuestionItem[]
-  pagination: Pagination
-}
+// TODO: Product Q&A is not supported by the backend API yet.
+// To enable once backend supports it.
+// export interface ProductQuestionsResponse { ... }
 
 export interface SearchResponse {
   query: string
@@ -446,10 +484,19 @@ export interface OrdersResponse {
   pagination: Pagination
 }
 
+export interface CartLine {
+  id: number
+  name: string
+  image: ImageAsset | null
+  quantity: number
+  unitPrice: Money
+  lineTotal: Money
+}
+
 export interface OrderDetailsResponse {
   order: OrderSummary
   lines: CartLine[]
-  shippingAddress?: Record<string, string> | null
+  shippingAddress?: string | null
 }
 
 export interface OrderTrackingResponse {
@@ -477,29 +524,23 @@ export interface GetCategoryProductsParams {
   filters?: ProductFilters
 }
 
-export interface GetProductParams {
-  variantId?: string
-  cityId?: string
-}
+// TODO: GetProductParams (variantId/cityId) not needed without availability support.
+// Keep for potential future use.
+// export interface GetProductParams { variantId?: string; cityId?: string }
 
-export interface GetProductAvailabilityParams {
-  variantId?: string
-  cityId?: string
-}
+// TODO: Product availability params — not supported by backend API yet.
+// export interface GetProductAvailabilityParams { variantId?: string; cityId?: string }
 
-export interface GetProductQuestionsParams {
-  page?: number
-  limit?: number
-}
+// TODO: Product Q&A params — not supported by backend API yet.
+// export interface GetProductQuestionsParams { page?: number; limit?: number }
 
 export interface GetProductReviewsParams {
   page?: number
   limit?: number
 }
 
-export interface CompareProductsParams {
-  productIds: string[]
-}
+// TODO: Product compare is not supported by the backend API yet.
+// export interface CompareProductsParams { productIds: string[] }
 
 export interface SearchParams {
   q: string

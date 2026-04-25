@@ -2,26 +2,21 @@ export { setAuthToken, setUnauthorizedHandler, setRefreshHandler } from './clien
 
 export { register, login, verifyEmail, resendVerification, refreshToken, logout } from './auth'
 
-export { getCategories, getCategoryProducts, compareProducts } from './catalog'
+export { getCategories, getCategoryProducts } from './catalog'
+// TODO: compareProducts is not supported by the backend API yet.
 
 export {
   getProduct,
-  getProductAvailability,
   createProductReview,
   getProductReviews,
-  getProductReviewsSummary,
-  getProductQuestions,
+  // TODO: getProductAvailability — not supported by backend API yet.
+  // TODO: getProductReviewsSummary — not supported by backend API yet.
+  // TODO: getProductQuestions — not supported by backend API yet.
 } from './products'
 
 export { search, searchSuggest } from './search'
 
-export {
-  getCart,
-  addCartLine,
-  updateCartLine,
-  removeCartLine,
-  validateCartFulfillment,
-} from './cart'
+export { getCart, addCartLine, updateCartLine, removeCartLine } from './cart'
 
 export { getWishlist, addWishlistItem, removeWishlistItem } from './wishlist'
 
@@ -33,7 +28,6 @@ export {
   updateLocation,
   getOrders,
   getOrder,
-  getOrderTracking,
 } from './account'
 
 export { getStore } from './store'
@@ -73,6 +67,7 @@ export type {
   DetailsSection,
   ProductDocumentType,
   ProductDocument,
+  // TODO: FulfillmentType, FulfillmentOption — backend not yet supporting fulfillment. UI components retain these types.
   FulfillmentType,
   FulfillmentOption,
   ProductDetails,
@@ -85,55 +80,50 @@ export type {
   FilterType,
   FilterDefinition,
   // Cart
-  CartLine,
+  CartItem,
+  CartItemVariant,
+  CartItemProduct,
   Cart,
   AddCartLineRequest,
   UpdateCartLineRequest,
-  ValidateFulfillmentLineRequest,
-  ValidateFulfillmentRequest,
-  ValidateFulfillmentIssue,
-  ValidateFulfillmentResponse,
   // Wishlist
   WishlistItem,
   AddWishlistItemRequest,
   // Orders
   OrderStatus,
   OrderSummary,
+  CartLine,
   OrderTrackingStep,
   // Store
   StoreHours,
-  QuestionItem,
+  // TODO: QuestionItem — not supported by backend API yet.
   // Response shapes
   CategoriesResponse,
   ProductListResponse,
-  ProductCompareResponse,
+  // TODO: ProductCompareResponse — not supported by backend API yet.
   ProductDetailsResponse,
-  ProductAvailabilityResponse,
+  // TODO: ProductAvailabilityResponse — not supported by backend API yet.
   ProductReview,
   ProductReviewListResponse,
+  // TODO: ReviewHistogramEntry — backend not yet supporting review histogram. UI component retains this type.
   ReviewHistogramEntry,
   CreateProductReviewRequest,
   CreateProductReviewResponse,
-  ProductReviewsSummaryResponse,
-  ProductQuestionsResponse,
+  // TODO: ProductReviewsSummaryResponse — not supported by backend API yet.
+  // TODO: ProductQuestionsResponse — not supported by backend API yet.
   SearchResponse,
   SearchSuggestResponse,
   WishlistResponse,
   OrdersResponse,
   OrderDetailsResponse,
-  OrderTrackingResponse,
   StoreDetailsResponse,
   // Query param types
   SortOption,
   ProductFilters,
   GetCategoryProductsParams,
-  GetProductParams,
-  GetProductAvailabilityParams,
   GetProductReviewsParams,
-  GetProductQuestionsParams,
-  CompareProductsParams,
+  // TODO: GetProductParams, GetProductAvailabilityParams, GetProductQuestionsParams, CompareProductsParams — not supported yet.
   SearchParams,
   SearchSuggestParams,
   GetWishlistParams,
-  GetOrdersParams,
 } from './types'
