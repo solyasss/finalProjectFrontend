@@ -108,7 +108,9 @@
   },
   "productCard": {
     "reviewCount": "({count} reviews)",
-    "variantCount": "{count} colours available"
+    "variantCount": "{count} colours available",
+    "noImage": "No image",
+    "priceAvailableInFutureRelease": "Price available in future release"
   },
   "plp": {
     "eyebrow": "Category",
@@ -280,10 +282,27 @@
       "generic": "Something went wrong. Please try again."
     }
   },
+  "cartPage": {
+    "eyebrow": "My basket",
+    "title": "Review your selected items",
+    "description": "Update quantities, remove products, and confirm your current basket totals.",
+    "loading": "Loading your basket...",
+    "error": "We could not load your basket right now.",
+    "empty": "Your basket is empty.",
+    "refresh": "Refresh basket",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "remove": "Remove",
+    "summaryTitle": "Order summary",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "total": "Total"
+  },
   "ordersPage": {
     "eyebrow": "My purchases",
     "title": "Order history",
-    "description": "Review past purchases, check delivery progress, and reopen order details whenever you need them.",
+    "description": "Review past purchases and reopen order details whenever you need them.",
     "loading": "Loading orders...",
     "error": "We could not load your orders right now.",
     "empty": "You haven't placed any orders yet.",
@@ -301,7 +320,7 @@
     "eyebrow": "My purchases",
     "title": "Order #{orderId}",
     "titleFallback": "Order details",
-    "description": "Review purchased items, shipping destination, and the latest delivery progress for this order.",
+    "description": "Review purchased items, shipping destination, and the current order status.",
     "loading": "Loading order...",
     "error": "We could not load this order right now.",
     "invalidOrder": "This order link is invalid.",
@@ -325,10 +344,13 @@
     "trackingLoading": "Loading tracking updates...",
     "trackingError": "Tracking details are temporarily unavailable. Please try again later.",
     "trackingUnavailable": "Tracking updates are not available for this order yet.",
+    "trackingFutureRelease": "Available in a future release.",
     "trackingUpdatedAt": "Updated {date}",
     "currentStatus": "Current status"
   },
   "orderStatus": {
+    "PENDING": "Pending",
+    "PAID": "Paid",
     "PLACED": "Order placed",
     "PROCESSING": "Processing",
     "SHIPPED": "Shipped",
@@ -343,7 +365,7 @@
     "loading": "Loading product details...",
     "error": "We could not load this product right now.",
     "detailsTitle": "Product details",
-    "detailsEmpty": "Product details are not available for this item yet.",
+    "detailsEmpty": "The seller hasn't provided any details for this product yet.",
     "documentsTitle": "Documents",
     "relatedProductsTitle": "Related products",
     "accessoriesTitle": "Complete the look",
@@ -352,6 +374,7 @@
     "reviewsLoading": "Loading reviews...",
     "reviewsError": "We could not load reviews right now.",
     "fulfillmentTitle": "How to get it",
+    "priceUnavailable": "Price unavailable",
     "availabilityLoading": "Refreshing availability...",
     "availabilityError": "We could not refresh fulfillment information right now.",
     "availabilityAvailable": "Available",
