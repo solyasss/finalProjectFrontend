@@ -3,23 +3,19 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import {
   createProductReview,
+  getCategoryProducts,
   getProduct,
-  getProductAvailability,
   getProductReviews,
-  getProductReviewsSummary,
   type CreateProductReviewRequest,
-  type FulfillmentOption,
   type Pagination,
-  type ProductBreadcrumbItem,
   type ProductCard,
   type ProductDetails,
   type ProductReview,
   type ProductVariant,
-  type RatingSummary,
-  type ReviewHistogramEntry,
-  type VariantAttributePresentation,
 } from '@/api'
-import { useAuthStore, useCartStore, useLocationStore } from '@/stores'
+import { useAuthStore, useCartStore } from '@/stores'
+
+export type VariantAttributePresentation = 'swatch' | 'text'
 
 export interface SelectorOption {
   value: string
@@ -52,7 +48,6 @@ export function clampQuantity(
   min = DEFAULT_MIN_QUANTITY,
   max = DEFAULT_MAX_QUANTITY,
 ) {
-  // Normalizes quantity before it is shown in controls or sent to cart actions.
   if (!Number.isFinite(next)) {
     return min
   }
@@ -65,22 +60,16 @@ function matchesSelections(
   selections: Record<string, string>,
   ignoredKey?: string,
 ) {
-  // Checks whether a variant is compatible with the current option choices when resolving a variant or disabling invalid options.
-  // Example: selections { color: 'Black', size: 'Standard' } only match a variant with both attributes.
   return Object.entries(selections).every(([key, value]) => {
-    if (!value || key === ignoredKey) {
-      return true
-    }
-
-    return variant.attributes[key] === value
+    if (!value || key === ignoredKey) return true
+    if (key === 'color') return (variant.color ?? undefined) === value
+    return false
   })
 }
 
 export function resolveInitialVariant(product: ProductDetails, preferredVariantId?: string | null) {
-  // Picks the first active PDP variant on initial load so price, gallery, selectors, and availability all render from the same variant.
-  // Order: query param variant -> first product variant.
   const variantFromQuery = preferredVariantId
-    ? product.variants.find((variant) => variant.variantId === preferredVariantId)
+    ? product.variants.find((variant) => variant.id === preferredVariantId)
     : null
 
   if (variantFromQuery) {
@@ -95,9 +84,6 @@ export function resolveVariantForSelections(
   selections: Record<string, string>,
   changedGroupKey?: string,
 ) {
-  // Resolves the next active variant from the current selections.
-  // If no exact match exists, it keeps the value from the group the shopper changed most recently and picks the closest valid variant.
-  // Example: if "Black / Large" does not exist after the shopper changes color, keep "Black" and choose the best matching available size.
   const exactMatch = product.variants.find((variant) => matchesSelections(variant, selections))
 
   if (exactMatch) {
@@ -110,13 +96,13 @@ export function resolveVariantForSelections(
 
   const changedValue = selections[changedGroupKey]
   const rankedCandidates = product.variants
-    .filter((variant) => variant.attributes[changedGroupKey] === changedValue)
+    .filter((variant) => (variant.color ?? undefined) === changedValue)
     .sort((left, right) => {
       const leftScore = Object.entries(selections).filter(
-        ([key, value]) => left.attributes[key] === value,
+        ([key, value]) => key === 'color' && (left.color ?? undefined) === value,
       ).length
       const rightScore = Object.entries(selections).filter(
-        ([key, value]) => right.attributes[key] === value,
+        ([key, value]) => key === 'color' && (right.color ?? undefined) === value,
       ).length
 
       return rightScore - leftScore
@@ -129,10 +115,8 @@ export function buildSelectorGroups(
   product: ProductDetails,
   selectedVariantId?: string | null,
 ): SelectorGroup[] {
-  // Builds the selector UI model from backend variant metadata and the current variant.
-  // It marks which options are selected and which combinations should be disabled before rendering VariantSelector components.
   const selectedVariant =
-    product.variants.find((variant) => variant.variantId === selectedVariantId) ??
+    product.variants.find((variant) => variant.id === selectedVariantId) ??
     product.variants[0] ??
     null
 
@@ -140,66 +124,53 @@ export function buildSelectorGroups(
     return []
   }
 
-  const selections = selectedVariant.attributes
-  return (product.variantAttributes ?? []).map((group) => {
-    const options = group.options.map((option) => ({
-      value: option.value,
-      label: option.label,
-      hex: option.hex,
-      image: option.image,
-      selected: selectedVariant.attributes[group.key] === option.value,
-      disabled: !product.variants.some(
-        (variant) =>
-          variant.attributes[group.key] === option.value &&
-          matchesSelections(variant, selections, group.key),
-      ),
-    }))
+  // Derive color selector from variants (only attribute returned by backend currently)
+  const uniqueColors = [
+    ...new Set(product.variants.filter((v) => v.color).map((v) => v.color as string)),
+  ]
 
-    return {
-      key: group.key,
-      label: group.label,
-      presentation: group.presentation,
-      selectedValue: selectedVariant.attributes[group.key],
-      options,
-    }
-  })
-}
+  if (!uniqueColors.length) {
+    return []
+  }
 
-export function normalizeReviewHistogram(histogram: ReviewHistogramEntry[] = []) {
-  return Array.from({ length: 5 }, (_, index) => {
-    const stars = 5 - index
-    const entry = histogram.find((item) => item.stars === stars)
+  const selections: Record<string, string> = selectedVariant.color
+    ? { color: selectedVariant.color }
+    : {}
 
-    return {
-      stars,
-      count: Math.max(0, entry?.count ?? 0),
-    }
-  })
+  return [
+    {
+      key: 'color',
+      label: 'Color',
+      presentation: 'swatch' as const,
+      selectedValue: selectedVariant.color ?? undefined,
+      options: uniqueColors.map((color) => ({
+        value: color,
+        label: color.charAt(0) + color.slice(1).toLowerCase(),
+        hex: null,
+        image: null,
+        selected: selectedVariant.color === color,
+        disabled: !product.variants.some(
+          (variant) => variant.color === color && matchesSelections(variant, selections, 'color'),
+        ),
+      })),
+    },
+  ]
 }
 
 export function useProductDetailPage() {
-  // Owns PDP route state, variant selection, availability refresh, and add-to-cart behavior.
   const { t } = useI18n()
   const route = useRoute()
   const router = useRouter()
   const authStore = useAuthStore()
   const cartStore = useCartStore()
-  const locationStore = useLocationStore()
 
   const loading = ref(false)
-  const loadingAvailability = ref(false)
   const addingToCart = ref(false)
   const error = ref<string | null>(null)
-  const availabilityError = ref<string | null>(null)
   const product = ref<ProductDetails | null>(null)
   const relatedProducts = ref<ProductCard[]>([])
-  const accessories = ref<ProductCard[]>([])
-  const breadcrumbs = ref<ProductBreadcrumbItem[]>([])
-  const reviewsSummary = ref<RatingSummary | null>(null)
-  const reviewHistogram = ref<ReviewHistogramEntry[]>([])
   const reviews = ref<ProductReview[]>([])
   const reviewsPagination = ref<Pagination | null>(null)
-  const availability = ref<FulfillmentOption[]>([])
   const quantity = ref(DEFAULT_MIN_QUANTITY)
   const selectedVariantId = ref('')
   const ctaMessage = ref<CtaMessage | null>(null)
@@ -209,20 +180,37 @@ export function useProductDetailPage() {
   const submitReviewError = ref<string | null>(null)
   const submitReviewSuccess = ref(false)
 
+  // TODO: availability state not supported by backend API yet.
+  // const loadingAvailability = ref(false)
+  // const availabilityError = ref<string | null>(null)
+  // const availability = ref<FulfillmentOption[]>([])
+
+  // TODO: related products/accessories not supported by backend API yet.
+  // const relatedProducts = ref<ProductCard[]>([])
+  // const accessories = ref<ProductCard[]>([])
+
+  // TODO: breadcrumbs not supported by backend API yet.
+  // const breadcrumbs = ref<ProductBreadcrumbItem[]>([])
+
+  // TODO: review summary/histogram not supported by backend API yet.
+  // const reviewsSummary = ref<RatingSummary | null>(null)
+  // const reviewHistogram = ref<ReviewHistogramEntry[]>([])
+
   const routeVariantSync = ref<string | null>(null)
 
-  const productSlug = computed(() => String(route.params.productSlug ?? ''))
+  const productId = computed(() => {
+    const raw = route.params.productId
+    const id = typeof raw === 'string' ? parseInt(raw, 10) : NaN
+    return Number.isFinite(id) ? id : null
+  })
+
   const queryVariantId = computed(() => {
     const variant = route.query.variant
     return typeof variant === 'string' ? variant : ''
   })
-  const cityId = computed(() => locationStore.getContext().cityId)
 
   const selectedVariant = computed(() => {
-    return (
-      product.value?.variants.find((variant) => variant.variantId === selectedVariantId.value) ??
-      null
-    )
+    return product.value?.variants.find((variant) => variant.id === selectedVariantId.value) ?? null
   })
 
   const selectorGroups = computed(() => {
@@ -233,6 +221,7 @@ export function useProductDetailPage() {
     return buildSelectorGroups(product.value, selectedVariantId.value)
   })
 
+  // Returns string[] — backend variant images are plain URLs
   const galleryImages = computed(() => selectedVariant.value?.images ?? [])
 
   const canAddToCart = computed(() => {
@@ -251,8 +240,6 @@ export function useProductDetailPage() {
   })
 
   function resetReviewState() {
-    reviewsSummary.value = null
-    reviewHistogram.value = []
     reviews.value = []
     reviewsPagination.value = null
     reviewsError.value = null
@@ -271,7 +258,6 @@ export function useProductDetailPage() {
   }
 
   async function syncVariantQuery(variantId: string) {
-    // Updates the route query after variant changes so the selected configuration is shareable.
     if (queryVariantId.value === variantId) {
       return
     }
@@ -285,54 +271,17 @@ export function useProductDetailPage() {
     })
   }
 
-  async function loadAvailability(productId: string, variantId: string) {
-    // Loads fulfillment data after initial PDP load and whenever variant or city changes.
-    loadingAvailability.value = true
-    availabilityError.value = null
+  // TODO: loadAvailability not supported by backend API yet.
+  // TODO: loadReviewsSummary not supported by backend API yet.
 
-    const result = await getProductAvailability(productId, {
-      variantId,
-      cityId: cityId.value,
-    })
-
-    loadingAvailability.value = false
-
-    if (!result.ok) {
-      availabilityError.value = result.error.message || t('pdp.availabilityError')
-      return
-    }
-
-    availability.value = result.data.options
-  }
-
-  async function loadReviewsSummary(productId: string) {
-    const result = await getProductReviewsSummary(productId)
-
-    if (!result.ok) {
-      reviewsError.value = result.error.message || t('pdp.reviewsError')
-      reviewsSummary.value = null
-      reviewHistogram.value = []
-      return false
-    }
-
-    reviewsSummary.value = result.data.summary
-    reviewHistogram.value = normalizeReviewHistogram(result.data.histogram)
-
-    if (product.value) {
-      product.value.rating = result.data.summary
-    }
-
-    return true
-  }
-
-  async function loadReviews(productId: string, page = 1) {
+  async function loadReviews(pid: number, page = 1) {
     loadingReviews.value = true
 
     if (page === 1) {
       reviewsError.value = null
     }
 
-    const result = await getProductReviews(productId, { page, limit: DEFAULT_REVIEWS_LIMIT })
+    const result = await getProductReviews(pid, { page, limit: DEFAULT_REVIEWS_LIMIT })
 
     loadingReviews.value = false
 
@@ -347,8 +296,12 @@ export function useProductDetailPage() {
       return false
     }
 
-    reviews.value = page === 1 ? result.data.items : [...reviews.value, ...result.data.items]
-    reviewsPagination.value = result.data.pagination
+    reviews.value = page === 1 ? result.data.data : [...reviews.value, ...result.data.data]
+    reviewsPagination.value = {
+      page: Number(result.data.meta.currentPage),
+      limit: Number(result.data.meta.itemsPerPage),
+      total: result.data.meta.totalItems,
+    }
     return true
   }
 
@@ -357,10 +310,10 @@ export function useProductDetailPage() {
       return false
     }
 
-    return loadReviews(product.value.productId, reviewsPagination.value.page + 1)
+    return loadReviews(product.value.id, reviewsPagination.value.page + 1)
   }
 
-  async function submitReview(payload: CreateProductReviewRequest) {
+  async function submitReview(payload: { rating: number; text: string }) {
     if (!product.value || submittingReview.value) {
       return false
     }
@@ -374,7 +327,7 @@ export function useProductDetailPage() {
     }
 
     submittingReview.value = true
-    const result = await createProductReview(product.value.productId, payload)
+    const result = await createProductReview({ ...payload, productId: product.value.id })
     submittingReview.value = false
 
     if (!result.ok) {
@@ -388,8 +341,7 @@ export function useProductDetailPage() {
     }
 
     submitReviewSuccess.value = true
-    await loadReviewsSummary(product.value.productId)
-    await loadReviews(product.value.productId, 1)
+    await loadReviews(product.value.id, 1)
     return true
   }
 
@@ -398,65 +350,58 @@ export function useProductDetailPage() {
   }
 
   async function applySelectedVariant(nextVariant: ProductVariant, syncRoute = true) {
-    // Applies a resolved variant, then refreshes URL and availability for that selection.
-    selectedVariantId.value = nextVariant.variantId
+    // TODO: loadAvailability call removed — not supported by backend yet.
+    selectedVariantId.value = nextVariant.id
     ctaMessage.value = null
     quantity.value = clampQuantity(quantity.value)
 
     if (syncRoute) {
-      await syncVariantQuery(nextVariant.variantId)
-    }
-
-    if (product.value) {
-      await loadAvailability(product.value.productId, nextVariant.variantId)
+      await syncVariantQuery(nextVariant.id)
     }
   }
 
   async function reload() {
-    // Fetches PDP data when the page opens or when the product slug changes.
-    // TODO: If no productSlug consider redirecting to a 404 page
-    if (!productSlug.value) {
+    if (!productId.value) {
       product.value = null
-      relatedProducts.value = []
-      accessories.value = []
-      availability.value = []
-      breadcrumbs.value = []
       resetReviewState()
       return
     }
 
     loading.value = true
     error.value = null
-    availabilityError.value = null
     ctaMessage.value = null
     quantity.value = DEFAULT_MIN_QUANTITY
     resetReviewState()
 
-    const result = await getProduct(productSlug.value)
+    const result = await getProduct(productId.value)
 
     loading.value = false
 
     if (!result.ok) {
       error.value = result.error.message || t('pdp.error')
       product.value = null
-      relatedProducts.value = []
-      accessories.value = []
-      availability.value = []
-      breadcrumbs.value = []
       resetReviewState()
       return
     }
 
-    product.value = result.data.product
-    relatedProducts.value = result.data.relatedProducts
-    accessories.value = result.data.accessories
-    breadcrumbs.value = result.data.breadcrumbs ?? []
-    availability.value = result.data.product.fulfillment
+    // Backend returns product directly (not wrapped in { product: ... })
+    product.value = result.data
 
-    await loadReviewsSummary(result.data.product.productId)
-    await loadReviews(result.data.product.productId, 1)
+    // Load related products from the same category (best-effort, non-blocking)
+    const firstCategoryId = result.data.categories[0]?.id
+    if (firstCategoryId) {
+      getCategoryProducts(firstCategoryId, { limit: 15 }).then((relResult) => {
+        if (relResult.ok) {
+          relatedProducts.value = relResult.data.data.filter((p) => p.id !== result.data.id)
+        }
+      })
+    }
 
-    const initialVariant = resolveInitialVariant(result.data.product, queryVariantId.value)
+    // TODO: relatedProducts, accessories, breadcrumbs not supported by backend API yet.
+
+    await loadReviews(result.data.id, 1)
+
+    const initialVariant = resolveInitialVariant(result.data, queryVariantId.value)
 
     if (!initialVariant) {
       selectedVariantId.value = ''
@@ -467,19 +412,18 @@ export function useProductDetailPage() {
   }
 
   async function selectOption(groupKey: string, value: string) {
-    // Recomputes the active variant after a shopper picks a new option value.
     if (!product.value) {
       return
     }
 
-    const nextSelections = {
-      ...selectedVariant.value?.attributes,
+    const nextSelections: Record<string, string> = {
+      ...(selectedVariant.value?.color ? { color: selectedVariant.value.color } : {}),
       [groupKey]: value,
     }
 
     const nextVariant = resolveVariantForSelections(product.value, nextSelections, groupKey)
 
-    if (!nextVariant || nextVariant.variantId === selectedVariantId.value) {
+    if (!nextVariant || nextVariant.id === selectedVariantId.value) {
       return
     }
 
@@ -487,12 +431,10 @@ export function useProductDetailPage() {
   }
 
   function setQuantity(next: number) {
-    // Updates quantity from the purchase panel controls before add-to-cart.
     quantity.value = clampQuantity(next)
   }
 
   async function addToCart() {
-    // Handles the purchase CTA by redirecting guests or adding the selected variant to cart.
     if (!product.value || !selectedVariant.value || addingToCart.value) {
       return false
     }
@@ -506,8 +448,7 @@ export function useProductDetailPage() {
 
     addingToCart.value = true
     await cartStore.addItem({
-      productId: product.value.productId,
-      variantId: selectedVariant.value.variantId,
+      variantId: selectedVariant.value.id,
       quantity: quantity.value,
     })
     addingToCart.value = false
@@ -528,16 +469,14 @@ export function useProductDetailPage() {
   }
 
   watch(
-    productSlug,
+    productId,
     () => {
-      // Reload the PDP whenever navigation changes the product slug.
       reload()
     },
     { immediate: true },
   )
 
   watch(queryVariantId, (nextVariantId) => {
-    // Apply externally changed variant query params, such as browser navigation or shared PDP links.
     if (!nextVariantId || !product.value) {
       return
     }
@@ -549,41 +488,27 @@ export function useProductDetailPage() {
 
     const nextVariant = resolveInitialVariant(product.value, nextVariantId)
 
-    if (!nextVariant || nextVariant.variantId === selectedVariantId.value) {
+    if (!nextVariant || nextVariant.id === selectedVariantId.value) {
       return
     }
 
     applySelectedVariant(nextVariant, false)
   })
 
-  watch(cityId, () => {
-    // Refresh fulfillment messaging when the shopper changes delivery location.
-    if (!product.value || !selectedVariant.value) {
-      return
-    }
-
-    loadAvailability(product.value.productId, selectedVariant.value.variantId)
-  })
+  // TODO: watch(cityId) removed — availability not supported by backend yet.
 
   return {
     loading,
     error,
-    availabilityError,
     product,
     relatedProducts,
-    accessories,
-    breadcrumbs,
-    reviewsSummary,
-    reviewHistogram,
     reviews,
     reviewsPagination,
     selectedVariantId,
     selectedVariant,
     selectorGroups,
     galleryImages,
-    availability,
     quantity,
-    loadingAvailability,
     loadingReviews,
     addingToCart,
     submittingReview,
