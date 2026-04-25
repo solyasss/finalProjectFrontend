@@ -1,29 +1,43 @@
 import { request } from './client'
 import type {
   ApiResult,
-  MeResponse,
-  UpdateProfileRequest,
   ChangePasswordRequest,
-  OrdersResponse,
+  MeResponse,
   OrderDetailsResponse,
+  OrdersResponse,
   OrderTrackingResponse,
+  UpdateProfileRequest,
   GetOrdersParams,
 } from './types'
 
 export function getMe(): Promise<ApiResult<MeResponse>> {
-  return request('/me', { auth: true })
+  return request<MeResponse>('/auth/me', { auth: true, baseUrl: 'root' })
 }
 
 export function updateProfile(body: UpdateProfileRequest): Promise<ApiResult<MeResponse>> {
-  return request('/me/profile', { method: 'PATCH', body, auth: true })
+  return request<MeResponse>('/users/me', {
+    method: 'PATCH',
+    body,
+    auth: true,
+    baseUrl: 'root',
+  })
 }
 
-export function changePassword(body: ChangePasswordRequest): Promise<ApiResult<void>> {
-  return request('/me/password', { method: 'PATCH', body, auth: true })
-}
+// TODO: `openapi.json` currently documents `/users/me` delete, but does not define a
+// password-confirmation request body. The frontend still requires password confirmation.
+// Keep the UX for now and align the final contract with the backend team before removing it.
+export async function deleteAccount(_body: { password: string }): Promise<ApiResult<void>> {
+  const result = await request<unknown>('/users/me', {
+    method: 'DELETE',
+    auth: true,
+    baseUrl: 'root',
+  })
 
-export function deleteAccount(body: { password: string }): Promise<ApiResult<void>> {
-  return request('/me/account', { method: 'DELETE', body, auth: true })
+  if (!result.ok) {
+    return result
+  }
+
+  return { ok: true, data: undefined }
 }
 
 // TODO: no dedicated location endpoint in the current API spec.
@@ -33,6 +47,12 @@ export function updateLocation(_payload: {
   storeId?: string
 }): Promise<ApiResult<void>> {
   return Promise.resolve({ ok: true, data: undefined })
+}
+
+// TODO: OpenAPI does not currently document password change. Keep the legacy helper until
+// frontend/backend teams agree on the new endpoint rather than silently removing the feature.
+export function changePassword(body: ChangePasswordRequest): Promise<ApiResult<void>> {
+  return request('/me/password', { method: 'PATCH', body, auth: true })
 }
 
 export function getOrders(params?: GetOrdersParams): Promise<ApiResult<OrdersResponse>> {

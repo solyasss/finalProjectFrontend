@@ -10,6 +10,9 @@ export type ErrorCode =
 export interface ApiError {
   code: ErrorCode
   message: string
+  rawCode?: string | null
+  path?: string | null
+  timestamp?: string | null
   fields?: Record<string, string> | null
 }
 
@@ -47,7 +50,7 @@ export interface RegisterRequest {
   password: string
   firstName: string
   lastName: string
-  dateOfBirth: string
+  dateOfBirth?: string
 }
 
 export interface LoginRequest {
@@ -56,8 +59,8 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string
-  user: MeResponse
+  accessToken: string
+  user?: MeResponse | null
 }
 
 export interface VerifyEmailRequest {
@@ -93,11 +96,12 @@ export interface UpdateProfileRequest {
 }
 
 export interface MeResponse {
-  userId: string
+  id: string
   email: string
   firstName: string
   lastName: string
-  dateOfBirth: string
+  dateOfBirth?: string | null
+  role?: string | null
   address?: UserAddress | null
 }
 
