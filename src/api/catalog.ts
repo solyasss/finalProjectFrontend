@@ -4,21 +4,21 @@ import type {
   ApiResult,
   CategoriesResponse,
   ProductListResponse,
-  ProductCompareResponse,
   GetCategoryProductsParams,
-  CompareProductsParams,
 } from './types'
 
 export function getCategories(): Promise<ApiResult<CategoriesResponse>> {
-  return request('/categories')
+  return request('/catalog/categories', { baseUrl: 'root' })
 }
 
 export function getCategoryProducts(
-  categorySlug: string,
+  categoryId: number,
   params?: GetCategoryProductsParams,
 ): Promise<ApiResult<ProductListResponse>> {
-  return request(`/categories/${categorySlug}/products`, {
+  return request('/catalog/products', {
+    baseUrl: 'root',
     query: {
+      categoryId,
       page: params?.page,
       limit: params?.limit,
       sort: params?.sort,
@@ -27,10 +27,12 @@ export function getCategoryProducts(
   })
 }
 
-export function compareProducts(
-  params: CompareProductsParams,
-): Promise<ApiResult<ProductCompareResponse>> {
-  return request('/products/compare', {
-    query: { productIds: params.productIds.join(',') },
-  })
-}
+// TODO: Product compare is not supported by the backend API yet.
+// To enable once backend supports it.
+// export function compareProducts(
+//   params: CompareProductsParams,
+// ): Promise<ApiResult<ProductCompareResponse>> {
+//   return request('/products/compare', {
+//     query: { productIds: params.productIds.join(',') },
+//   })
+// }

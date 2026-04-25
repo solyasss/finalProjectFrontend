@@ -21,7 +21,7 @@ function handleSelect(product: ApiProductCard) {
   <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
     <ProductCard
       v-for="product in props.products"
-      :key="product.productId"
+      :key="product.id"
       :product="product"
       :clickable="true"
       @select="handleSelect"

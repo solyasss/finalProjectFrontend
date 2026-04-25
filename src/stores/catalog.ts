@@ -46,7 +46,7 @@ export const useCatalogStore = defineStore('catalog', () => {
       const res = await getCategories()
 
       if (res.ok) {
-        categoriesTree.value = normalizeCategoryTree(res.data.categories)
+        categoriesTree.value = normalizeCategoryTree(res.data)
         categoriesLoaded.value = true
         return
       }
@@ -62,11 +62,26 @@ export const useCatalogStore = defineStore('catalog', () => {
     return fetchPromise
   }
 
+  function findCategoryBySlug(slug: string): CategoryTreeNode | null {
+    function search(nodes: CategoryTreeNode[]): CategoryTreeNode | null {
+      for (const node of nodes) {
+        if (node.slug === slug) return node
+        if (node.children?.length) {
+          const found = search(node.children)
+          if (found) return found
+        }
+      }
+      return null
+    }
+    return search(categoriesTree.value)
+  }
+
   return {
     categoriesTree,
     loadingCategories,
     categoriesError,
     categoriesLoaded,
     fetchCategories,
+    findCategoryBySlug,
   }
 })
