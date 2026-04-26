@@ -6,7 +6,6 @@ import {
   getCategoryProducts,
   getProduct,
   getProductReviews,
-  type CreateProductReviewRequest,
   type Pagination,
   type ProductCard,
   type ProductDetails,

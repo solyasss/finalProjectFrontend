@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import Message from 'primevue/message'
 import { useI18n } from 'vue-i18n'
+import type { DetailsSection } from '@/api'
 import { useProductDetailPage } from '@/composables/useProductDetailPage'
 import ProductDetailsAccordion from '@/components/organisms/ProductDetailsAccordion/ProductDetailsAccordion.vue'
 import ProductGallery from '@/components/organisms/ProductGallery/ProductGallery.vue'
@@ -46,6 +48,20 @@ const {
 // TODO: availability, loadingAvailability, availabilityError removed — not supported by backend yet.
 // TODO: breadcrumbs removed — not supported by backend yet.
 // TODO: reviewsSummary, reviewHistogram removed — not supported by backend yet.
+
+const detailSections = computed<DetailsSection[]>(() => {
+  if (!product.value?.description?.trim()) {
+    return []
+  }
+
+  return [
+    {
+      key: 'DETAILS',
+      title: t('pdp.descriptionTitle'),
+      content: product.value.description,
+    },
+  ]
+})
 </script>
 
 <template>
@@ -90,7 +106,7 @@ const {
         </div>
 
         <!-- Accordion always shown; empty sections show "seller hasn't provided details" message -->
-        <ProductDetailsAccordion :sections="[]" :documents="[]" />
+        <ProductDetailsAccordion :sections="detailSections" :documents="[]" />
 
         <ReviewSection
           :summary="null"

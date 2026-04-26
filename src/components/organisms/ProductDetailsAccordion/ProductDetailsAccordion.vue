@@ -36,6 +36,8 @@ const panels = computed(() => {
 
   return items
 })
+
+const expandedPanelKeys = computed(() => panels.value.map((panel) => panel.key))
 </script>
 
 <template>
@@ -48,7 +50,7 @@ const panels = computed(() => {
       {{ t('pdp.detailsEmpty') }}
     </Message>
 
-    <Accordion v-else multiple>
+    <Accordion v-else multiple :value="expandedPanelKeys">
       <AccordionPanel v-for="panel in panels" :key="panel.key" :value="panel.key">
         <AccordionHeader>{{ panel.title }}</AccordionHeader>
         <AccordionContent>

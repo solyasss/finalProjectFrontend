@@ -365,6 +365,7 @@
     "loading": "Loading product details...",
     "error": "We could not load this product right now.",
     "detailsTitle": "Product details",
+    "descriptionTitle": "Description",
     "detailsEmpty": "The seller hasn't provided any details for this product yet.",
     "documentsTitle": "Documents",
     "relatedProductsTitle": "Related products",
