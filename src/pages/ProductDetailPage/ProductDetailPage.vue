@@ -1,39 +1,30 @@
 <script setup lang="ts">
 import Message from 'primevue/message'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
-import type { ProductCard as ApiProductCard } from '@/api'
 import { useProductDetailPage } from '@/composables/useProductDetailPage'
-import BreadcrumbNav from '@/components/molecules/BreadcrumbNav/BreadcrumbNav.vue'
-import ProductCard from '@/components/molecules/ProductCard/ProductCard.vue'
 import ProductDetailsAccordion from '@/components/organisms/ProductDetailsAccordion/ProductDetailsAccordion.vue'
 import ProductGallery from '@/components/organisms/ProductGallery/ProductGallery.vue'
 import ProductPurchasePanel from '@/components/organisms/ProductPurchasePanel/ProductPurchasePanel.vue'
 import ReviewSection from '@/components/organisms/ReviewSection/ReviewSection.vue'
-import CarouselSection from '@/components/organisms/CarouselSection/CarouselSection.vue'
+import ProductCard from '@/components/molecules/ProductCard/ProductCard.vue'
 import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
 
+// TODO: BreadcrumbNav removed — breadcrumbs not supported by backend API yet.
+// import BreadcrumbNav from '@/components/molecules/BreadcrumbNav/BreadcrumbNav.vue'
+
 const { t } = useI18n()
-const router = useRouter()
 
 const {
   loading,
   error,
-  availabilityError,
   product,
   relatedProducts,
-  accessories,
-  breadcrumbs,
-  reviewsSummary,
-  reviewHistogram,
   reviews,
   reviewsPagination,
   selectedVariant,
   selectorGroups,
   galleryImages,
-  availability,
   quantity,
-  loadingAvailability,
   loadingReviews,
   addingToCart,
   submittingReview,
@@ -52,9 +43,9 @@ const {
   submitReview,
 } = useProductDetailPage()
 
-function handleSelectProduct(card: ApiProductCard) {
-  router.push({ name: 'pdp', params: { productSlug: card.slug } })
-}
+// TODO: availability, loadingAvailability, availabilityError removed — not supported by backend yet.
+// TODO: breadcrumbs removed — not supported by backend yet.
+// TODO: reviewsSummary, reviewHistogram removed — not supported by backend yet.
 </script>
 
 <template>
@@ -69,28 +60,27 @@ function handleSelectProduct(card: ApiProductCard) {
       </Message>
 
       <template v-else-if="product">
-        <BreadcrumbNav
-          :items="
-            breadcrumbs.map((item) => ({
-              label: item.label,
-              route: item.slug ? { name: 'plp', params: { categorySlug: item.slug } } : undefined,
-            }))
-          "
-          :current-label="product.name"
-        />
+        <!-- TODO: BreadcrumbNav removed — breadcrumbs not supported by backend API yet.
+          To enable once backend supports it.
+        <BreadcrumbNav :items="..." :current-label="product.name" />
+        -->
 
-        <div class="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.9fr)] lg:items-start">
-          <ProductGallery :images="galleryImages" :name="product.name" />
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.9fr)] lg:items-stretch">
+          <ProductGallery
+            :images="galleryImages"
+            :name="product.name"
+            class="h-full min-h-[300px]"
+          />
 
           <ProductPurchasePanel
             :product="product"
             :selected-variant="selectedVariant"
             :selector-groups="selectorGroups"
-            :availability="availability"
+            :availability="[]"
             :quantity="quantity"
-            :loading-availability="loadingAvailability"
+            :loading-availability="false"
             :adding-to-cart="addingToCart"
-            :availability-error="availabilityError"
+            :availability-error="null"
             :can-add-to-cart="canAddToCart"
             :cta-message="ctaMessage"
             @select-option="selectOption($event.groupKey, $event.value)"
@@ -99,14 +89,12 @@ function handleSelectProduct(card: ApiProductCard) {
           />
         </div>
 
-        <ProductDetailsAccordion
-          :sections="product.detailsSections"
-          :documents="product.documents"
-        />
+        <!-- Accordion always shown; empty sections show "seller hasn't provided details" message -->
+        <ProductDetailsAccordion :sections="[]" :documents="[]" />
 
         <ReviewSection
-          :summary="reviewsSummary"
-          :histogram="reviewHistogram"
+          :summary="null"
+          :histogram="[]"
           :reviews="reviews"
           :pagination="reviewsPagination"
           :loading="loadingReviews"
@@ -121,44 +109,24 @@ function handleSelectProduct(card: ApiProductCard) {
           @load-more="loadMoreReviews"
         />
 
-        <CarouselSection
-          v-if="relatedProducts.length"
-          :title="t('pdp.relatedProductsTitle')"
-          :items="relatedProducts"
-          item-key="productId"
-          :num-visible="4"
-          :num-scroll="1"
-          :responsive-options="[
-            { breakpoint: '1199px', numVisible: 3, numScroll: 1 },
-            { breakpoint: '767px', numVisible: 2, numScroll: 1 },
-            { breakpoint: '575px', numVisible: 1, numScroll: 1 },
-          ]"
-          content-class="px-2"
-          @select-item="handleSelectProduct($event.item as unknown as ApiProductCard)"
-        >
-          <template #default="{ item, select }">
-            <ProductCard :product="item as ApiProductCard" clickable @select="select" />
-          </template>
+        <section v-if="relatedProducts.length" class="grid gap-6">
+          <h2 class="text-color m-0 text-3xl font-bold uppercase leading-tight md:text-4xl">
+            {{ t('pdp.relatedProductsTitle') }}
+          </h2>
+          <div class="flex gap-4 overflow-x-auto pb-2">
+            <div v-for="item in relatedProducts" :key="item.id" class="w-[200px] shrink-0">
+              <ProductCard :product="item" :clickable="true" />
+            </div>
+          </div>
+        </section>
+
+        <!-- TODO: Accessories not supported by backend API yet.
+          To enable once backend supports it.
+        <CarouselSection v-if="accessories.length" :title="t('pdp.accessoriesTitle')" ...>
+          ...
         </CarouselSection>
-        <CarouselSection
-          v-if="accessories.length"
-          :title="t('pdp.accessoriesTitle')"
-          :items="accessories"
-          item-key="productId"
-          :num-visible="4"
-          :num-scroll="1"
-          :responsive-options="[
-            { breakpoint: '1199px', numVisible: 3, numScroll: 1 },
-            { breakpoint: '767px', numVisible: 2, numScroll: 1 },
-            { breakpoint: '575px', numVisible: 1, numScroll: 1 },
-          ]"
-          content-class="px-2"
-          @select-item="handleSelectProduct($event.item as unknown as ApiProductCard)"
-        >
-          <template #default="{ item, select }">
-            <ProductCard :product="item as ApiProductCard" clickable @select="select" />
-          </template>
-        </CarouselSection>
+        <p>Available in future release</p>
+        -->
       </template>
     </section>
   </DefaultTemplate>

@@ -3,36 +3,29 @@ import type { ProductDetails } from '@/api'
 import ProductPurchasePanel from './ProductPurchasePanel.vue'
 
 const product: ProductDetails = {
-  productId: 'prd_lyngor',
+  id: 1,
   slug: 'lyngor-bed-frame',
   name: 'LYNGÖR bed frame',
   description: 'Layered comfort with a calm, low profile and a washable cover.',
-  series: 'Bedroom',
-  badges: ['NEW'],
-  rating: { average: 4.7, count: 91 },
-  selectedVariantId: 'var_white_160',
+  isActive: true,
+  createdAt: '2024-01-01T00:00:00.000Z',
+  updatedAt: '2024-01-01T00:00:00.000Z',
+  baseImageUrl: null,
+  ratingAverage: 4.7,
+  ratingCount: 91,
+  categories: [],
   variants: [
     {
-      variantId: 'var_white_160',
+      id: 'var_white_160',
       sku: '100.01',
-      name: 'White / 160x200',
-      attributes: { color: 'white', size: '160x200' },
+      color: 'white',
+      price: '15999',
+      stock: 10,
       images: [],
-      price: { amountMinor: 1599900, currency: 'UAH', formatted: '₴15,999' },
-      previousPrice: null,
+      createdAt: '2024-01-01T00:00:00.000Z',
+      updatedAt: '2024-01-01T00:00:00.000Z',
     },
   ],
-  variantAttributes: [
-    {
-      key: 'color',
-      label: 'Colour',
-      presentation: 'swatch' as const,
-      options: [{ value: 'white', label: 'White', hex: '#ffffff' }],
-    },
-  ],
-  detailsSections: [],
-  documents: [],
-  fulfillment: [],
 }
 
 const meta = {

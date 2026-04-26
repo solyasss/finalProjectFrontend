@@ -4,65 +4,61 @@ import type {
   CreateProductReviewRequest,
   CreateProductReviewResponse,
   ProductDetailsResponse,
-  ProductAvailabilityResponse,
   ProductReviewListResponse,
-  ProductReviewsSummaryResponse,
-  ProductQuestionsResponse,
-  GetProductParams,
-  GetProductAvailabilityParams,
-  GetProductQuestionsParams,
   GetProductReviewsParams,
 } from './types'
 
-export function getProduct(
-  productSlug: string,
-  params?: GetProductParams,
-): Promise<ApiResult<ProductDetailsResponse>> {
-  return request(`/products/${productSlug}`, {
-    query: { variantId: params?.variantId, zipCode: params?.zipCode },
-  })
+export function getProduct(productId: number): Promise<ApiResult<ProductDetailsResponse>> {
+  return request(`/catalog/products/${productId}`, { baseUrl: 'root' })
 }
 
-export function getProductAvailability(
-  productId: string,
-  params?: GetProductAvailabilityParams,
-): Promise<ApiResult<ProductAvailabilityResponse>> {
-  return request(`/products/${productId}/availability`, {
-    query: { variantId: params?.variantId, zipCode: params?.zipCode },
-  })
-}
+// TODO: Product availability is not supported by the backend API yet.
+// To enable once backend supports it.
+// export function getProductAvailability(
+//   productId: string,
+//   params?: GetProductAvailabilityParams,
+// ): Promise<ApiResult<ProductAvailabilityResponse>> {
+//   return request(`/products/${productId}/availability`, {
+//     query: { variantId: params?.variantId, cityId: params?.cityId },
+//   })
+// }
 
-export function getProductReviewsSummary(
-  productId: string,
-): Promise<ApiResult<ProductReviewsSummaryResponse>> {
-  return request(`/products/${productId}/reviews/summary`)
-}
+// TODO: Product reviews summary/histogram is not supported by the backend API yet.
+// To enable once backend supports it.
+// export function getProductReviewsSummary(
+//   productId: string,
+// ): Promise<ApiResult<ProductReviewsSummaryResponse>> {
+//   return request(`/products/${productId}/reviews/summary`)
+// }
 
 export function getProductReviews(
-  productId: string,
+  productId: number,
   params?: GetProductReviewsParams,
 ): Promise<ApiResult<ProductReviewListResponse>> {
-  return request(`/products/${productId}/reviews`, {
-    query: { page: params?.page, limit: params?.limit },
+  return request('/catalog/reviews', {
+    baseUrl: 'root',
+    query: { productId, page: params?.page, limit: params?.limit },
   })
 }
 
 export function createProductReview(
-  productId: string,
   body: CreateProductReviewRequest,
 ): Promise<ApiResult<CreateProductReviewResponse>> {
-  return request(`/products/${productId}/reviews`, {
+  return request('/catalog/reviews', {
+    baseUrl: 'root',
     method: 'POST',
     body,
     auth: true,
   })
 }
 
-export function getProductQuestions(
-  productId: string,
-  params?: GetProductQuestionsParams,
-): Promise<ApiResult<ProductQuestionsResponse>> {
-  return request(`/products/${productId}/questions`, {
-    query: { page: params?.page, limit: params?.limit },
-  })
-}
+// TODO: Product Q&A is not supported by the backend API yet.
+// To enable once backend supports it.
+// export function getProductQuestions(
+//   productId: string,
+//   params?: GetProductQuestionsParams,
+// ): Promise<ApiResult<ProductQuestionsResponse>> {
+//   return request(`/products/${productId}/questions`, {
+//     query: { page: params?.page, limit: params?.limit },
+//   })
+// }

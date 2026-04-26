@@ -16,9 +16,9 @@ function mockSuccess(payload: LoginRequest): Promise<ApiResult<LoginResponse>> {
   return Promise.resolve({
     ok: true,
     data: {
-      token: 'storybook-token',
+      accessToken: 'storybook-token',
       user: {
-        userId: 'user-1',
+        id: 'user-1',
         email: payload.email,
         firstName: 'Olya',
         lastName: 'S.',

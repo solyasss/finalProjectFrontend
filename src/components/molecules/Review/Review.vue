@@ -20,6 +20,7 @@ const formattedDate = computed(() => {
 })
 
 const hasTitle = computed(() => Boolean(props.review.title?.trim()))
+const displayName = computed(() => props.review.authorName || `User #${props.review.userId}`)
 </script>
 
 <template>
@@ -28,7 +29,7 @@ const hasTitle = computed(() => Boolean(props.review.title?.trim()))
       <div class="grid gap-2">
         <div class="flex flex-wrap items-center gap-2">
           <h3 class="m-0 text-base font-bold text-color">
-            {{ review.authorName }}
+            {{ displayName }}
           </h3>
           <Tag
             v-if="review.verifiedPurchase"
@@ -49,7 +50,7 @@ const hasTitle = computed(() => Boolean(props.review.title?.trim()))
     </h4>
 
     <p class="m-0 whitespace-pre-line text-sm leading-6 text-muted-color md:text-base">
-      {{ review.body }}
+      {{ review.text }}
     </p>
   </article>
 </template>

@@ -4,7 +4,6 @@ import Message from 'primevue/message'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type {
-  CreateProductReviewRequest,
   Pagination,
   ProductReview,
   RatingSummary,
@@ -45,7 +44,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (event: 'load-more'): void
   (event: 'request-auth'): void
-  (event: 'submit-review', payload: CreateProductReviewRequest): void
+  (event: 'submit-review', payload: { rating: number; text: string }): void
 }>()
 
 const { t } = useI18n()
@@ -90,61 +89,49 @@ function getHistogramWidth(count: number) {
       {{ t('pdp.reviewForm.success') }}
     </Message>
 
+    <!-- Histogram only shown when summary is available -->
     <div
       v-if="summary && summary.count > 0"
-      class="grid gap-6 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:items-start"
+      class="grid gap-3 rounded-3xl border border-surface bg-surface-0 p-5"
     >
-      <div class="grid gap-3 rounded-3xl border border-surface bg-surface-0 p-5">
-        <div
-          v-for="entry in histogram"
-          :key="entry.stars"
-          class="grid grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-3 text-sm"
-        >
-          <span class="font-medium text-color">{{ entry.stars }}/5</span>
-          <div class="h-2 overflow-hidden rounded-full bg-surface-200">
-            <div
-              class="h-full rounded-full bg-surface-900 transition-[width]"
-              :style="{ width: getHistogramWidth(entry.count) }"
-            />
-          </div>
-          <span class="text-right text-muted-color">{{ entry.count }}</span>
-        </div>
-      </div>
-
-      <div class="grid gap-4">
-        <Message v-if="loading && !reviews.length" severity="secondary" variant="simple">
-          {{ t('pdp.reviewsLoading') }}
-        </Message>
-        <Message v-else-if="error" severity="error">
-          {{ error }}
-        </Message>
-        <Message v-else-if="!reviews.length" severity="secondary" variant="simple">
-          {{ t('pdp.reviewsEmpty') }}
-        </Message>
-
-        <template v-else>
-          <Review v-for="review in reviews" :key="review.reviewId" :review="review" />
-          <Button
-            v-if="canLoadMore"
-            severity="secondary"
-            outlined
-            :label="t('pdp.loadMoreReviews')"
-            @click="emit('load-more')"
+      <div
+        v-for="entry in histogram"
+        :key="entry.stars"
+        class="grid grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-3 text-sm"
+      >
+        <span class="font-medium text-color">{{ entry.stars }}/5</span>
+        <div class="h-2 overflow-hidden rounded-full bg-surface-200">
+          <div
+            class="h-full rounded-full bg-surface-900 transition-[width]"
+            :style="{ width: getHistogramWidth(entry.count) }"
           />
-        </template>
+        </div>
+        <span class="text-right text-muted-color">{{ entry.count }}</span>
       </div>
     </div>
 
-    <div v-else class="grid gap-4">
-      <Message v-if="loading" severity="secondary" variant="simple">
+    <!-- Reviews always rendered -->
+    <div class="grid gap-4">
+      <Message v-if="loading && !reviews.length" severity="secondary" variant="simple">
         {{ t('pdp.reviewsLoading') }}
       </Message>
       <Message v-else-if="error" severity="error">
         {{ error }}
       </Message>
-      <Message v-else severity="secondary" variant="simple">
+      <Message v-else-if="!reviews.length" severity="secondary" variant="simple">
         {{ t('pdp.reviewsEmpty') }}
       </Message>
+
+      <template v-else>
+        <Review v-for="review in reviews" :key="review.id" :review="review" />
+        <Button
+          v-if="canLoadMore"
+          severity="secondary"
+          outlined
+          :label="t('pdp.loadMoreReviews')"
+          @click="emit('load-more')"
+        />
+      </template>
     </div>
   </section>
 </template>

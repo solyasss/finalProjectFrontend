@@ -163,7 +163,9 @@ export function useRegistrationForm(options: RegistrationOptions = {}) {
   }
 
   function toApiPayload(): RegisterRequest {
-    // TODO: Replace with actual api payload
+    // TODO: Frontend currently requires `dateOfBirth`, but the backend OpenAPI RegisterDto
+    // does not document it. Keep sending it while the frontend stays stricter, then align
+    // the final register contract with the backend team before changing UX validation.
     return {
       firstName: draft.firstName.trim(),
       lastName: draft.lastName.trim(),

@@ -24,6 +24,8 @@ const { t, d } = useI18n()
 const { getOrderStatusMeta } = useOrderStatusPresentation()
 
 const STATUS_STEP_ALIASES: Record<OrderStatus, string[]> = {
+  PENDING: ['pending', 'placed'],
+  PAID: ['paid', 'processing'],
   PLACED: ['placed'],
   PROCESSING: ['processing'],
   SHIPPED: ['shipped', 'transit', 'in_transit'],
@@ -105,6 +107,22 @@ const normalizedSteps = computed(() => {
   }))
 })
 
+const latestStepIndex = computed(() => {
+  const statusStepIndex = findStatusStepIndex(props.steps, props.status)
+
+  if (statusStepIndex >= 0) {
+    return statusStepIndex
+  }
+
+  const fallbackCurrentStepIndex = findFallbackCurrentStepIndex(props.steps)
+
+  if (fallbackCurrentStepIndex >= 0) {
+    return fallbackCurrentStepIndex
+  }
+
+  return props.steps.length - 1
+})
+
 function formatTimestamp(value?: string | null) {
   if (!value) {
     return null
@@ -138,8 +156,25 @@ function formatTimestamp(value?: string | null) {
     <Timeline :value="normalizedSteps" align="left">
       <template #content="slotProps">
         <div>
-          <p>{{ slotProps.item.title }}</p>
-          <p v-if="formatTimestamp(slotProps.item.timestamp)">
+          <p class="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span>{{ slotProps.item.title }}</span>
+            <span
+              v-if="
+                slotProps.index === latestStepIndex && formatTimestamp(slotProps.item.timestamp)
+              "
+              class="text-sm text-muted-color"
+            >
+              {{
+                t('orderDetailPage.trackingUpdatedAt', {
+                  date: formatTimestamp(slotProps.item.timestamp),
+                })
+              }}
+            </span>
+          </p>
+          <p
+            v-if="slotProps.index !== latestStepIndex && formatTimestamp(slotProps.item.timestamp)"
+            class="text-sm text-muted-color"
+          >
             {{
               t('orderDetailPage.trackingUpdatedAt', {
                 date: formatTimestamp(slotProps.item.timestamp),

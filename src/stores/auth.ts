@@ -1,6 +1,13 @@
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getMe, login, refreshToken, setAuthToken, setRefreshHandler } from '@/api'
+import {
+  getMe,
+  login,
+  logout as logoutRequest,
+  refreshToken,
+  setAuthToken,
+  setRefreshHandler,
+} from '@/api'
 import type { ApiResult, LoginRequest, LoginResponse, MeResponse } from '@/api'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -13,6 +20,23 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => user.value !== null)
   const firstName = computed(() => user.value?.firstName ?? null)
 
+  async function hydrateUserFromToken(preloadedUser?: MeResponse | null): Promise<boolean> {
+    if (preloadedUser) {
+      user.value = preloadedUser
+      return true
+    }
+
+    const meResult = await getMe()
+
+    if (meResult.ok) {
+      user.value = meResult.data
+      return true
+    }
+
+    user.value = null
+    return false
+  }
+
   // Runs before app mount to restore session
   async function initialize() {
     if (initialized.value) {
@@ -22,9 +46,13 @@ export const useAuthStore = defineStore('auth', () => {
     initializePromise ??= (async () => {
       const res = await refreshToken()
 
-      if (res.ok) {
-        setAuthToken(res.data.token)
-        user.value = res.data.user
+      if (res.ok && res.data.accessToken) {
+        setAuthToken(res.data.accessToken)
+        const hydrated = await hydrateUserFromToken(res.data.user)
+
+        if (!hydrated) {
+          setAuthToken(null)
+        }
       } else {
         user.value = null
         setAuthToken(null)
@@ -71,31 +99,50 @@ export const useAuthStore = defineStore('auth', () => {
 
     const res = await login(payload)
 
-    if (res.ok) {
-      setAuthToken(res.data.token)
-      user.value = res.data.user
+    if (res.ok && res.data.accessToken) {
+      setAuthToken(res.data.accessToken)
+      const hydrated = await hydrateUserFromToken(res.data.user)
+
+      if (!hydrated) {
+        setAuthToken(null)
+        error.value = 'Unable to load account profile'
+        return {
+          ok: false,
+          error: { code: 'INTERNAL_ERROR', message: 'Unable to load account profile' },
+        }
+      }
+
       return res
     }
 
     user.value = null
     setAuthToken(null)
+
+    if (res.ok) {
+      error.value = 'Invalid auth response from server'
+      return {
+        ok: false,
+        error: { code: 'INTERNAL_ERROR', message: 'Invalid auth response from server' },
+      }
+    }
+
     error.value = res.error.message
     return res
   }
 
-  function logout() {
+  async function logout() {
+    await logoutRequest()
     setUser(null)
     setAuthToken(null)
   }
 
   setRefreshHandler(async () => {
     const res = await refreshToken()
-    if (res.ok) {
-      setAuthToken(res.data.token)
-      user.value = res.data.user
-      return true
+    if (res.ok && res.data.accessToken) {
+      setAuthToken(res.data.accessToken)
+      return hydrateUserFromToken(res.data.user)
     }
-    logout()
+    await logout()
     return false
   })
 

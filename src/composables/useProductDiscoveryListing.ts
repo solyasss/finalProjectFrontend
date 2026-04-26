@@ -3,15 +3,19 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter, type LocationQueryRaw, type LocationQueryValue } from 'vue-router'
 import {
   getCategoryProducts,
-  search,
+  // TODO: search is not supported by the backend API yet.
+  // To enable once backend supports search endpoint.
+  // search,
   type FilterDefinition,
   type Pagination,
   type ProductCard,
   type ProductFilters,
   type ProductListResponse,
-  type SearchResponse,
+  // TODO: SearchResponse not supported yet.
+  // type SearchResponse,
   type SortOption,
 } from '@/api'
+import { useCatalogStore } from '@/stores'
 
 const DEFAULT_LIMIT = 12
 const FILTER_QUERY_PREFIX = 'filters['
@@ -41,7 +45,9 @@ export interface ProductDiscoveryFilterChip {
 }
 
 interface ProductDiscoveryListingOptions {
-  mode: 'search' | 'plp'
+  // TODO: 'search' mode not supported by backend API yet.
+  // To enable once backend supports search endpoint.
+  mode: 'plp'
 }
 
 interface ListingResponseMeta {
@@ -224,6 +230,7 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
   const { t } = useI18n()
   const route = useRoute()
   const router = useRouter()
+  const catalogStore = useCatalogStore()
 
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -233,16 +240,14 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
   const title = ref('')
 
   const sourceValue = computed(() => {
-    if (options.mode === 'search') {
-      const query = route.query.q
-      return typeof query === 'string' ? query.trim() : ''
-    }
-
+    // TODO: search mode removed — not supported by backend API yet.
+    // if (options.mode === 'search') { ... }
     return String(route.params.categorySlug ?? '')
   })
 
   const hasSource = computed(() => Boolean(sourceValue.value))
-  const showPromptState = computed(() => options.mode === 'search' && !hasSource.value)
+  // TODO: showPromptState was for search mode — not supported yet.
+  const showPromptState = computed(() => false)
 
   const sort = computed<SortOption | ''>(() => {
     const nextSort = route.query.sort
@@ -265,9 +270,22 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
       filters.value = []
       pagination.value = null
       error.value = null
-      if (options.mode === 'plp') {
-        title.value = ''
-      }
+      title.value = ''
+      return null
+    }
+
+    // Ensure categories are loaded so we can resolve slug → id
+    await catalogStore.fetchCategories()
+
+    const categorySlug = sourceValue.value
+    const category = catalogStore.findCategoryBySlug(categorySlug)
+
+    if (!category) {
+      error.value = t('plp.error')
+      products.value = []
+      filters.value = []
+      pagination.value = null
+      title.value = categorySlug
       return null
     }
 
@@ -282,29 +300,10 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
       filters: apiFilters,
     }
 
-    if (options.mode === 'search') {
-      const result = await search({ q: sourceValue.value, ...requestParams })
+    // TODO: search mode removed — not supported by backend API yet.
+    // To enable once backend supports search endpoint.
 
-      loading.value = false
-
-      if (!result.ok) {
-        error.value = result.error.message || t('search.error')
-        products.value = []
-        filters.value = []
-        pagination.value = null
-        return null
-      }
-
-      const normalized = normalizeSearchResponse(result.data)
-
-      title.value = normalized.title
-      products.value = normalized.products
-      filters.value = normalized.filters
-      pagination.value = normalized.pagination
-      return normalized
-    }
-
-    const result = await getCategoryProducts(sourceValue.value, requestParams)
+    const result = await getCategoryProducts(category.id, requestParams)
 
     loading.value = false
 
@@ -313,11 +312,11 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
       products.value = []
       filters.value = []
       pagination.value = null
-      title.value = sourceValue.value
+      title.value = category.name
       return null
     }
 
-    const normalized = normalizeCategoryResponse(result.data)
+    const normalized = normalizeCategoryResponse(result.data, category.name)
 
     title.value = normalized.title
     products.value = normalized.products
@@ -326,23 +325,26 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
     return normalized
   }
 
-  function normalizeCategoryResponse(data: ProductListResponse): ListingResponseMeta {
+  function normalizeCategoryResponse(
+    data: ProductListResponse,
+    categoryName: string,
+  ): ListingResponseMeta {
     return {
-      title: data.category.name,
-      products: data.products,
-      filters: data.filters,
-      pagination: data.pagination,
+      title: categoryName,
+      products: data.data,
+      // TODO: filters not returned by /catalog/products — not supported yet.
+      filters: [],
+      pagination: {
+        total: data.meta.totalItems,
+        page: data.meta.currentPage,
+        limit: data.meta.itemsPerPage,
+      },
     }
   }
 
-  function normalizeSearchResponse(data: SearchResponse): ListingResponseMeta {
-    return {
-      title: data.query,
-      products: data.products,
-      filters: data.filters,
-      pagination: data.pagination,
-    }
-  }
+  // TODO: normalizeSearchResponse removed — search not supported by backend API yet.
+  // To enable once backend supports search endpoint.
+  // function normalizeSearchResponse(data: SearchResponse): ListingResponseMeta { ... }
 
   async function updateQuery(
     nextSort: SortOption | '',
@@ -445,7 +447,7 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
   }
 
   async function selectProduct(product: ProductCard) {
-    await router.push({ name: 'pdp', params: { productSlug: product.slug } })
+    await router.push({ name: 'pdp', params: { productId: product.id } })
   }
 
   async function reload() {

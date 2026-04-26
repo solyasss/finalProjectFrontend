@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
 import Message from 'primevue/message'
-import Tag from 'primevue/tag'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PriceTag from '@/components/atoms/PriceTag/PriceTag.vue'
 import QuantitySelector from '@/components/atoms/QuantitySelector/QuantitySelector.vue'
@@ -28,7 +28,7 @@ interface Props {
   ctaMessage?: CtaMessage | null
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (event: 'select-option', payload: { groupKey: string; value: string }): void
@@ -38,9 +38,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-function formatBadgeLabel(badge: ProductDetails['badges'][number]) {
-  return badge.replaceAll('_', ' ')
-}
+const formattedPrice = computed(() => `${props.selectedVariant!.price} ₴`)
 </script>
 
 <template>
@@ -48,22 +46,20 @@ function formatBadgeLabel(badge: ProductDetails['badges'][number]) {
     class="grid gap-6 rounded-3xl border border-surface bg-surface-0 p-5 md:p-6 lg:sticky lg:top-6"
   >
     <header class="grid gap-4">
+      <!-- TODO: badges not returned by backend API yet.
+           To enable once backend supports it.
       <div class="flex flex-wrap gap-2">
-        <Tag
-          v-for="badge in product.badges"
-          :key="badge"
-          :value="formatBadgeLabel(badge)"
-          severity="secondary"
-        />
+        <Tag v-for="badge in product.badges" :key="badge" ... />
       </div>
+      <p>Available in future release</p>
+      -->
 
       <div class="space-y-3">
-        <p
-          v-if="product.series"
-          class="text-sm font-bold uppercase tracking-[0.16em] text-muted-color"
-        >
-          {{ product.series }}
-        </p>
+        <!-- TODO: series not returned by backend API yet.
+             To enable once backend supports it.
+        <p v-if="product.series" ...>{{ product.series }}</p>
+        <p>Available in future release</p>
+        -->
         <h1 class="text-3xl font-bold text-color md:text-4xl">
           {{ product.name }}
         </h1>
@@ -73,17 +69,13 @@ function formatBadgeLabel(badge: ProductDetails['badges'][number]) {
       </div>
 
       <RatingDisplay
-        v-if="product.rating?.count"
-        :average="product.rating.average"
-        :count="product.rating.count"
+        v-if="product.ratingCount"
+        :average="product.ratingAverage ?? undefined"
+        :count="product.ratingCount"
         size="detail"
       />
 
-      <PriceTag
-        v-if="selectedVariant"
-        :current-price="selectedVariant.price.formatted"
-        :previous-price="selectedVariant.previousPrice?.formatted ?? undefined"
-      />
+      <PriceTag v-if="selectedVariant && formattedPrice" :current-price="formattedPrice" />
     </header>
 
     <section v-if="selectorGroups.length" class="grid gap-5">

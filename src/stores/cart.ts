@@ -3,14 +3,34 @@ import { defineStore } from 'pinia'
 import { getCart, addCartLine, updateCartLine, removeCartLine } from '@/api'
 import type { Cart, AddCartLineRequest } from '@/api'
 
+function formatUAH(amount: number): string {
+  return `${amount.toLocaleString('uk-UA')} ₴`
+}
+
 export const useCartStore = defineStore('cart', () => {
   const cart = ref<Cart | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
 
-  const itemCount = computed(() => cart.value?.itemCount ?? 0)
-  const grandTotal = computed(() => cart.value?.grandTotal ?? null)
-  const isEmpty = computed(() => !cart.value || cart.value.lines.length === 0)
+  const itemCount = computed(() => cart.value?.items.reduce((sum, i) => sum + i.quantity, 0) ?? 0)
+
+  const subtotalAmount = computed(
+    () => cart.value?.items.reduce((sum, i) => sum + i.basePrice * i.quantity, 0) ?? 0,
+  )
+
+  const discountAmount = computed(
+    () => cart.value?.items.reduce((sum, i) => sum + i.discountAmount * i.quantity, 0) ?? 0,
+  )
+
+  const grandTotalAmount = computed(() => subtotalAmount.value - discountAmount.value)
+
+  const subtotal = computed(() => formatUAH(subtotalAmount.value))
+  const discountTotal = computed(() =>
+    discountAmount.value > 0 ? formatUAH(discountAmount.value) : null,
+  )
+  const grandTotal = computed(() => formatUAH(grandTotalAmount.value))
+
+  const isEmpty = computed(() => !cart.value || cart.value.items.length === 0)
 
   async function fetchCart() {
     loading.value = true
@@ -36,10 +56,10 @@ export const useCartStore = defineStore('cart', () => {
     loading.value = false
   }
 
-  async function updateQuantity(lineId: string, quantity: number) {
+  async function updateQuantity(itemId: number, quantity: number) {
     loading.value = true
     error.value = null
-    const res = await updateCartLine(lineId, { quantity })
+    const res = await updateCartLine(itemId, quantity)
     if (res.ok) {
       cart.value = res.data
     } else {
@@ -48,10 +68,10 @@ export const useCartStore = defineStore('cart', () => {
     loading.value = false
   }
 
-  async function removeLine(lineId: string) {
+  async function removeLine(itemId: number) {
     loading.value = true
     error.value = null
-    const res = await removeCartLine(lineId)
+    const res = await removeCartLine(itemId)
     if (res.ok) {
       cart.value = res.data
     } else {
@@ -65,6 +85,8 @@ export const useCartStore = defineStore('cart', () => {
     loading,
     error,
     itemCount,
+    subtotal,
+    discountTotal,
     grandTotal,
     isEmpty,
     fetchCart,

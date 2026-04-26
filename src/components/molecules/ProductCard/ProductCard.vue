@@ -2,11 +2,9 @@
 import { computed } from 'vue'
 import Card from 'primevue/card'
 import Image from 'primevue/image'
-import Tag from 'primevue/tag'
 import { useI18n } from 'vue-i18n'
-import PriceTag from '@/components/atoms/PriceTag/PriceTag.vue'
 import RatingDisplay from '@/components/molecules/RatingDisplay/RatingDisplay.vue'
-import type { Badge, ProductCard } from '@/api'
+import type { ProductCard } from '@/api'
 
 interface Props {
   product: ProductCard
@@ -22,22 +20,8 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 const isClickable = computed(() => props.clickable ?? true)
-const hasDescription = computed(() => Boolean(props.product.shortDescription))
-const hasRating = computed(() => Boolean(props.product.rating?.count))
-const hasVariants = computed(() => Boolean(props.product.variantPreview?.totalVariants))
-
-const badgeItems = computed(() => props.product.badges.slice(0, 2))
-
-const badgeSeverityMap: Record<Badge, 'contrast' | 'danger' | 'warn' | 'info'> = {
-  NEW: 'info',
-  BEST_SELLER: 'contrast',
-  LAST_CHANCE: 'danger',
-  MEMBER_PRICE: 'warn',
-}
-
-function formatBadgeLabel(badge: Badge) {
-  return badge.replaceAll('_', ' ')
-}
+const hasDescription = computed(() => Boolean(props.product.description))
+const hasRating = computed(() => Boolean(props.product.ratingCount))
 
 function handleSelect() {
   if (!isClickable.value) {
@@ -46,8 +30,6 @@ function handleSelect() {
 
   emit('select', props.product)
 }
-
-// TODO: confirm PLP/Search availability data contract with backend
 </script>
 
 <template>
@@ -62,8 +44,8 @@ function handleSelect() {
           borderRadius: '0.5rem',
         },
       },
-      body: { style: { padding: '0', height: '100%'  } },
-      content: { style: { padding: '0', height: '100%'   } },
+      body: { style: { padding: '0', height: '100%' } },
+      content: { style: { padding: '0', height: '100%' } },
     }"
     @click="handleSelect"
   >
@@ -71,10 +53,11 @@ function handleSelect() {
       <article
         class="group grid h-full grid-rows-[auto_1fr] border border-surface bg-surface-0 transition-shadow hover:shadow-md"
       >
-        <div class="relative aspect-square overflow-hidden bg-surface-100">
+        <div class="relative aspect-square w-full overflow-hidden bg-surface-100">
           <Image
-            :src="product.heroImage.url"
-            :alt="product.heroImage.alt"
+            v-if="product.baseImageUrl"
+            :src="product.baseImageUrl"
+            :alt="product.name"
             :pt="{
               root: {
                 style: {
@@ -94,14 +77,11 @@ function handleSelect() {
               },
             }"
           />
-
-          <div v-if="badgeItems.length" class="absolute left-3 top-3 flex flex-wrap gap-2">
-            <Tag
-              v-for="badge in badgeItems"
-              :key="badge"
-              :value="formatBadgeLabel(badge)"
-              :severity="badgeSeverityMap[badge]"
-            />
+          <div
+            v-else
+            class="flex h-full w-full items-center justify-center text-muted-color text-xs"
+          >
+            {{ t('productCard.noImage') }}
           </div>
         </div>
 
@@ -111,28 +91,24 @@ function handleSelect() {
               {{ product.name }}
             </h3>
             <p v-if="hasDescription" class="text-muted-color line-clamp-2 text-xs leading-5">
-              {{ product.shortDescription }}
+              {{ product.description }}
             </p>
           </div>
 
-          <PriceTag
-            :current-price="product.price.formatted"
-            :previous-price="product.previousPrice?.formatted ?? undefined"
-            size="compact"
-          />
+          <!-- TODO: price not returned by /catalog/products — not supported yet.
+               To enable once backend returns price in product listing.
+          <PriceTag :current-price="..." size="compact" />
+          -->
+          <p class="text-surface-500 text-xs italic">
+            <em>{{ t('productCard.priceAvailableInFutureRelease') }}</em>
+          </p>
 
           <RatingDisplay
             v-if="hasRating"
-            :average="product.rating?.average"
-            :count="product.rating?.count"
+            :average="product.ratingAverage ?? undefined"
+            :count="product.ratingCount ?? undefined"
             size="card"
           />
-
-          <p v-if="hasVariants" class="text-muted-color text-xs leading-5">
-            {{
-              t('productCard.variantCount', { count: product.variantPreview?.totalVariants ?? 0 })
-            }}
-          </p>
         </div>
       </article>
     </template>

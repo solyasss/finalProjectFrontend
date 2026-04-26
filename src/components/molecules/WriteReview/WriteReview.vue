@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
-import InputText from 'primevue/inputtext'
 import Message from 'primevue/message'
 import Rating from 'primevue/rating'
 import Textarea from 'primevue/textarea'
 import { reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { CreateProductReviewRequest } from '@/api'
 
 interface Props {
   authenticated: boolean
@@ -18,20 +16,19 @@ interface Props {
 
 interface FieldErrors {
   rating?: string
-  body?: string
+  text?: string
 }
 
 interface ReviewDraft {
   rating: number
-  title: string
-  body: string
+  text: string
 }
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (event: 'request-auth'): void
-  (event: 'submit', payload: CreateProductReviewRequest): void
+  (event: 'submit', payload: { rating: number; text: string }): void
 }>()
 
 const { t } = useI18n()
@@ -39,17 +36,15 @@ const { t } = useI18n()
 const visible = ref(false)
 const draft = reactive<ReviewDraft>({
   rating: 0,
-  title: '',
-  body: '',
+  text: '',
 })
 const fieldErrors = reactive<FieldErrors>({})
 
 function resetForm() {
   draft.rating = 0
-  draft.title = ''
-  draft.body = ''
+  draft.text = ''
   fieldErrors.rating = undefined
-  fieldErrors.body = undefined
+  fieldErrors.text = undefined
 }
 
 function openDialog() {
@@ -67,10 +62,10 @@ function closeDialog() {
 
 function validate() {
   fieldErrors.rating = draft.rating > 0 ? undefined : t('pdp.reviewForm.errors.required')
-  fieldErrors.body =
-    draft.body.trim().length >= 10 ? undefined : t('pdp.reviewForm.errors.minLength')
+  fieldErrors.text =
+    draft.text.trim().length >= 10 ? undefined : t('pdp.reviewForm.errors.minLength')
 
-  return !fieldErrors.rating && !fieldErrors.body
+  return !fieldErrors.rating && !fieldErrors.text
 }
 
 function handleSubmit() {
@@ -80,8 +75,7 @@ function handleSubmit() {
 
   emit('submit', {
     rating: draft.rating,
-    title: draft.title.trim(),
-    body: draft.body.trim(),
+    text: draft.text.trim(),
   })
 }
 
@@ -153,26 +147,19 @@ watch(visible, (isVisible) => {
         </div>
 
         <div>
-          <label for="review-title" class="mb-2 block text-sm font-bold text-color">
-            {{ t('pdp.reviewForm.titleLabel') }}
-          </label>
-          <InputText id="review-title" v-model="draft.title" fluid />
-        </div>
-
-        <div>
           <label for="review-body" class="mb-2 block text-sm font-bold text-color">
             {{ t('pdp.reviewForm.bodyLabel') }}
           </label>
           <Textarea
             id="review-body"
-            v-model="draft.body"
+            v-model="draft.text"
             fluid
             auto-resize
             rows="5"
-            :invalid="Boolean(fieldErrors.body)"
+            :invalid="Boolean(fieldErrors.text)"
           />
-          <Message v-if="fieldErrors.body" severity="error" size="small" variant="simple">
-            {{ fieldErrors.body }}
+          <Message v-if="fieldErrors.text" severity="error" size="small" variant="simple">
+            {{ fieldErrors.text }}
           </Message>
         </div>
 

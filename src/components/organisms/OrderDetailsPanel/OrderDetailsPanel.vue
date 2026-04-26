@@ -12,16 +12,10 @@ import OrderTrackingTimeline from '@/components/organisms/OrderTrackingTimeline/
 interface Props {
   order: OrderSummary
   lines: CartLine[]
-  shippingAddress: Record<string, string> | null
-  trackingSteps: OrderTrackingStep[]
-  trackingStatus?: string | null
-  trackingError?: string | null
+  shippingAddress: string | null
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  trackingStatus: null,
-  trackingError: null,
-})
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (event: 'back'): void
@@ -29,31 +23,50 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-const shippingAddressEntries = computed(() => {
-  if (!props.shippingAddress) {
-    return []
+const shippingAddressText = computed(() => props.shippingAddress?.trim() ?? '')
+const isCancelled = computed(() => props.order.status === 'CANCELLED')
+const latestTrackingStepKey = computed(() => {
+  if (props.order.status === 'DELIVERED') {
+    return 'delivered'
   }
 
-  return Object.entries(props.shippingAddress).filter(([, value]) => Boolean(value))
+  if (props.order.status === 'SHIPPED') {
+    return 'shipped'
+  }
+
+  if (props.order.status === 'PAID') {
+    return 'paid'
+  }
+
+  return null
 })
 
-function formatAddressKey(key: string) {
-  const knownLabels: Record<string, string> = {
-    street: t('orderDetailPage.shippingFields.street'),
-    city: t('orderDetailPage.shippingFields.city'),
-    postalCode: t('orderDetailPage.shippingFields.postalCode'),
-    region: t('orderDetailPage.shippingFields.region'),
-  }
+const trackingSteps = computed<OrderTrackingStep[]>(() => {
+  const isPaid = ['PAID', 'SHIPPED', 'DELIVERED'].includes(props.order.status)
+  const isShipped = ['SHIPPED', 'DELIVERED'].includes(props.order.status)
+  const isDelivered = props.order.status === 'DELIVERED'
 
-  if (knownLabels[key]) {
-    return knownLabels[key]
-  }
-
-  return key
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    .replaceAll('_', ' ')
-    .replace(/^./, (value) => value.toUpperCase())
-}
+  return [
+    {
+      key: 'paid',
+      title: t('orderStatus.PAID'),
+      completed: isPaid,
+      timestamp: latestTrackingStepKey.value === 'paid' ? props.order.createdAt : null,
+    },
+    {
+      key: 'shipped',
+      title: t('orderStatus.SHIPPED'),
+      completed: isShipped,
+      timestamp: latestTrackingStepKey.value === 'shipped' ? props.order.createdAt : null,
+    },
+    {
+      key: 'delivered',
+      title: t('orderStatus.DELIVERED'),
+      completed: isDelivered,
+      timestamp: latestTrackingStepKey.value === 'delivered' ? props.order.createdAt : null,
+    },
+  ]
+})
 </script>
 
 <template>
@@ -87,7 +100,7 @@ function formatAddressKey(key: string) {
             </div>
 
             <div class="grid gap-3">
-              <OrderLineItemRow v-for="line in lines" :key="line.lineId" :line="line" />
+              <OrderLineItemRow v-for="line in lines" :key="line.id" :line="line" />
             </div>
           </section>
         </template>
@@ -113,16 +126,12 @@ function formatAddressKey(key: string) {
                 </p>
               </div>
 
-              <dl v-if="shippingAddressEntries.length" class="grid gap-3">
-                <div
-                  v-for="[key, value] in shippingAddressEntries"
-                  :key="key"
-                  class="grid gap-1 rounded-lg border border-surface bg-surface-50 p-3"
-                >
-                  <dt class="text-sm text-muted-color">{{ formatAddressKey(key) }}</dt>
-                  <dd class="text-sm font-medium text-color">{{ value }}</dd>
-                </div>
-              </dl>
+              <p
+                v-if="shippingAddressText"
+                class="rounded-lg border border-surface bg-surface-50 p-4 text-sm text-color"
+              >
+                {{ shippingAddressText }}
+              </p>
 
               <Message v-else severity="secondary" variant="simple">
                 {{ t('orderDetailPage.shippingEmpty') }}
@@ -150,11 +159,11 @@ function formatAddressKey(key: string) {
                 </p>
               </div>
 
-              <OrderTrackingTimeline
-                :steps="trackingSteps"
-                :status="trackingStatus"
-                :error="trackingError"
-              />
+              <Message v-if="isCancelled" severity="warn" variant="simple">
+                {{ t('orderStatus.CANCELLED') }}
+              </Message>
+
+              <OrderTrackingTimeline v-else :steps="trackingSteps" :status="order.status" />
             </section>
           </template>
         </Card>

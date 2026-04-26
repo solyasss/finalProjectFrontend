@@ -67,7 +67,7 @@ export function useAccountProfileForm(options: AccountProfileFormOptions) {
 
   const fields = computed<AccountProfileField[]>(() =>
     options.section === 'personalInfo'
-      ? ['firstName', 'lastName', 'dateOfBirth']
+      ? ['firstName', 'lastName']
       : ['street', 'city', 'postalCode', 'region'],
   )
 
@@ -86,6 +86,9 @@ export function useAccountProfileForm(options: AccountProfileFormOptions) {
         return source.trim() ? undefined : t('accountPage.errors.required')
       }
       case 'dateOfBirth':
+        // TODO: Frontend currently requires `dateOfBirth`, but the backend OpenAPI profile
+        // contract does not clearly guarantee it. Keep existing validation for now and align
+        // with the backend team before relaxing the field in account UX.
         if (!personalDraft.dateOfBirth.trim()) {
           return t('accountPage.errors.required')
         }
@@ -131,7 +134,8 @@ export function useAccountProfileForm(options: AccountProfileFormOptions) {
       return {
         firstName: personalDraft.firstName.trim(),
         lastName: personalDraft.lastName.trim(),
-        dateOfBirth: personalDraft.dateOfBirth.trim(),
+        // TODO: Re-enable `dateOfBirth` in the payload when `/users/me` supports it in the new API contract.
+        // dateOfBirth: personalDraft.dateOfBirth.trim(),
       }
     }
 
@@ -145,7 +149,10 @@ export function useAccountProfileForm(options: AccountProfileFormOptions) {
       address.region = addressDraft.region.trim()
     }
 
-    return { address }
+    return {
+      // TODO: Re-enable `address` in the payload when `/users/me` supports address fields in the new API contract.
+      // address,
+    }
   }
 
   function applyServerErrors(fields?: Record<string, string> | null) {

@@ -27,31 +27,53 @@ export function useOrdersPage() {
 
   const loading = ref(false)
   const error = ref<string | null>(null)
-  const orders = ref<OrderSummary[]>([])
-  const pagination = ref<Pagination | null>(null)
+  const allOrders = ref<OrderSummary[]>([])
 
   const currentPage = computed(() => parsePageQuery(route.query.page))
+
+  const pagination = computed<Pagination | null>(() => {
+    if (!allOrders.value.length) {
+      return null
+    }
+
+    return {
+      total: allOrders.value.length,
+      page: currentPage.value,
+      limit: ORDERS_PAGE_SIZE,
+    }
+  })
+
+  const orders = computed(() => {
+    const start = (currentPage.value - 1) * ORDERS_PAGE_SIZE
+    return allOrders.value.slice(start, start + ORDERS_PAGE_SIZE)
+  })
 
   async function loadOrders() {
     loading.value = true
     error.value = null
 
-    const result = await getOrders({
-      page: currentPage.value,
-      limit: ORDERS_PAGE_SIZE,
-    })
+    try {
+      const result = await getOrders()
 
-    loading.value = false
+      if (!result.ok) {
+        allOrders.value = []
+        error.value = result.error.message || t('ordersPage.error')
+        return
+      }
 
-    if (!result.ok) {
-      orders.value = []
-      pagination.value = null
-      error.value = result.error.message || t('ordersPage.error')
-      return
+      allOrders.value = result.data.orders
+
+      const maxPage = Math.max(1, Math.ceil(allOrders.value.length / ORDERS_PAGE_SIZE))
+
+      if (currentPage.value > maxPage) {
+        await setPage(maxPage)
+      }
+    } catch {
+      allOrders.value = []
+      error.value = t('ordersPage.error')
+    } finally {
+      loading.value = false
     }
-
-    orders.value = result.data.orders
-    pagination.value = result.data.pagination
   }
 
   async function setPage(page: number) {
