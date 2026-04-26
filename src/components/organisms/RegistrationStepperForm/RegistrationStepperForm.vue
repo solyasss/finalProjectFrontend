@@ -87,9 +87,7 @@ function handlePrevStep(previousStep: RegistrationStep, activateCallback: (value
 </script>
 
 <template>
-  <div
-    class="overflow-hidden h-full md:rounded-4xl border border-surface bg-surface-0 shadow-2xl"
-  >
+  <div class="overflow-hidden h-full md:rounded-4xl border border-surface bg-surface-0 shadow-2xl">
     <div v-if="isSuccess" class="grid gap-5 px-5 py-6 sm:px-8 sm:py-8">
       <div class="space-y-3">
         <p class="text-sm font-bold uppercase tracking-[0.18em] text-muted-color">

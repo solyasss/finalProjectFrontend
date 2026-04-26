@@ -14,9 +14,9 @@ const { t } = useI18n()
 
 <template>
   <article
-    class="grid gap-4 rounded-lg border border-surface bg-surface-0 p-4 sm:grid-cols-[5rem_minmax(0,1fr)]"
+    class="grid grid-cols-[5rem_minmax(0,1fr)] gap-4 rounded-lg border border-surface bg-surface-0 p-4"
   >
-    <div class="overflow-hidden rounded-lg bg-surface-100">
+    <div class="aspect-square w-20 overflow-hidden rounded-lg bg-surface-100">
       <Image
         :src="line.image?.url"
         :alt="line.image?.alt ?? line.name"
@@ -26,7 +26,7 @@ const { t } = useI18n()
             style: {
               display: 'block',
               width: '100%',
-              height: '5rem',
+              height: '100%',
               objectFit: 'cover',
             },
           },
