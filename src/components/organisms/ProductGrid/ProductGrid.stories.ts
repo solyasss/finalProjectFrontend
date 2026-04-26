@@ -7,123 +7,70 @@ import ProductGrid from './ProductGrid.vue'
 // ---------------------------------------------------------------------------
 
 const makeProduct = (
-  overrides: Partial<ApiProductCard> & { productId: string; slug: string; name: string },
+  overrides: Partial<ApiProductCard> & { id: number; slug: string; name: string },
 ): ApiProductCard => ({
-  shortDescription: 'A modern piece for every home.',
-  heroImage: {
-    url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
-    alt: overrides.name,
-    width: 900,
-    height: 900,
-  },
-  price: { amountMinor: 299900, currency: 'UAH', formatted: '₴2,999' },
-  previousPrice: null,
-  badges: [],
-  rating: { average: 4.2, count: 58 },
-  variantPreview: null,
+  description: 'A modern piece for every home.',
+  isActive: true,
+  createdAt: '2026-04-10T09:00:00Z',
+  updatedAt: '2026-04-10T09:00:00Z',
+  baseImageUrl:
+    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
+  ratingAverage: 4.2,
+  ratingCount: 58,
   ...overrides,
 })
 
 const PRODUCTS: ApiProductCard[] = [
   makeProduct({
-    productId: 'prd_1',
+    id: 1,
     slug: 'billy-bookcase-white',
     name: 'BILLY Bookcase, white, 80×28×202 cm',
-    shortDescription: 'Classic adjustable shelves for books and decor.',
-    price: { amountMinor: 599900, currency: 'UAH', formatted: '₴5,999' },
-    previousPrice: { amountMinor: 699900, currency: 'UAH', formatted: '₴6,999' },
-    badges: ['NEW', 'BEST_SELLER'],
-    rating: { average: 4.6, count: 132 },
-    variantPreview: {
-      totalVariants: 3,
-      swatches: [
-        { variantId: 'var_1', hex: '#ffffff' },
-        { variantId: 'var_2', hex: '#d9d3c7' },
-      ],
-    },
+    description: 'Classic adjustable shelves for books and decor.',
+    ratingAverage: 4.6,
+    ratingCount: 132,
   }),
   makeProduct({
-    productId: 'prd_2',
+    id: 2,
     slug: 'kallax-shelf-unit',
     name: 'KALLAX Shelf unit, white, 77×147 cm',
-    heroImage: {
-      url: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80',
-      alt: 'KALLAX shelf unit',
-      width: 900,
-      height: 900,
-    },
-    price: { amountMinor: 489900, currency: 'UAH', formatted: '₴4,899' },
-    badges: ['LAST_CHANCE'],
+    baseImageUrl:
+      'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80',
   }),
   makeProduct({
-    productId: 'prd_3',
+    id: 3,
     slug: 'lack-side-table',
     name: 'LACK Side table, black, 55×55 cm',
-    heroImage: {
-      url: 'https://images.unsplash.com/photo-1538688423619-a81d3f23454b?auto=format&fit=crop&w=900&q=80',
-      alt: 'Black side table',
-      width: 900,
-      height: 900,
-    },
-    price: { amountMinor: 89900, currency: 'UAH', formatted: '₴899' },
-    rating: { average: 3.9, count: 24 },
+    baseImageUrl:
+      'https://images.unsplash.com/photo-1538688423619-a81d3f23454b?auto=format&fit=crop&w=900&q=80',
+    ratingAverage: 3.9,
+    ratingCount: 24,
   }),
   makeProduct({
-    productId: 'prd_4',
+    id: 4,
     slug: 'poang-armchair',
     name: 'POÄNG Armchair, birch veneer / Knisa light beige',
-    heroImage: {
-      url: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?auto=format&fit=crop&w=900&q=80',
-      alt: 'Armchair in light beige',
-      width: 900,
-      height: 900,
-    },
-    price: { amountMinor: 1299900, currency: 'UAH', formatted: '₴12,999' },
-    badges: ['MEMBER_PRICE'],
-    rating: { average: 4.8, count: 301 },
-    variantPreview: {
-      totalVariants: 6,
-      swatches: [
-        { variantId: 'var_a', hex: '#e8dfc7' },
-        { variantId: 'var_b', hex: '#5c4033' },
-        { variantId: 'var_c', hex: '#2b2b2b' },
-      ],
-    },
+    baseImageUrl:
+      'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?auto=format&fit=crop&w=900&q=80',
+    ratingAverage: 4.8,
+    ratingCount: 301,
   }),
   makeProduct({
-    productId: 'prd_5',
+    id: 5,
     slug: 'malm-bed-frame',
     name: 'MALM Bed frame, high, white, 160×200 cm',
-    heroImage: {
-      url: 'https://images.unsplash.com/photo-1588046130717-0eb0c9a3ba15?auto=format&fit=crop&w=900&q=80',
-      alt: 'White bed frame',
-      width: 900,
-      height: 900,
-    },
-    price: { amountMinor: 2199900, currency: 'UAH', formatted: '₴21,999' },
-    previousPrice: { amountMinor: 2599900, currency: 'UAH', formatted: '₴25,999' },
-    rating: { average: 4.5, count: 88 },
-    variantPreview: {
-      totalVariants: 2,
-      swatches: [
-        { variantId: 'var_w', hex: '#ffffff' },
-        { variantId: 'var_o', hex: '#c8a96e' },
-      ],
-    },
+    baseImageUrl:
+      'https://images.unsplash.com/photo-1588046130717-0eb0c9a3ba15?auto=format&fit=crop&w=900&q=80',
+    ratingAverage: 4.5,
+    ratingCount: 88,
   }),
   makeProduct({
-    productId: 'prd_6',
+    id: 6,
     slug: 'hemnes-dresser',
     name: 'HEMNES Chest of 6 drawers, grey, 108×131 cm',
-    heroImage: {
-      url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
-      alt: 'Grey chest of drawers',
-      width: 900,
-      height: 900,
-    },
-    price: { amountMinor: 3499900, currency: 'UAH', formatted: '₴34,999' },
-    badges: ['NEW'],
-    rating: null,
+    baseImageUrl:
+      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
+    ratingAverage: null,
+    ratingCount: null,
   }),
 ]
 
