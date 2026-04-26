@@ -47,7 +47,7 @@ export interface ProductDiscoveryFilterChip {
 interface ProductDiscoveryListingOptions {
   // TODO: 'search' mode not supported by backend API yet.
   // To enable once backend supports search endpoint.
-  mode: 'plp'
+  mode: 'plp' | 'search'
 }
 
 interface ListingResponseMeta {
@@ -226,7 +226,7 @@ function extractFilterQuerySignature(query: Record<string, unknown>): string {
   return entries.join('|')
 }
 
-export function useProductDiscoveryListing(options: ProductDiscoveryListingOptions) {
+export function useProductDiscoveryListing(_options: ProductDiscoveryListingOptions) {
   const { t } = useI18n()
   const route = useRoute()
   const router = useRouter()
