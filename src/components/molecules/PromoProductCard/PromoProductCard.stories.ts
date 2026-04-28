@@ -44,3 +44,30 @@ export const CustomPrice: Story = {
     title: 'Throws',
   },
 }
+
+export const ParentSized: Story = {
+  render: (args) => ({
+    components: { PromoProductCard },
+    setup() {
+      return { args }
+    },
+    template: `
+      <div class="flex flex-wrap items-start gap-6 p-4">
+        <div class="w-48">
+          <PromoProductCard v-bind="args" />
+        </div>
+        <div class="w-72">
+          <PromoProductCard v-bind="args" />
+        </div>
+      </div>
+    `,
+  }),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Both cards keep the same image height while the image stretches to the full card width.',
+      },
+    },
+  },
+}

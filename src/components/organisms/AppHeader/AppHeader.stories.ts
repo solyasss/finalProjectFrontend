@@ -37,6 +37,14 @@ const meta: Meta<typeof AppHeader> = {
   title: 'Organisms/AppHeader',
   component: AppHeader,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'Global header with the updated primary navigation: a dedicated Rooms destination plus the categories menu.',
+      },
+    },
+  },
 }
 
 export default meta
@@ -95,7 +103,7 @@ export const WithCategories: Story = {
         <AppHeader />
         <main class="mx-auto max-w-[1440px] px-4 py-8 md:px-6">
           <div class="bg-surface-100 text-muted-color rounded-border flex min-h-[18rem] items-center justify-center border border-surface">
-            Header preview with category navigation
+            Header preview with Rooms navigation and category menu
           </div>
         </main>
       </div>

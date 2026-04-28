@@ -42,9 +42,7 @@
     "categoryMenuBrowseAll": "Переглянути все в категорії {category}",
     "navAriaLabel": "Основна навігація",
     "nav": {
-      "products": "Товари",
       "rooms": "Кімнати",
-      "design": "Дизайн",
       "categories": "Категорії"
     }
   },
@@ -118,6 +116,64 @@
     "error": "Зараз не вдалося завантажити товари.",
     "empty": "У цій категорії ще немає товарів."
   },
+  "roomsPage": {
+    "title": "Кімнати",
+    "loading": "Завантажуємо кімнати...",
+    "error": "Зараз не вдалося завантажити кімнати.",
+    "empty": "Наразі кімнати недоступні.",
+    "noImage": "Зображення відсутнє",
+    "setCount": "{count} наборів",
+    "paginationSummary": "Сторінка {page} з {total}"
+  },
+  "roomDetailPage": {
+    "eyebrow": "Кімната",
+    "loading": "Завантажуємо деталі кімнати...",
+    "error": "Зараз не вдалося завантажити цю кімнату.",
+    "empty": "Для цієї кімнати ще немає готових наборів.",
+    "invalidRoom": "Посилання на кімнату некоректне.",
+    "backToRooms": "Назад до кімнат",
+    "noImage": "Зображення відсутнє",
+    "descriptionFallback": "Детальніша інформація про цю кімнату з'явиться згодом.",
+    "setCountLabel": "Готові набори",
+    "setCountValue": "{count} наборів",
+    "activeStatusLabel": "Доступність",
+    "activeStatus": "Активна",
+    "inactiveStatus": "Неактивна",
+    "setsTitle": "Набори товарів",
+    "setsDescription": "Перегляньте скоординовані набори, підібрані для цієї кімнати."
+  },
+  "productSetCard": {
+    "noImage": "Зображення відсутнє",
+    "variantCount": "{count} варіантів",
+    "phoneOrderNote": "Набори можна замовити телефоном"
+  },
+  "productSetDetailPage": {
+    "eyebrow": "Набір товарів",
+    "loading": "Завантажуємо деталі набору...",
+    "error": "Зараз не вдалося завантажити цей набір.",
+    "empty": "Для цього набору ще немає доступних варіантів.",
+    "invalidRoom": "Посилання на кімнату некоректне.",
+    "invalidSet": "Посилання на набір некоректне.",
+    "roomMismatch": "Цей набір не належить вибраній кімнаті.",
+    "backToRoom": "Назад до кімнати",
+    "noImage": "Зображення відсутнє",
+    "descriptionFallback": "Детальніша інформація про цей набір з'явиться згодом.",
+    "roomLabel": "Кімната",
+    "variantCountLabel": "Варіанти",
+    "variantCountValue": "{count} варіантів",
+    "variantsTitle": "Доступні варіанти",
+    "variantsDescription": "Перегляньте доступні варіанти всередині цього готового набору."
+  },
+  "productSetVariantCard": {
+    "noImage": "Зображення відсутнє",
+    "skuLabel": "SKU",
+    "colorLabel": "Колір",
+    "colorUnavailable": "Не вказано",
+    "phoneOrderNote": "Набори можна замовити телефоном",
+    "stockIn": "У наявності: {count}",
+    "stockLow": "Залишилось мало: {count}",
+    "stockOut": "Немає в наявності"
+  },
   "search": {
     "eyebrow": "Пошук",
     "resultsTitle": "Результати для \"{query}\"",
@@ -145,7 +201,8 @@
     "applyRange": "Застосувати діапазон",
     "clearRange": "Очистити діапазон",
     "rangeSummary": "Обраний діапазон: {value}",
-    "rangeEmpty": "Діапазон не обрано"
+    "rangeEmpty": "Діапазон не обрано",
+    "paginationSummary": "Сторінка {page} з {total}"
   },
   "authRegister": {
     "eyebrow": "Створення акаунта",
@@ -365,6 +422,7 @@
     "loading": "Завантажуємо інформацію про товар...",
     "error": "Зараз не вдалося завантажити цей товар.",
     "detailsTitle": "Деталі товару",
+    "descriptionTitle": "Опис",
     "detailsEmpty": "Продавець ще не надав детальну інформацію про цей товар.",
     "documentsTitle": "Документи",
     "relatedProductsTitle": "Схожі товари",

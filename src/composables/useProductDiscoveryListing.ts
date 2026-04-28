@@ -47,7 +47,7 @@ export interface ProductDiscoveryFilterChip {
 interface ProductDiscoveryListingOptions {
   // TODO: 'search' mode not supported by backend API yet.
   // To enable once backend supports search endpoint.
-  mode: 'plp'
+  mode: 'plp' | 'search'
 }
 
 interface ListingResponseMeta {
@@ -226,7 +226,19 @@ function extractFilterQuerySignature(query: Record<string, unknown>): string {
   return entries.join('|')
 }
 
-export function useProductDiscoveryListing(options: ProductDiscoveryListingOptions) {
+function normalizePagination(meta: ProductListResponse['meta'] | undefined): Pagination {
+  const total = Number(meta?.totalItems)
+  const page = Number(meta?.currentPage)
+  const limit = Number(meta?.itemsPerPage)
+
+  return {
+    total: Number.isFinite(total) && total >= 0 ? total : 0,
+    page: Number.isFinite(page) && page > 0 ? page : 1,
+    limit: Number.isFinite(limit) && limit > 0 ? limit : DEFAULT_LIMIT,
+  }
+}
+
+export function useProductDiscoveryListing(_options: ProductDiscoveryListingOptions) {
   const { t } = useI18n()
   const route = useRoute()
   const router = useRouter()
@@ -248,6 +260,11 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
   const hasSource = computed(() => Boolean(sourceValue.value))
   // TODO: showPromptState was for search mode — not supported yet.
   const showPromptState = computed(() => false)
+
+  const currentPage = computed(() => {
+    const pageValue = Number(getQueryStringValue(route.query.page))
+    return Number.isFinite(pageValue) && pageValue > 0 ? pageValue : 1
+  })
 
   const sort = computed<SortOption | ''>(() => {
     const nextSort = route.query.sort
@@ -294,7 +311,7 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
 
     const apiFilters = buildApiFilters(parseSelectedFilters(route.query, filters.value))
     const requestParams = {
-      page: 1,
+      page: currentPage.value,
       limit: DEFAULT_LIMIT,
       sort: sort.value || undefined,
       filters: apiFilters,
@@ -334,11 +351,7 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
       products: data.data,
       // TODO: filters not returned by /catalog/products — not supported yet.
       filters: [],
-      pagination: {
-        total: data.meta.totalItems,
-        page: data.meta.currentPage,
-        limit: data.meta.itemsPerPage,
-      },
+      pagination: normalizePagination(data.meta),
     }
   }
 
@@ -349,6 +362,7 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
   async function updateQuery(
     nextSort: SortOption | '',
     nextSelectedFilters: ProductDiscoverySelectedFilters,
+    nextPage = 1,
   ) {
     const nextQuery: LocationQueryRaw = { ...route.query }
 
@@ -370,6 +384,12 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
       nextQuery[`filters[${key}]`] = value
     }
 
+    if (nextPage > 1) {
+      nextQuery.page = String(nextPage)
+    } else {
+      delete nextQuery.page
+    }
+
     await router.replace({ query: nextQuery })
   }
 
@@ -383,6 +403,14 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
 
   async function applyFilters(nextSelectedFilters: ProductDiscoverySelectedFilters) {
     await updateQuery(sort.value, nextSelectedFilters)
+  }
+
+  async function setPage(nextPage: number) {
+    if (currentPage.value === nextPage || nextPage < 1) {
+      return
+    }
+
+    await updateQuery(sort.value, selectedFilters.value, nextPage)
   }
 
   async function toggleFilterOption(key: string, value: string) {
@@ -457,7 +485,9 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
   watch(
     [
       sourceValue,
+      currentPage,
       () => getQueryStringValue(route.query.sort),
+      () => getQueryStringValue(route.query.page),
       () => extractFilterQuerySignature(route.query),
     ],
     () => {
@@ -478,9 +508,11 @@ export function useProductDiscoveryListing(options: ProductDiscoveryListingOptio
     activeFilterChips,
     title,
     sourceValue,
+    currentPage,
     hasSource,
     showPromptState,
     setSort,
+    setPage,
     applyFilters,
     toggleFilterOption,
     setBooleanFilter,

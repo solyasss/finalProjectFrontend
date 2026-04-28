@@ -2,7 +2,7 @@ export { setAuthToken, setUnauthorizedHandler, setRefreshHandler } from './clien
 
 export { register, login, verifyEmail, resendVerification, refreshToken, logout } from './auth'
 
-export { getCategories, getCategoryProducts } from './catalog'
+export { getCategories, getCategoryProducts, getRooms, getRoom, getProductSet } from './catalog'
 // TODO: compareProducts is not supported by the backend API yet.
 
 export {
@@ -79,6 +79,13 @@ export type {
   FilterRange,
   FilterType,
   FilterDefinition,
+  Room,
+  RoomSummary,
+  RoomDetails,
+  SetSummary,
+  ProductSetSummary,
+  ProductSetVariant,
+  ProductSetDetails,
   // Cart
   CartItem,
   CartItemVariant,
@@ -100,8 +107,11 @@ export type {
   // Response shapes
   CategoriesResponse,
   ProductListResponse,
+  RoomListResponse,
   // TODO: ProductCompareResponse — not supported by backend API yet.
   ProductDetailsResponse,
+  RoomDetailsResponse,
+  ProductSetDetailsResponse,
   // TODO: ProductAvailabilityResponse — not supported by backend API yet.
   ProductReview,
   ProductReviewListResponse,

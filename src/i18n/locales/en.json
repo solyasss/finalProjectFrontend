@@ -42,9 +42,7 @@
     "categoryMenuBrowseAll": "Browse all {category}",
     "navAriaLabel": "Main navigation",
     "nav": {
-      "products": "Products",
       "rooms": "Rooms",
-      "design": "Design",
       "categories": "Categories"
     }
   },
@@ -118,6 +116,64 @@
     "error": "We could not load the products right now.",
     "empty": "No products found in this category yet."
   },
+  "roomsPage": {
+    "title": "Rooms",
+    "loading": "Loading rooms...",
+    "error": "We could not load the rooms right now.",
+    "empty": "No rooms are available right now.",
+    "noImage": "No image",
+    "setCount": "{count} sets",
+    "paginationSummary": "Page {page} of {total}"
+  },
+  "roomDetailPage": {
+    "eyebrow": "Room",
+    "loading": "Loading room details...",
+    "error": "We could not load this room right now.",
+    "empty": "No curated sets are available for this room yet.",
+    "invalidRoom": "The room link is invalid.",
+    "backToRooms": "Back to rooms",
+    "noImage": "No image",
+    "descriptionFallback": "Detailed information for this room will be available soon.",
+    "setCountLabel": "Curated sets",
+    "setCountValue": "{count} sets",
+    "activeStatusLabel": "Availability",
+    "activeStatus": "Active",
+    "inactiveStatus": "Inactive",
+    "setsTitle": "Product sets",
+    "setsDescription": "Browse coordinated sets prepared for this room."
+  },
+  "productSetCard": {
+    "noImage": "No image",
+    "variantCount": "{count} variants",
+    "phoneOrderNote": "Sets can be ordered via phone call"
+  },
+  "productSetDetailPage": {
+    "eyebrow": "Product set",
+    "loading": "Loading product set details...",
+    "error": "We could not load this product set right now.",
+    "empty": "No variants are available for this product set yet.",
+    "invalidRoom": "The room link is invalid.",
+    "invalidSet": "The product set link is invalid.",
+    "roomMismatch": "This product set does not belong to the selected room.",
+    "backToRoom": "Back to room",
+    "noImage": "No image",
+    "descriptionFallback": "Detailed information for this product set will be available soon.",
+    "roomLabel": "Room",
+    "variantCountLabel": "Variants",
+    "variantCountValue": "{count} variants",
+    "variantsTitle": "Available variants",
+    "variantsDescription": "Review the available variants inside this curated set."
+  },
+  "productSetVariantCard": {
+    "noImage": "No image",
+    "skuLabel": "SKU",
+    "colorLabel": "Color",
+    "colorUnavailable": "Not specified",
+    "phoneOrderNote": "Sets can be ordered via phone call",
+    "stockIn": "In stock: {count}",
+    "stockLow": "Low stock: {count}",
+    "stockOut": "Out of stock"
+  },
   "search": {
     "eyebrow": "Search",
     "resultsTitle": "Results for \"{query}\"",
@@ -145,7 +201,8 @@
     "applyRange": "Apply range",
     "clearRange": "Clear range",
     "rangeSummary": "Selected range: {value}",
-    "rangeEmpty": "No range selected"
+    "rangeEmpty": "No range selected",
+    "paginationSummary": "Page {page} of {total}"
   },
   "authRegister": {
     "eyebrow": "Create your account",
@@ -365,6 +422,7 @@
     "loading": "Loading product details...",
     "error": "We could not load this product right now.",
     "detailsTitle": "Product details",
+    "descriptionTitle": "Description",
     "detailsEmpty": "The seller hasn't provided any details for this product yet.",
     "documentsTitle": "Documents",
     "relatedProductsTitle": "Related products",

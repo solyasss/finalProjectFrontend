@@ -1,16 +1,17 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import Message from 'primevue/message'
 import { useI18n } from 'vue-i18n'
+import type { DetailsSection } from '@/api'
+import BreadcrumbNav from '@/components/molecules/BreadcrumbNav/BreadcrumbNav.vue'
 import { useProductDetailPage } from '@/composables/useProductDetailPage'
+import { useBreadcrumbs } from '@/composables/useBreadcrumbs'
 import ProductDetailsAccordion from '@/components/organisms/ProductDetailsAccordion/ProductDetailsAccordion.vue'
 import ProductGallery from '@/components/organisms/ProductGallery/ProductGallery.vue'
 import ProductPurchasePanel from '@/components/organisms/ProductPurchasePanel/ProductPurchasePanel.vue'
 import ReviewSection from '@/components/organisms/ReviewSection/ReviewSection.vue'
 import ProductCard from '@/components/molecules/ProductCard/ProductCard.vue'
 import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
-
-// TODO: BreadcrumbNav removed — breadcrumbs not supported by backend API yet.
-// import BreadcrumbNav from '@/components/molecules/BreadcrumbNav/BreadcrumbNav.vue'
 
 const { t } = useI18n()
 
@@ -42,10 +43,24 @@ const {
   requestReviewAuth,
   submitReview,
 } = useProductDetailPage()
+const { breadcrumbItems } = useBreadcrumbs(product)
 
 // TODO: availability, loadingAvailability, availabilityError removed — not supported by backend yet.
-// TODO: breadcrumbs removed — not supported by backend yet.
 // TODO: reviewsSummary, reviewHistogram removed — not supported by backend yet.
+
+const detailSections = computed<DetailsSection[]>(() => {
+  if (!product.value?.description?.trim()) {
+    return []
+  }
+
+  return [
+    {
+      key: 'DETAILS',
+      title: t('pdp.descriptionTitle'),
+      content: product.value.description,
+    },
+  ]
+})
 </script>
 
 <template>
@@ -60,12 +75,11 @@ const {
       </Message>
 
       <template v-else-if="product">
-        <!-- TODO: BreadcrumbNav removed — breadcrumbs not supported by backend API yet.
-          To enable once backend supports it.
-        <BreadcrumbNav :items="..." :current-label="product.name" />
-        -->
+        <BreadcrumbNav :items="breadcrumbItems" :current-label="product.name" />
 
-        <div class="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.9fr)] lg:items-stretch">
+        <div
+          class="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.9fr)] lg:items-stretch max-h-[700px]"
+        >
           <ProductGallery
             :images="galleryImages"
             :name="product.name"
@@ -90,7 +104,7 @@ const {
         </div>
 
         <!-- Accordion always shown; empty sections show "seller hasn't provided details" message -->
-        <ProductDetailsAccordion :sections="[]" :documents="[]" />
+        <ProductDetailsAccordion :sections="detailSections" :documents="[]" />
 
         <ReviewSection
           :summary="null"
@@ -114,7 +128,7 @@ const {
             {{ t('pdp.relatedProductsTitle') }}
           </h2>
           <div class="flex gap-4 overflow-x-auto pb-2">
-            <div v-for="item in relatedProducts" :key="item.id" class="w-[200px] shrink-0">
+            <div v-for="item in relatedProducts" :key="item.id" class="w-[250px] shrink-0">
               <ProductCard :product="item" :clickable="true" />
             </div>
           </div>

@@ -247,6 +247,56 @@ export interface FilterDefinition {
   range?: FilterRange | null
 }
 
+export interface ProductSetSummary {
+  id: number
+  name: string
+  slug: string
+  description?: string | null
+  isActive?: boolean
+  createdAt?: string
+  updatedAt?: string
+  deletedAt?: string | null
+  imageUrl?: string | null
+  roomId?: number
+  variantIds?: string[]
+}
+
+export interface RoomSummary {
+  id: number
+  name: string
+  slug: string
+  description?: string | null
+  imageUrl?: string | null
+  isActive?: boolean
+  createdAt?: string
+  updatedAt?: string
+  deletedAt?: string | null
+  sets?: ProductSetSummary[]
+}
+
+export type SetSummary = ProductSetSummary
+export type Room = RoomSummary
+
+export interface RoomDetails extends RoomSummary {
+  sets: ProductSetSummary[]
+}
+
+export interface ProductSetVariant {
+  id: string
+  sku: string
+  color?: string | null
+  price: string
+  stock: number
+  images: string[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ProductSetDetails extends ProductSetSummary {
+  room: RoomSummary
+  variants: ProductSetVariant[]
+}
+
 // Cart
 export interface CartItemProduct {
   id: number
@@ -375,6 +425,21 @@ export interface ProductListResponse {
   data: ProductCard[]
   meta: ProductListMeta
 }
+
+export interface RoomListMeta {
+  totalItems: number
+  itemsPerPage: number
+  currentPage: number
+  totalPages: number
+}
+
+export interface RoomListResponse {
+  data: Room[]
+  meta: RoomListMeta
+}
+
+export type RoomDetailsResponse = RoomDetails
+export type ProductSetDetailsResponse = ProductSetDetails
 
 // TODO: Product compare is not supported by the backend API yet.
 // To enable once backend supports it.

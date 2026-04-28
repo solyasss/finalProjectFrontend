@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import Message from 'primevue/message'
 import { useI18n } from 'vue-i18n'
-import ProductFilterDrawer from '@/components/organisms/ProductFilterDrawer/ProductFilterDrawer.vue'
-import ProductFilters from '@/components/organisms/ProductFilters/ProductFilters.vue'
-import SortControl from '@/components/molecules/SortControl/SortControl.vue'
-import ProductGrid from '@/components/organisms/ProductGrid/ProductGrid.vue'
-import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
+import ProductDiscoveryTemplate from '@/components/templates/ProductDiscoveryTemplate/ProductDiscoveryTemplate.vue'
 import { useProductDiscoveryListing } from '@/composables/useProductDiscoveryListing'
 
 const { t } = useI18n()
@@ -18,6 +13,7 @@ const {
   products,
   filters,
   pagination,
+  currentPage,
   sort,
   sortOptions,
   selectedFilters,
@@ -34,64 +30,28 @@ const resultCount = computed(() => pagination.value?.total ?? products.value.len
 </script>
 
 <template>
-  <DefaultTemplate>
-    <section class="mx-auto grid max-w-[1440px] gap-6 px-4 py-6 md:px-6 md:py-8">
-      <header class="space-y-2">
-        <p class="text-sm font-bold uppercase tracking-[0.16em] text-muted-color">
-          {{ t('search.eyebrow') }}
-        </p>
-        <h1 class="text-2xl font-bold text-color md:text-3xl">
-          {{ searchTitle }}
-        </h1>
-      </header>
-
-      <Message v-if="showPromptState" severity="secondary" variant="simple">
-        {{ t('search.prompt') }}
-      </Message>
-      <Message v-else-if="loading" severity="secondary" variant="simple">
-        {{ t('search.loading') }}
-      </Message>
-      <Message v-else-if="error" severity="error">{{ error }}</Message>
-      <Message v-else-if="!products.length" severity="secondary" variant="simple">
-        {{ t('search.empty') }}
-      </Message>
-      <div v-else class="grid gap-6 md:grid-cols-[18rem_minmax(0,1fr)] md:items-start">
-        <aside class="hidden md:sticky md:top-24 md:block">
-          <ProductFilters
-            :filters="filters"
-            :selected-filters="selectedFilters"
-            :active-chips="activeFilterChips"
-            :result-count="resultCount"
-            :loading="loading"
-            @apply-filters="listing.applyFilters"
-          />
-        </aside>
-
-        <div class="grid gap-4">
-          <div class="flex items-end justify-between gap-3">
-            <div class="md:hidden self-end">
-              <ProductFilterDrawer
-                :filters="filters"
-                :selected-filters="selectedFilters"
-                :active-chips="activeFilterChips"
-                :result-count="resultCount"
-                :loading="loading"
-                @apply-filters="listing.applyFilters"
-              />
-            </div>
-            <div class="flex justify-end md:ml-auto">
-              <SortControl
-                :model-value="sort"
-                :options="sortOptions"
-                :disabled="loading"
-                @update:model-value="listing.setSort"
-              />
-            </div>
-          </div>
-
-          <ProductGrid :products="products" @select-product="listing.selectProduct" />
-        </div>
-      </div>
-    </section>
-  </DefaultTemplate>
+  <ProductDiscoveryTemplate
+    :eyebrow="t('search.eyebrow')"
+    :title="searchTitle"
+    :loading="loading"
+    :error="error"
+    :products="products"
+    :filters="filters"
+    :selected-filters="selectedFilters"
+    :active-filter-chips="activeFilterChips"
+    :result-count="resultCount"
+    :current-page="currentPage"
+    :pagination-total="pagination?.total ?? 0"
+    :pagination-limit="pagination?.limit ?? 0"
+    :sort="sort"
+    :sort-options="sortOptions"
+    :loading-message="t('search.loading')"
+    :empty-message="t('search.empty')"
+    :show-prompt-state="showPromptState"
+    :prompt-message="t('search.prompt')"
+    @apply-filters="listing.applyFilters"
+    @page-change="listing.setPage"
+    @update:sort="listing.setSort"
+    @select-product="listing.selectProduct"
+  />
 </template>

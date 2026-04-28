@@ -65,17 +65,25 @@ function handleSelect(item: HamburgerMenuItem) {
     <Drawer
       :visible="open"
       position="left"
-      class="hamburger-menu-drawer"
       :header="drawerTitle"
+      :pt="{
+        root: {
+          class: 'h-dvh w-screen max-w-screen rounded-none',
+        },
+      }"
       @update:visible="setOpen"
     >
-      <nav class="hamburger-menu-list" :aria-label="t('hamburgerMenu.navAriaLabel')">
+      <div class="mb-1">
+        <slot />
+      </div>
+
+      <nav class="grid gap-1" :aria-label="t('hamburgerMenu.navAriaLabel')">
         <button
           v-for="item in props.items"
           :key="item.id"
           type="button"
           :disabled="item.disabled"
-          class="hamburger-menu-item"
+          class="w-full rounded-2xl border border-surface-200 bg-surface-0 p-4 text-inherit disabled:opacity-60"
           @click="handleSelect(item)"
         >
           <span class="flex items-start gap-3">
@@ -96,23 +104,3 @@ function handleSelect(item: HamburgerMenuItem) {
     </Drawer>
   </div>
 </template>
-
-<style scoped>
-.hamburger-menu-list {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.hamburger-menu-item {
-  width: 100%;
-  border: 1px solid var(--p-surface-200);
-  border-radius: 1rem;
-  background: var(--p-surface-0);
-  padding: 1rem;
-  color: inherit;
-}
-
-.hamburger-menu-item:disabled {
-  opacity: 0.6;
-}
-</style>

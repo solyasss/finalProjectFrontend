@@ -15,6 +15,21 @@ const router = createRouter({
       component: () => import('@/pages/ProductListingPage/ProductListingPage.vue'),
     },
     {
+      path: '/rooms',
+      name: 'rooms',
+      component: () => import('@/pages/RoomsPage/RoomsPage.vue'),
+    },
+    {
+      path: '/rooms/:roomId',
+      name: 'room-detail',
+      component: () => import('@/pages/RoomDetailPage/RoomDetailPage.vue'),
+    },
+    {
+      path: '/rooms/:roomId/sets/:setId',
+      name: 'product-set-detail',
+      component: () => import('@/pages/ProductSetDetailPage/ProductSetDetailPage.vue'),
+    },
+    {
       path: '/p/:productId',
       name: 'pdp',
       component: () => import('@/pages/ProductDetailPage/ProductDetailPage.vue'),

@@ -3,38 +3,17 @@ import type { ProductCard as ApiProductCard } from '@/api'
 import ProductCard from './ProductCard.vue'
 
 const sampleProduct: ApiProductCard = {
-  productId: 'prd_1',
+  id: 1,
   slug: 'billy-bookcase-white',
   name: 'BILLY Bookcase, white, 80x28x202 cm',
-  shortDescription: 'A timeless storage piece with adjustable shelves for books and decor.',
-  heroImage: {
-    url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
-    alt: 'White bookcase in a bright living room',
-    width: 900,
-    height: 900,
-  },
-  price: {
-    amountMinor: 599900,
-    currency: 'UAH',
-    formatted: '₴5,999',
-  },
-  previousPrice: {
-    amountMinor: 699900,
-    currency: 'UAH',
-    formatted: '₴6,999',
-  },
-  badges: ['NEW', 'BEST_SELLER'],
-  rating: {
-    average: 4.4,
-    count: 132,
-  },
-  variantPreview: {
-    totalVariants: 3,
-    swatches: [
-      { variantId: 'var_1', hex: '#ffffff' },
-      { variantId: 'var_2', hex: '#d9d3c7' },
-    ],
-  },
+  description: 'A timeless storage piece with adjustable shelves for books and decor.',
+  isActive: true,
+  createdAt: '2026-04-10T09:00:00Z',
+  updatedAt: '2026-04-10T09:00:00Z',
+  baseImageUrl:
+    'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
+  ratingAverage: 4.4,
+  ratingCount: 132,
 }
 
 const meta: Meta<typeof ProductCard> = {
@@ -62,7 +41,8 @@ export const WithoutRating: Story = {
   args: {
     product: {
       ...sampleProduct,
-      rating: null,
+      ratingAverage: null,
+      ratingCount: null,
     },
   },
 }
@@ -71,7 +51,8 @@ export const WithoutDiscount: Story = {
   args: {
     product: {
       ...sampleProduct,
-      previousPrice: null,
+      ratingAverage: 4.4,
+      ratingCount: 132,
     },
   },
 }
@@ -81,7 +62,7 @@ export const LongContent: Story = {
     product: {
       ...sampleProduct,
       name: 'HAUGA Storage combination with shelves and cabinet for living room organization',
-      shortDescription:
+      description:
         'Versatile storage for books, ceramics, framed art, and everyday essentials with a calm neutral finish that blends into multiple room setups.',
     },
   },
