@@ -50,8 +50,8 @@ function handleSelectItem(index: number) {
 
 <template>
   <!-- TODO: Improve Mobile Render -->
-  <section class="grid grid-cols-1 gap-4" :aria-label="t('homeHeroCta.ariaLabel')">
-    <div class="flex flex-col flex-wrap items-center gap-6 mb-2 md:flex-row">
+  <section class="grid w-full grid-cols-1 gap-4 text-left" :aria-label="t('homeHeroCta.ariaLabel')">
+    <div class="mb-2 flex flex-col flex-wrap items-start gap-6 md:flex-row md:items-start">
       <div>
         <Button
           type="button"
@@ -115,7 +115,7 @@ function handleSelectItem(index: number) {
     <div class="w-full md:hidden">
       <Carousel :value="items" :num-visible="1" :num-scroll="1">
         <template #item="{ data, index }">
-          <div class="px-1">
+          <div class="overflow-hidden rounded-[1.5rem] px-1">
             <PromoProductCard
               :image-src="data.imageSrc"
               :image-alt="data.imageAlt"
@@ -131,23 +131,27 @@ function handleSelectItem(index: number) {
       </Carousel>
     </div>
 
-    <!-- md+: 3-column grid -->
-    <div class="hidden md:grid md:grid-cols-3 md:gap-12">
-      <PromoProductCard
+    <!-- md+: 3-column grid, width controlled by parent layout -->
+    <div class="hidden md:grid md:grid-cols-3 md:gap-6 xl:gap-8">
+      <div
         v-for="(item, index) in items"
         :key="`${item.title}-${index}`"
-        :image-src="item.imageSrc"
-        :image-alt="item.imageAlt"
-        :title="item.title"
-        :subtitle="item.subtitle"
-        :price="item.price"
-        :badge-text="item.badgeText ?? t('homeHeroCta.promoBadgeFallback')"
-        clickable
-        @select="handleSelectItem(index)"
-      />
+        class="overflow-hidden rounded-[1.5rem]"
+      >
+        <PromoProductCard
+          :image-src="item.imageSrc"
+          :image-alt="item.imageAlt"
+          :title="item.title"
+          :subtitle="item.subtitle"
+          :price="item.price"
+          :badge-text="item.badgeText ?? t('homeHeroCta.promoBadgeFallback')"
+          clickable
+          @select="handleSelectItem(index)"
+        />
+      </div>
     </div>
 
-    <p class="text-color text-sm">
+    <p class="text-color text-left text-sm">
       <span>{{ promoPrefix }}</span>
       <strong class="font-semibold"> {{ promoHighlight }} </strong>
       <span>{{ promoSuffix }}</span>

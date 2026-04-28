@@ -35,7 +35,7 @@ const items = computed<PromoItem[]>(() => props.items ?? [])
 
 <template>
   <section
-    class="flex bg-surface-0"
+    class="flex w-full bg-surface-0"
     :style="{
       backgroundImage: `url(${imageSrc})`,
       backgroundPosition: 'center',
@@ -51,8 +51,8 @@ const items = computed<PromoItem[]>(() => props.items ?? [])
           {{ title }}
         </h1>
 
-        <div class="flex w-full justify-center lg:justify-start lg:pl-24">
-          <div class="w-full lg:max-w-none lg:basis-[30%] lg:min-w-88">
+        <div class="flex w-full justify-center lg:justify-start lg:pl-16 xl:pl-24">
+          <div class="w-full lg:max-w-xl">
             <HomeHeroCta
               :items="items"
               @primary-click="emit('primary-click')"

@@ -256,11 +256,6 @@ const sectionResponsiveOptions = [
     numScroll: 1,
   },
   {
-    breakpoint: '768px',
-    numVisible: 2,
-    numScroll: 1,
-  },
-  {
     breakpoint: '640px',
     numVisible: 1,
     numScroll: 1,
@@ -326,7 +321,7 @@ const newArrivalItems = [
             :title="t('homePage.recommendationTitle')"
             :items="recommendationItems"
             item-key="id"
-            :num-visible="6"
+            :num-visible="5"
             :num-scroll="1"
             :show-indicators="false"
             :show-navigators="true"
@@ -347,7 +342,7 @@ const newArrivalItems = [
             :title="t('homePage.bestSetsTitle')"
             :items="bestSetItems"
             item-key="id"
-            :num-visible="6"
+            :num-visible="5"
             :num-scroll="1"
             :show-indicators="false"
             :show-navigators="true"
