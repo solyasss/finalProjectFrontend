@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Button from 'primevue/button'
 import { useI18n } from 'vue-i18n'
+import BackButton from '@/components/atoms/BackButton/BackButton.vue'
 
 interface Props {
   imageSrc?: string
@@ -24,18 +24,7 @@ const { t } = useI18n()
   >
     <div class="flex min-h-72 h-full flex-col px-8 py-8 text-white">
       <div>
-        <RouterLink to="/" class="inline-flex no-underline">
-          <Button
-            variant="link"
-            type="button"
-            text
-            icon="pi pi-arrow-left"
-            :label="t('common.back')"
-            :pt="{
-              root: { style: { color: '#fff' } },
-            }"
-          />
-        </RouterLink>
+        <BackButton :label="t('common.back')" :to="{ name: 'home' }" variant="link" inverted />
       </div>
 
       <div class="mt-6 flex flex-col gap-4">
