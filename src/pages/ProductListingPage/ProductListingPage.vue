@@ -13,6 +13,7 @@ const {
   products,
   filters,
   pagination,
+  currentPage,
   sort,
   sortOptions,
   selectedFilters,
@@ -34,11 +35,15 @@ const resultCount = computed(() => pagination.value?.total ?? products.value.len
     :selected-filters="selectedFilters"
     :active-filter-chips="activeFilterChips"
     :result-count="resultCount"
+    :current-page="currentPage"
+    :pagination-total="pagination?.total ?? 0"
+    :pagination-limit="pagination?.limit ?? 0"
     :sort="sort"
     :sort-options="sortOptions"
     :loading-message="t('plp.loading')"
     :empty-message="t('plp.empty')"
     @apply-filters="listing.applyFilters"
+    @page-change="listing.setPage"
     @update:sort="listing.setSort"
     @select-product="listing.selectProduct"
   />

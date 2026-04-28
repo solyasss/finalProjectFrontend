@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import Message from 'primevue/message'
+import Paginator from 'primevue/paginator'
+import { useI18n } from 'vue-i18n'
 import type { FilterDefinition, ProductCard, SortOption } from '@/api'
 import SortControl from '@/components/molecules/SortControl/SortControl.vue'
 import ProductFilterDrawer from '@/components/organisms/ProductFilterDrawer/ProductFilterDrawer.vue'
@@ -27,6 +29,9 @@ interface Props {
   selectedFilters?: ProductDiscoverySelectedFilters
   activeFilterChips?: ProductDiscoveryFilterChip[]
   resultCount?: number
+  currentPage?: number
+  paginationTotal?: number
+  paginationLimit?: number
   sort?: SortOption | ''
   sortOptions?: SortControlOption[]
   loadingMessage: string
@@ -40,6 +45,9 @@ const props = withDefaults(defineProps<Props>(), {
   selectedFilters: () => ({}),
   activeFilterChips: () => [],
   resultCount: 0,
+  currentPage: 1,
+  paginationTotal: 0,
+  paginationLimit: 0,
   sort: '',
   sortOptions: () => [],
   showPromptState: false,
@@ -49,8 +57,11 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (event: 'apply-filters', value: ProductDiscoverySelectedFilters): void
   (event: 'update:sort', value: SortOption | ''): void
+  (event: 'page-change', page: number): void
   (event: 'select-product', product: ProductCard): void
 }>()
+
+const { t } = useI18n()
 
 const showFilters = computed(() => props.filters.length > 0)
 const showSort = computed(() => props.sortOptions.length > 0)
@@ -58,6 +69,18 @@ const showControls = computed(() => showFilters.value || showSort.value)
 const contentLayoutClass = computed(() =>
   showFilters.value ? 'md:grid-cols-[18rem_minmax(0,1fr)] md:items-start' : '',
 )
+const pageCount = computed(() => {
+  if (!props.paginationLimit) {
+    return 1
+  }
+
+  return Math.max(1, Math.ceil(props.paginationTotal / props.paginationLimit))
+})
+const showPaginator = computed(() => props.paginationTotal > 0 && props.paginationLimit > 0)
+
+function handlePageChange(event: { page: number }) {
+  emit('page-change', event.page + 1)
+}
 </script>
 
 <template>
@@ -120,6 +143,28 @@ const contentLayoutClass = computed(() =>
             :products="props.products"
             @select-product="emit('select-product', $event)"
           />
+
+          <div
+            v-if="showPaginator"
+            class="flex flex-col gap-3 rounded-lg border border-surface bg-surface-0 p-4 md:flex-row md:items-center md:justify-between"
+          >
+            <p class="text-sm text-muted-color">
+              {{
+                t('listingControls.paginationSummary', {
+                  page: props.currentPage,
+                  total: pageCount,
+                })
+              }}
+            </p>
+
+            <Paginator
+              :rows="props.paginationLimit"
+              :first="(props.currentPage - 1) * props.paginationLimit"
+              :total-records="props.paginationTotal"
+              template="PrevPageLink PageLinks NextPageLink"
+              @page="handlePageChange"
+            />
+          </div>
         </div>
       </div>
     </section>
