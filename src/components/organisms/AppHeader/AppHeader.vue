@@ -49,16 +49,10 @@ const menuItems = computed(() => [
     description: currentLabel.value,
     icon: 'pi pi-map-marker',
   },
-  { id: 'products', label: t('header.nav.products'), icon: 'pi pi-box' },
   { id: 'rooms', label: t('header.nav.rooms'), icon: 'pi pi-home' },
-  { id: 'design', label: t('header.nav.design'), icon: 'pi pi-palette' },
 ])
 
-const navItems = computed(() => [
-  { label: t('header.nav.products'), to: { name: 'plp', params: { categorySlug: 'living-room' } } },
-  { label: t('header.nav.rooms'), to: { name: 'plp', params: { categorySlug: 'bedroom' } } },
-  { label: t('header.nav.design'), to: { name: 'plp', params: { categorySlug: 'lighting' } } },
-])
+const navItems = computed(() => [{ label: t('header.nav.rooms'), to: { name: 'rooms' } }])
 
 function handleMenuSelect(item: { id: string }) {
   if (item.id === 'location') {
@@ -66,20 +60,8 @@ function handleMenuSelect(item: { id: string }) {
     return
   }
 
-  if (item.id === 'products') {
-    router.push({ name: 'plp', params: { categorySlug: 'living-room' } })
-    menuOpen.value = false
-    return
-  }
-
   if (item.id === 'rooms') {
-    router.push({ name: 'plp', params: { categorySlug: 'bedroom' } })
-    menuOpen.value = false
-    return
-  }
-
-  if (item.id === 'design') {
-    router.push({ name: 'plp', params: { categorySlug: 'lighting' } })
+    router.push({ name: 'rooms' })
     menuOpen.value = false
   }
 }
@@ -89,9 +71,9 @@ function handleMenuSelect(item: { id: string }) {
   <header class="bg-surface-0 border-b border-surface md:sticky top-0 z-50">
     <div class="px-3 py-3 md:px-6 lg:px-12">
       <div
-        class="flex min-h-18 items-center justify-between gap-4 md:grid md:grid-cols-[minmax(0,1fr)_minmax(18rem,36rem)_minmax(0,1fr)] md:gap-6"
+        class="flex min-h-16 flex-wrap items-center justify-between gap-x-4 gap-y-3 md:flex-nowrap md:gap-6"
       >
-        <div class="flex min-w-0 items-center gap-4 md:gap-6 lg:gap-8 md:justify-self-start">
+        <div class="flex min-w-0 flex-1 items-center gap-4 md:flex-none md:gap-6 lg:gap-8">
           <div class="md:hidden">
             <HamburgerMenu
               v-model:open="menuOpen"
@@ -126,11 +108,15 @@ function handleMenuSelect(item: { id: string }) {
           </nav>
         </div>
 
-        <div class="hidden w-full md:block md:justify-self-center">
-          <SearchBar v-model="searchQuery" @submit="handleSearch" />
+        <div class="hidden min-w-0 flex-1 md:flex md:justify-center">
+          <div class="w-full max-w-lg">
+            <SearchBar v-model="searchQuery" @submit="handleSearch" />
+          </div>
         </div>
 
-        <div class="flex shrink-0 items-center gap-1 md:gap-2 md:justify-self-end">
+        <div
+          class="flex min-w-0 shrink-0 flex-wrap items-center justify-end gap-1 md:ml-auto md:flex-nowrap md:gap-2"
+        >
           <LocationPicker
             class="hidden md:block"
             ref="locationPickerRef"

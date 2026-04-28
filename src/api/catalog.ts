@@ -3,6 +3,9 @@ import { buildFilterQuery } from './utils'
 import type {
   ApiResult,
   CategoriesResponse,
+  RoomListResponse,
+  RoomDetailsResponse,
+  ProductSetDetailsResponse,
   ProductListResponse,
   GetCategoryProductsParams,
 } from './types'
@@ -25,6 +28,18 @@ export function getCategoryProducts(
       ...buildFilterQuery(params?.filters),
     },
   })
+}
+
+export function getRooms(): Promise<ApiResult<RoomListResponse>> {
+  return request('/catalog/rooms', { baseUrl: 'root' })
+}
+
+export function getRoom(roomId: number): Promise<ApiResult<RoomDetailsResponse>> {
+  return request(`/catalog/rooms/${roomId}`, { baseUrl: 'root' })
+}
+
+export function getProductSet(productSetId: number): Promise<ApiResult<ProductSetDetailsResponse>> {
+  return request(`/catalog/product-sets/${productSetId}`, { baseUrl: 'root' })
 }
 
 // TODO: Product compare is not supported by the backend API yet.
