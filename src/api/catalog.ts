@@ -7,11 +7,17 @@ import type {
   RoomDetailsResponse,
   ProductSetDetailsResponse,
   ProductListResponse,
+  CatalogImagesResponse,
   GetCategoryProductsParams,
+  GetCatalogImagesParams,
 } from './types'
 
 export function getCategories(): Promise<ApiResult<CategoriesResponse>> {
   return request('/catalog/categories', { baseUrl: 'root' })
+}
+
+export function getCategoriesTree(): Promise<ApiResult<CategoriesResponse>> {
+  return request('/catalog/categories/tree', { baseUrl: 'root' })
 }
 
 export function getCategoryProducts(
@@ -42,12 +48,15 @@ export function getProductSet(productSetId: number): Promise<ApiResult<ProductSe
   return request(`/catalog/product-sets/${productSetId}`, { baseUrl: 'root' })
 }
 
-// TODO: Product compare is not supported by the backend API yet.
-// To enable once backend supports it.
-// export function compareProducts(
-//   params: CompareProductsParams,
-// ): Promise<ApiResult<ProductCompareResponse>> {
-//   return request('/products/compare', {
-//     query: { productIds: params.productIds.join(',') },
-//   })
-// }
+export function getCatalogImages(
+  params?: GetCatalogImagesParams,
+): Promise<ApiResult<CatalogImagesResponse>> {
+  return request('/catalog/images', {
+    baseUrl: 'root',
+    query: {
+      page: params?.page,
+      limit: params?.limit,
+      variantId: params?.variantId,
+    },
+  })
+}

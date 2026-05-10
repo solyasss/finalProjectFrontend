@@ -54,7 +54,27 @@ const expandedPanelKeys = computed(() => panels.value.map((panel) => panel.key))
       <AccordionPanel v-for="panel in panels" :key="panel.key" :value="panel.key">
         <AccordionHeader>{{ panel.title }}</AccordionHeader>
         <AccordionContent>
-          <div v-if="panel.key !== 'DOCUMENTS'" class="prose prose-sm max-w-none text-color">
+          <dl
+            v-if="panel.key === 'ADDITIONAL_INFORMATION'"
+            class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm"
+          >
+            <template
+              v-for="[rawKey, rawValue] in Object.entries(JSON.parse(panel.content))"
+              :key="rawKey"
+            >
+              <dt class="font-medium text-color capitalize">
+                {{ (rawKey as string).replace(/([A-Z])/g, ' $1').trim() }}
+              </dt>
+              <dd class="text-color/70">
+                {{ typeof rawValue === 'boolean' ? (rawValue ? 'Yes' : 'No') : rawValue }}
+              </dd>
+            </template>
+          </dl>
+
+          <div
+            v-else-if="panel.key !== 'DOCUMENTS'"
+            class="prose prose-sm max-w-none text-color whitespace-pre-line"
+          >
             {{ panel.content }}
           </div>
 

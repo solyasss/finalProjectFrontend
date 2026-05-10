@@ -8,6 +8,7 @@ import type {
   SearchSuggestParams,
 } from './types'
 
+// TODO: Verify that the backend supports all the query parameters
 export function search(params: SearchParams): Promise<ApiResult<SearchResponse>> {
   return request('/search', {
     query: {
@@ -20,6 +21,7 @@ export function search(params: SearchParams): Promise<ApiResult<SearchResponse>>
   })
 }
 
+// TODO: Verify that the backend expose a search suggest endpoint
 export function searchSuggest(
   params: SearchSuggestParams,
 ): Promise<ApiResult<SearchSuggestResponse>> {

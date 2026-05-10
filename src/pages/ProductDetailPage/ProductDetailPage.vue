@@ -53,13 +53,32 @@ const detailSections = computed<DetailsSection[]>(() => {
     return []
   }
 
-  return [
+  const variant = selectedVariant.value
+  const { widthCm, heightCm, depthCm, weightKg } = variant ?? {}
+  const hasDimensions = widthCm != null && heightCm != null && depthCm != null && weightKg != null
+
+  const dimensionsSuffix = hasDimensions
+    ? `\n\nDimensions: W ${widthCm} × H ${heightCm} × D ${depthCm} cm  ·  Weight: ${weightKg} kg`
+    : ''
+
+  const sections: DetailsSection[] = [
     {
       key: 'DETAILS',
       title: t('pdp.descriptionTitle'),
-      content: product.value.description,
+      content: product.value.description + dimensionsSuffix,
     },
   ]
+
+  const attributes = variant?.attributes
+  if (attributes && typeof attributes === 'object' && Object.keys(attributes).length > 0) {
+    sections.push({
+      key: 'ADDITIONAL_INFORMATION',
+      title: t('pdp.additionalInfoTitle'),
+      content: JSON.stringify(attributes),
+    })
+  }
+
+  return sections
 })
 </script>
 
@@ -78,7 +97,7 @@ const detailSections = computed<DetailsSection[]>(() => {
         <BreadcrumbNav :items="breadcrumbItems" :current-label="product.name" />
 
         <div
-          class="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.9fr)] lg:items-stretch max-h-[700px]"
+          class="grid gap-8 max-h-[1000px] lg:grid-cols-[minmax(0,1.3fr)_minmax(22rem,0.9fr)] lg:items-stretch lg:max-h-[700px]"
         >
           <ProductGallery
             :images="galleryImages"

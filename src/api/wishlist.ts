@@ -6,6 +6,7 @@ import type {
   GetWishlistParams,
 } from './types'
 
+// TODO: Verify that the backend API exposes wishlist endpoints
 export function getWishlist(params?: GetWishlistParams): Promise<ApiResult<WishlistResponse>> {
   return request('/wishlist', {
     query: { page: params?.page, limit: params?.limit },
