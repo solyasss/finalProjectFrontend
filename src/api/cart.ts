@@ -28,5 +28,3 @@ export function removeCartLine(itemId: number): Promise<ApiResult<Cart>> {
   return requestCart(`/sales/carts/my/items/${itemId}`, { method: 'DELETE' })
 }
 
-// TODO: Restore fulfillment validation when the backend documents it in OpenAPI.
-// export function validateCartFulfillment() {}

@@ -57,17 +57,15 @@ export function login(body: LoginRequest): Promise<ApiResult<LoginResponse>> {
 }
 
 // TODO: The current backend OpenAPI contract does not expose verify-email support.
-// Keep this helper as a placeholder until frontend/backend behavior is aligned.
 export function verifyEmail(body: VerifyEmailRequest): Promise<ApiResult<MessageResponse>> {
-  return request('/auth/verify-email', { method: 'POST', body })
+  throw new Error('Not implemented: verifyEmail')
 }
 
 // TODO: The current backend OpenAPI contract does not expose resend-verification support.
-// Keep this helper as a placeholder until frontend/backend behavior is aligned.
 export function resendVerification(
   body: ResendVerificationRequest,
 ): Promise<ApiResult<MessageResponse>> {
-  return request('/auth/resend-verification', { method: 'POST', body })
+  throw new Error('Not implemented: resendVerification')
 }
 
 // No Authorization header - auth comes from the HttpOnly refresh-token cookie
