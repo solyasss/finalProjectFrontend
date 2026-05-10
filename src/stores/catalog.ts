@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getCategories } from '@/api'
 import type { CategoryTreeNode } from '@/api'
+import { getCategoriesTree } from '@/api/catalog'
 
 export function normalizeCategoryTree(nodes?: CategoryTreeNode[] | null): CategoryTreeNode[] {
   if (!Array.isArray(nodes)) {
@@ -43,7 +43,7 @@ export const useCatalogStore = defineStore('catalog', () => {
       loadingCategories.value = true
       categoriesError.value = null
 
-      const res = await getCategories()
+      const res = await getCategoriesTree()
 
       if (res.ok) {
         categoriesTree.value = normalizeCategoryTree(res.data)

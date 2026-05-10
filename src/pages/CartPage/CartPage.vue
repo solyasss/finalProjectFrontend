@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
 import Image from 'primevue/image'
@@ -10,6 +11,7 @@ import { useCartStore } from '@/stores'
 
 const { t } = useI18n()
 const cartStore = useCartStore()
+const router = useRouter()
 
 const items = computed(() => cartStore.cart?.items ?? [])
 
@@ -24,6 +26,10 @@ async function updateQuantity(itemId: number, quantity: number) {
 
 async function removeLine(itemId: number) {
   await cartStore.removeLine(itemId)
+}
+
+function goToCheckout() {
+  router.push({ name: 'checkout' })
 }
 
 onMounted(async () => {
@@ -191,12 +197,10 @@ onMounted(async () => {
                 </dl>
 
                 <Button
-                  :label="t('cartPage.refresh')"
-                  icon="pi pi-refresh"
-                  severity="secondary"
-                  variant="outlined"
-                  :loading="cartStore.loading"
-                  @click="cartStore.fetchCart"
+                  :label="t('cartPage.checkout')"
+                  icon="pi pi-arrow-right"
+                  :disabled="cartStore.loading || cartStore.isEmpty"
+                  @click="goToCheckout"
                 />
               </section>
             </template>

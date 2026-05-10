@@ -2,7 +2,14 @@ export { setAuthToken, setUnauthorizedHandler, setRefreshHandler } from './clien
 
 export { register, login, verifyEmail, resendVerification, refreshToken, logout } from './auth'
 
-export { getCategories, getCategoryProducts, getRooms, getRoom, getProductSet } from './catalog'
+export {
+  getCategories,
+  getCatalogImages,
+  getCategoryProducts,
+  getRooms,
+  getRoom,
+  getProductSet,
+} from './catalog'
 // TODO: compareProducts is not supported by the backend API yet.
 
 export {
@@ -20,15 +27,10 @@ export { getCart, addCartLine, updateCartLine, removeCartLine } from './cart'
 
 export { getWishlist, addWishlistItem, removeWishlistItem } from './wishlist'
 
-export {
-  getMe,
-  updateProfile,
-  changePassword,
-  deleteAccount,
-  updateLocation,
-  getOrders,
-  getOrder,
-} from './account'
+export { getMe, updateProfile, changePassword, deleteAccount, updateLocation } from './account'
+
+export { getOrders, getOrder } from './orders'
+export { checkoutOrder } from './checkout'
 
 export { getStore } from './store'
 
@@ -85,6 +87,8 @@ export type {
   SetSummary,
   ProductSetSummary,
   ProductSetVariant,
+  CatalogImage,
+  CatalogImagesResponse,
   ProductSetDetails,
   // Cart
   CartItem,
@@ -101,6 +105,9 @@ export type {
   OrderSummary,
   CartLine,
   OrderTrackingStep,
+  // Checkout
+  CardDetails,
+  CheckoutRequest,
   // Store
   StoreHours,
   // TODO: QuestionItem — not supported by backend API yet.
@@ -131,6 +138,7 @@ export type {
   SortOption,
   ProductFilters,
   GetCategoryProductsParams,
+  GetCatalogImagesParams,
   GetProductReviewsParams,
   // TODO: GetProductParams, GetProductAvailabilityParams, GetProductQuestionsParams, CompareProductsParams — not supported yet.
   SearchParams,

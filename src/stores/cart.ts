@@ -80,6 +80,16 @@ export const useCartStore = defineStore('cart', () => {
     loading.value = false
   }
 
+  function clearCart() {
+    cart.value = null
+  }
+
+  async function clearCartOnBackend() {
+    const items = cart.value?.items ?? []
+    await Promise.all(items.map((item) => removeCartLine(item.id)))
+    cart.value = null
+  }
+
   return {
     cart,
     loading,
@@ -93,5 +103,7 @@ export const useCartStore = defineStore('cart', () => {
     addItem,
     updateQuantity,
     removeLine,
+    clearCart,
+    clearCartOnBackend,
   }
 })

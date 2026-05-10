@@ -138,6 +138,11 @@ export interface ProductVariant {
   price: string
   stock: number
   images: string[]
+  weightKg: string
+  widthCm: string
+  heightCm: string
+  depthCm: string
+  attributes: Record<string, string | number | boolean | null>
   createdAt: string
   updatedAt: string
 }
@@ -158,7 +163,12 @@ export interface ProductVariantAttributeGroup {
   options: ProductVariantAttributeOption[]
 }
 
-export type DetailsSectionKey = 'DETAILS' | 'MEASUREMENTS' | 'MATERIALS_CARE' | 'SAFETY'
+export type DetailsSectionKey =
+  | 'DETAILS'
+  | 'MEASUREMENTS'
+  | 'MATERIALS_CARE'
+  | 'SAFETY'
+  | 'ADDITIONAL_INFORMATION'
 
 export interface DetailsSection {
   key: DetailsSectionKey
@@ -295,6 +305,20 @@ export interface ProductSetVariant {
 export interface ProductSetDetails extends ProductSetSummary {
   room: RoomSummary
   variants: ProductSetVariant[]
+}
+
+export interface CatalogImage {
+  id?: string | number
+  url?: string | null
+  imageUrl?: string | null
+  src?: string | null
+  variantId?: string | null
+}
+
+export interface CatalogImagesResponse {
+  data?: CatalogImage[]
+  images?: CatalogImage[]
+  items?: CatalogImage[]
 }
 
 // Cart
@@ -570,6 +594,19 @@ export interface OrderTrackingResponse {
   steps: OrderTrackingStep[]
 }
 
+export interface CardDetails {
+  cardholderName: string
+  cardNumber: string
+  expiryMonth: string
+  expiryYear: string
+  cvv: string
+}
+
+export interface CheckoutRequest {
+  shippingAddress: string
+  card: CardDetails
+}
+
 export interface StoreDetailsResponse {
   name: string
   address: string
@@ -587,6 +624,12 @@ export interface GetCategoryProductsParams {
   limit?: number
   sort?: SortOption
   filters?: ProductFilters
+}
+
+export interface GetCatalogImagesParams {
+  page?: number
+  limit?: number
+  variantId?: string
 }
 
 // TODO: GetProductParams (variantId/cityId) not needed without availability support.

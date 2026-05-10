@@ -3,9 +3,12 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import {
   createProductReview,
+  getCatalogImages,
   getCategoryProducts,
   getProduct,
   getProductReviews,
+  type CatalogImage,
+  type CatalogImagesResponse,
   type Pagination,
   type ProductCard,
   type ProductDetails,
@@ -41,6 +44,8 @@ export interface CtaMessage {
 const DEFAULT_MIN_QUANTITY = 1
 const DEFAULT_MAX_QUANTITY = 99
 const DEFAULT_REVIEWS_LIMIT = 4
+const VARIANT_GALLERY_PAGE = 1
+const VARIANT_GALLERY_LIMIT = 10
 
 export function clampQuantity(
   next: number,
@@ -52,6 +57,77 @@ export function clampQuantity(
   }
 
   return Math.min(Math.max(Math.trunc(next), min), max)
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function extractCatalogImageUrl(image: CatalogImage | string | null | undefined): string | null {
+  if (typeof image === 'string') {
+    return image.trim() || null
+  }
+
+  if (!image) {
+    return null
+  }
+
+  const rawUrl = image.url ?? image.imageUrl ?? image.src ?? null
+
+  if (typeof rawUrl !== 'string') {
+    return null
+  }
+
+  const normalizedUrl = rawUrl.trim()
+  return normalizedUrl || null
+}
+
+function extractCatalogImageEntries(
+  response: CatalogImagesResponse | unknown,
+): Array<CatalogImage | string> {
+  if (Array.isArray(response)) {
+    return response.filter(
+      (entry): entry is CatalogImage | string => typeof entry === 'string' || isRecord(entry),
+    )
+  }
+
+  if (!isRecord(response)) {
+    return []
+  }
+
+  const rawEntries = [response.data, response.images, response.items].find(Array.isArray)
+
+  if (!rawEntries) {
+    return []
+  }
+
+  return rawEntries.filter(
+    (entry): entry is CatalogImage | string => typeof entry === 'string' || isRecord(entry),
+  )
+}
+
+function mapCatalogImagesToUrls(response: CatalogImagesResponse | unknown): string[] {
+  const urls = extractCatalogImageEntries(response)
+    .map(extractCatalogImageUrl)
+    .filter((url): url is string => Boolean(url))
+
+  return [...new Set(urls)]
+}
+
+function buildFallbackGalleryImages(
+  variant: ProductVariant | null,
+  product: ProductDetails | null,
+): string[] {
+  const variantImages = (variant?.images ?? []).filter((image): image is string =>
+    Boolean(image?.trim()),
+  )
+
+  if (variantImages.length) {
+    return variantImages
+  }
+
+  const baseImageUrl = product?.baseImageUrl?.trim()
+  return baseImageUrl ? [baseImageUrl] : []
 }
 
 function matchesSelections(
@@ -178,6 +254,8 @@ export function useProductDetailPage() {
   const submittingReview = ref(false)
   const submitReviewError = ref<string | null>(null)
   const submitReviewSuccess = ref(false)
+  const remoteGalleryImages = ref<string[]>([])
+  const galleryRequestId = ref(0)
 
   // TODO: availability state not supported by backend API yet.
   // const loadingAvailability = ref(false)
@@ -220,8 +298,13 @@ export function useProductDetailPage() {
     return buildSelectorGroups(product.value, selectedVariantId.value)
   })
 
-  // Returns string[] — backend variant images are plain URLs
-  const galleryImages = computed(() => selectedVariant.value?.images ?? [])
+  const galleryImages = computed(() => {
+    if (remoteGalleryImages.value.length) {
+      return remoteGalleryImages.value
+    }
+
+    return buildFallbackGalleryImages(selectedVariant.value, product.value)
+  })
 
   const canAddToCart = computed(() => {
     return Boolean(product.value && selectedVariant.value && !addingToCart.value)
@@ -244,6 +327,12 @@ export function useProductDetailPage() {
     reviewsError.value = null
     submitReviewError.value = null
     submitReviewSuccess.value = false
+  }
+
+  function resetGalleryState() {
+    galleryRequestId.value += 1
+    remoteGalleryImages.value = []
+    selectedVariantId.value = ''
   }
 
   async function redirectToLogin() {
@@ -304,6 +393,37 @@ export function useProductDetailPage() {
     return true
   }
 
+  async function loadVariantGalleryImages(variant: ProductVariant | null) {
+    const requestId = galleryRequestId.value + 1
+    galleryRequestId.value = requestId
+
+    if (!variant?.id) {
+      remoteGalleryImages.value = []
+      return
+    }
+
+    const fallbackImages = buildFallbackGalleryImages(variant, product.value)
+    remoteGalleryImages.value = fallbackImages
+
+    const result = await getCatalogImages({
+      page: VARIANT_GALLERY_PAGE,
+      limit: VARIANT_GALLERY_LIMIT,
+      variantId: variant.id,
+    })
+
+    if (galleryRequestId.value !== requestId || selectedVariantId.value !== variant.id) {
+      return
+    }
+
+    if (!result.ok) {
+      remoteGalleryImages.value = fallbackImages
+      return
+    }
+
+    const nextImages = mapCatalogImagesToUrls(result.data)
+    remoteGalleryImages.value = nextImages.length ? nextImages : fallbackImages
+  }
+
   async function loadMoreReviews() {
     if (!product.value || !reviewsPagination.value || !canLoadMoreReviews.value) {
       return false
@@ -353,6 +473,7 @@ export function useProductDetailPage() {
     selectedVariantId.value = nextVariant.id
     ctaMessage.value = null
     quantity.value = clampQuantity(quantity.value)
+    void loadVariantGalleryImages(nextVariant)
 
     if (syncRoute) {
       await syncVariantQuery(nextVariant.id)
@@ -361,11 +482,13 @@ export function useProductDetailPage() {
 
   async function reload() {
     if (!productId.value) {
+      resetGalleryState()
       product.value = null
       resetReviewState()
       return
     }
 
+    resetGalleryState()
     loading.value = true
     error.value = null
     ctaMessage.value = null
@@ -404,6 +527,7 @@ export function useProductDetailPage() {
 
     if (!initialVariant) {
       selectedVariantId.value = ''
+      remoteGalleryImages.value = buildFallbackGalleryImages(null, result.data)
       return
     }
 

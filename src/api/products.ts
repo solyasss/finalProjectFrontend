@@ -23,13 +23,6 @@ export function getProduct(productId: number): Promise<ApiResult<ProductDetailsR
 //   })
 // }
 
-// TODO: Product reviews summary/histogram is not supported by the backend API yet.
-// To enable once backend supports it.
-// export function getProductReviewsSummary(
-//   productId: string,
-// ): Promise<ApiResult<ProductReviewsSummaryResponse>> {
-//   return request(`/products/${productId}/reviews/summary`)
-// }
 
 export function getProductReviews(
   productId: number,
