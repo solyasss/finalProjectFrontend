@@ -27,4 +27,3 @@ export function updateCartLine(itemId: number, quantity: number): Promise<ApiRes
 export function removeCartLine(itemId: number): Promise<ApiResult<Cart>> {
   return requestCart(`/sales/carts/my/items/${itemId}`, { method: 'DELETE' })
 }
-

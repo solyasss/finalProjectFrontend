@@ -13,17 +13,11 @@ interface Props {
 
 const props = defineProps<Props>()
 const { t } = useI18n()
-const {
-  addressDraft,
-  fieldErrors,
-  formError,
-  successMessage,
-  submitting,
-  markTouched,
-} = useAccountProfileForm({
-  section: 'address',
-  initialUser: props.user,
-})
+const { addressDraft, fieldErrors, formError, successMessage, submitting, markTouched } =
+  useAccountProfileForm({
+    section: 'address',
+    initialUser: props.user,
+  })
 
 // TODO: Re-enable address editing submission when `/users/me` supports address fields in the new API contract.
 async function handleSubmit() {
