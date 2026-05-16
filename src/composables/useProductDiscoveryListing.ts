@@ -9,6 +9,7 @@ import {
   type FilterDefinition,
   type Pagination,
   type ProductCard,
+  type ProductListItem,
   type ProductFilters,
   type ProductListResponse,
   // TODO: SearchResponse not supported yet.
@@ -238,6 +239,15 @@ function normalizePagination(meta: ProductListResponse['meta'] | undefined): Pag
   }
 }
 
+function normalizeProductCard(product: ProductListItem): ProductCard {
+  const firstVariant = product.variants?.[0] ?? null
+
+  return {
+    ...product,
+    price: firstVariant?.price ?? product.price ?? null,
+  }
+}
+
 export function useProductDiscoveryListing(_options: ProductDiscoveryListingOptions) {
   const { t } = useI18n()
   const route = useRoute()
@@ -348,7 +358,7 @@ export function useProductDiscoveryListing(_options: ProductDiscoveryListingOpti
   ): ListingResponseMeta {
     return {
       title: categoryName,
-      products: data.data,
+      products: data.data.map(normalizeProductCard),
       // TODO: filters not returned by /catalog/products — not supported yet.
       filters: [],
       pagination: normalizePagination(data.meta),

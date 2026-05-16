@@ -57,13 +57,13 @@ export function login(body: LoginRequest): Promise<ApiResult<LoginResponse>> {
 }
 
 // TODO: The current backend OpenAPI contract does not expose verify-email support.
-export function verifyEmail(body: VerifyEmailRequest): Promise<ApiResult<MessageResponse>> {
+export function verifyEmail(_body: VerifyEmailRequest): Promise<ApiResult<MessageResponse>> {
   throw new Error('Not implemented: verifyEmail')
 }
 
 // TODO: The current backend OpenAPI contract does not expose resend-verification support.
 export function resendVerification(
-  body: ResendVerificationRequest,
+  _body: ResendVerificationRequest,
 ): Promise<ApiResult<MessageResponse>> {
   throw new Error('Not implemented: resendVerification')
 }

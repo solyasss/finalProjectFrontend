@@ -23,7 +23,7 @@ defineEmits<{
 
 const passThrough = props.inverted
   ? {
-      root: { style: { color: '#fff' } },
+      root: { style: { color: 'var(--app-color-text-inverse, #ffffff)' } },
     }
   : undefined
 </script>

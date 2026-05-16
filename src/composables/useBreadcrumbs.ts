@@ -1,6 +1,7 @@
 import { ref, watch, type Ref } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
-import { getCategories, type Category, type CategoryTreeNode, type ProductDetails } from '@/api'
+import { type Category, type CategoryTreeNode, type ProductDetails } from '@/api'
+import { getCategoriesTree } from '@/api/catalog'
 
 export interface BreadcrumbItem {
   label: string
@@ -63,7 +64,7 @@ export function useBreadcrumbs(product: Ref<ProductDetails | null>) {
     const requestId = ++activeRequestId
     loading.value = true
 
-    const result = await getCategories()
+    const result = await getCategoriesTree()
 
     if (requestId !== activeRequestId) {
       return

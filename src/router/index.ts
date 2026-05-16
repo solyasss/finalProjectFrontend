@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { adminRouteMeta, authRouteMeta } from './meta'
 import { useAuthStore } from '@/stores'
 
 const router = createRouter({
@@ -43,37 +44,37 @@ const router = createRouter({
       path: '/cart',
       name: 'cart',
       component: () => import('@/pages/CartPage/CartPage.vue'),
-      meta: { requiresAuth: true },
+      meta: authRouteMeta,
     },
     {
       path: '/checkout',
       name: 'checkout',
       component: () => import('@/pages/CheckoutPage/CheckoutPage.vue'),
-      meta: { requiresAuth: true },
+      meta: authRouteMeta,
     },
     {
       path: '/favorites',
       name: 'favorites',
       component: () => import('@/pages/FavoritesPage/FavoritesPage.vue'),
-      meta: { requiresAuth: true },
+      meta: authRouteMeta,
     },
     {
       path: '/orders',
       name: 'orders',
       component: () => import('@/pages/OrdersPage/OrdersPage.vue'),
-      meta: { requiresAuth: true },
+      meta: authRouteMeta,
     },
     {
       path: '/orders/:orderId',
       name: 'order-detail',
       component: () => import('@/pages/OrderDetailPage/OrderDetailPage.vue'),
-      meta: { requiresAuth: true },
+      meta: authRouteMeta,
     },
     {
       path: '/account',
       name: 'account',
       component: () => import('@/pages/AccountPage/AccountPage.vue'),
-      meta: { requiresAuth: true },
+      meta: authRouteMeta,
     },
     {
       path: '/register',
@@ -84,6 +85,79 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/pages/LoginPage/LoginPage.vue'),
+    },
+    {
+      path: '/forbidden',
+      name: 'forbidden',
+      component: () => import('@/pages/ForbiddenPage/ForbiddenPage.vue'),
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('@/pages/AdminPage/AdminPage.vue'),
+      meta: adminRouteMeta,
+      children: [
+        {
+          path: '',
+          name: 'admin-dashboard',
+          component: () => import('@/pages/AdminDashboardPage/AdminDashboardPage.vue'),
+        },
+        {
+          path: 'products',
+          name: 'admin-products',
+          component: () => import('@/pages/AdminProductsPage/AdminProductsPage.vue'),
+        },
+        {
+          path: 'categories',
+          name: 'admin-categories',
+          component: () => import('@/pages/AdminCategoriesPage/AdminCategoriesPage.vue'),
+        },
+        {
+          path: 'images',
+          name: 'admin-images',
+          component: () => import('@/pages/AdminImagesPage/AdminImagesPage.vue'),
+        },
+        {
+          path: 'rooms',
+          name: 'admin-rooms',
+          component: () => import('@/pages/AdminRoomsPage/AdminRoomsPage.vue'),
+        },
+        {
+          path: 'product-sets',
+          name: 'admin-product-sets',
+          component: () => import('@/pages/AdminProductSetsPage/AdminProductSetsPage.vue'),
+        },
+        {
+          path: 'promotions',
+          name: 'admin-promotions',
+          component: () => import('@/pages/AdminPromotionsPage/AdminPromotionsPage.vue'),
+        },
+        {
+          path: 'orders',
+          name: 'admin-orders',
+          component: () => import('@/pages/AdminOrdersPage/AdminOrdersPage.vue'),
+        },
+        {
+          path: 'carts',
+          name: 'admin-carts',
+          component: () => import('@/pages/AdminCartsPage/AdminCartsPage.vue'),
+        },
+        {
+          path: 'reviews',
+          name: 'admin-reviews',
+          component: () => import('@/pages/AdminReviewsPage/AdminReviewsPage.vue'),
+        },
+        {
+          path: 'users',
+          name: 'admin-users',
+          component: () => import('@/pages/AdminUsersPage/AdminUsersPage.vue'),
+        },
+        {
+          path: 'search-index',
+          name: 'admin-search-index',
+          component: () => import('@/pages/AdminSearchIndexPage/AdminSearchIndexPage.vue'),
+        },
+      ],
     },
     {
       path: '/terms-and-conditions',
@@ -101,15 +175,21 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   const authStore = useAuthStore()
 
-  if (!authStore.initialized) {
+  const requiresAuth = Boolean(to.meta.requiresAuth || to.meta.requiresAdmin)
+
+  if (requiresAuth && !authStore.initialized) {
     await authStore.initialize()
   }
 
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+  if (requiresAuth && !authStore.isAuthenticated) {
     return {
       name: 'login',
       query: { redirect: to.fullPath },
     }
+  }
+
+  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    return { name: 'not-found', replace: true }
   }
 
   return true

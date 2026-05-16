@@ -5,9 +5,11 @@ import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { i18n } from '../src/i18n'
-import { BrandPreset } from '../src/theme'
+import { BrandPreset, installAppThemeVariables } from '../src/theme'
 
 import '../src/assets/main.css'
+
+installAppThemeVariables()
 
 // Register PrimeVue globally so all stories can use PrimeVue components
 setup((app) => {

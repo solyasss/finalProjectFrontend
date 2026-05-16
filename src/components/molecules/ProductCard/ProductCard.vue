@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import Card from 'primevue/card'
 import Image from 'primevue/image'
 import { useI18n } from 'vue-i18n'
+import PriceTag from '@/components/atoms/PriceTag/PriceTag.vue'
 import RatingDisplay from '@/components/molecules/RatingDisplay/RatingDisplay.vue'
 import type { ProductCard } from '@/api'
 
@@ -22,6 +23,15 @@ const { t } = useI18n()
 const isClickable = computed(() => props.clickable ?? true)
 const hasDescription = computed(() => Boolean(props.product.description))
 const hasRating = computed(() => Boolean(props.product.ratingCount))
+const formattedPrice = computed(() => {
+  const price = props.product.price?.trim()
+
+  if (!price) {
+    return null
+  }
+
+  return `${price} ₴`
+})
 
 function handleSelect() {
   if (!isClickable.value) {
@@ -95,11 +105,8 @@ function handleSelect() {
             </p>
           </div>
 
-          <!-- TODO: price not returned by /catalog/products — not supported yet.
-               To enable once backend returns price in product listing.
-          <PriceTag :current-price="..." size="compact" />
-          -->
-          <p class="text-surface-500 text-xs italic">
+          <PriceTag v-if="formattedPrice" :current-price="formattedPrice" size="compact" />
+          <p v-else class="text-surface-500 text-xs italic">
             <em>{{ t('productCard.priceAvailableInFutureRelease') }}</em>
           </p>
 
