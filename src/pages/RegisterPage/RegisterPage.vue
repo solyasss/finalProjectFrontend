@@ -15,10 +15,10 @@ const { t } = useI18n()
         :eyebrow="t('authRegister.eyebrow')"
         :title="t('authRegister.visualTitle')"
         :description="t('authRegister.visualDescription')"
-        :image-src="'/Auth.jpg'" 
-      /> 
+        :image-src="'/Auth.jpg'"
+      />
     </template>
 
-    <RegistrationStepperForm/>
+    <RegistrationStepperForm />
   </AuthSplitTemplate>
 </template>

@@ -3,12 +3,7 @@ import Button from 'primevue/button'
 import Message from 'primevue/message'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type {
-  Pagination,
-  ProductReview,
-  RatingSummary,
-  ReviewHistogramEntry,
-} from '@/api'
+import type { Pagination, ProductReview, RatingSummary, ReviewHistogramEntry } from '@/api'
 import RatingDisplay from '@/components/molecules/RatingDisplay/RatingDisplay.vue'
 import Review from '@/components/molecules/Review/Review.vue'
 import WriteReview from '@/components/molecules/WriteReview/WriteReview.vue'

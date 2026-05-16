@@ -32,7 +32,7 @@ interface Props {
   deleteError?: string | null
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   dialogVisible: false,
   deleteVisible: false,
 })

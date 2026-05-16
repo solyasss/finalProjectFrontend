@@ -23,7 +23,6 @@ export function getProduct(productId: number): Promise<ApiResult<ProductDetailsR
 //   })
 // }
 
-
 export function getProductReviews(
   productId: number,
   params?: GetProductReviewsParams,
