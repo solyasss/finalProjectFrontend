@@ -54,6 +54,36 @@ export const useAuthStore = defineStore('auth', () => {
   const role = computed<FrontendRole>(() => normalizeFrontendRole(user.value?.role))
   const isAdmin = computed(() => isAdminFrontendRole(role.value))
 
+  function getAuthPayload(result: ApiResult<LoginResponse>): LoginResponse | null {
+    if (!result.ok || typeof result.data !== 'object' || result.data === null) {
+      return null
+    }
+
+    return result.data
+  }
+
+  function getAccessToken(result: ApiResult<LoginResponse>): string | null {
+    const authPayload = getAuthPayload(result)
+
+    if (authPayload === null) {
+      return null
+    }
+
+    const { accessToken } = authPayload as Partial<LoginResponse>
+
+    if (typeof accessToken !== 'string') {
+      return null
+    }
+
+    const normalizedAccessToken = accessToken.trim()
+    return normalizedAccessToken === '' ? null : normalizedAccessToken
+  }
+
+  function clearSession() {
+    user.value = null
+    setAuthToken(null)
+  }
+
   async function hydrateUserFromToken(preloadedUser?: MeResponse | null): Promise<boolean> {
     if (preloadedUser) {
       user.value = preloadedUser
@@ -78,21 +108,28 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     initializePromise ??= (async () => {
-      const res = await refreshToken()
+      try {
+        const res = await refreshToken()
+        const authPayload = getAuthPayload(res)
+        const accessToken = getAccessToken(res)
 
-      if (res.ok && res.data.accessToken) {
-        setAuthToken(res.data.accessToken)
-        const hydrated = await hydrateUserFromToken(res.data.user)
+        if (authPayload !== null && accessToken !== null) {
+          setAuthToken(accessToken)
+          const hydrated = await hydrateUserFromToken(authPayload.user)
 
-        if (!hydrated) {
-          setAuthToken(null)
+          if (!hydrated) {
+            clearSession()
+          }
+
+          return
         }
-      } else {
-        user.value = null
-        setAuthToken(null)
-      }
 
-      initialized.value = true
+        clearSession()
+      } catch {
+        clearSession()
+      } finally {
+        initialized.value = true
+      }
     })().finally(() => {
       initializePromise = null
     })
@@ -132,13 +169,15 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
 
     const res = await login(payload)
+    const authPayload = getAuthPayload(res)
+    const accessToken = getAccessToken(res)
 
-    if (res.ok && res.data.accessToken) {
-      setAuthToken(res.data.accessToken)
-      const hydrated = await hydrateUserFromToken(res.data.user)
+    if (res.ok && authPayload !== null && accessToken !== null) {
+      setAuthToken(accessToken)
+      const hydrated = await hydrateUserFromToken(authPayload.user)
 
       if (!hydrated) {
-        setAuthToken(null)
+        clearSession()
         error.value = 'Unable to load account profile'
         return {
           ok: false,
@@ -149,8 +188,7 @@ export const useAuthStore = defineStore('auth', () => {
       return res
     }
 
-    user.value = null
-    setAuthToken(null)
+    clearSession()
 
     if (res.ok) {
       error.value = 'Invalid auth response from server'
@@ -166,8 +204,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function logout() {
     await logoutRequest()
-    setUser(null)
-    setAuthToken(null)
+    clearSession()
   }
 
   function hasRole(expectedRole: FrontendRole): boolean {
@@ -180,11 +217,15 @@ export const useAuthStore = defineStore('auth', () => {
 
   setRefreshHandler(async () => {
     const res = await refreshToken()
-    if (res.ok && res.data.accessToken) {
-      setAuthToken(res.data.accessToken)
-      return hydrateUserFromToken(res.data.user)
+    const authPayload = getAuthPayload(res)
+    const accessToken = getAccessToken(res)
+
+    if (res.ok && authPayload !== null && accessToken !== null) {
+      setAuthToken(accessToken)
+      return hydrateUserFromToken(authPayload.user)
     }
-    await logout()
+
+    clearSession()
     return false
   })
 
