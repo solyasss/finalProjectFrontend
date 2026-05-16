@@ -1,5 +1,7 @@
 export { setAuthToken, setUnauthorizedHandler, setRefreshHandler } from './client'
 
+export { normalizeAdminPagination } from './admin'
+
 export { register, login, verifyEmail, resendVerification, refreshToken, logout } from './auth'
 
 export {
@@ -34,6 +36,60 @@ export { checkoutOrder } from './checkout'
 
 export { getStore } from './store'
 
+export {
+  getAdminProducts,
+  getAdminProduct,
+  createAdminProduct,
+  updateAdminProduct,
+  deleteAdminProduct,
+} from './adminProducts'
+
+export {
+  getAdminCategories,
+  getAdminCategory,
+  createAdminCategory,
+  updateAdminCategory,
+  deleteAdminCategory,
+} from './adminCategories'
+
+export { getAdminImages, createAdminImage, updateAdminImage, deleteAdminImage } from './adminImages'
+
+export { getAdminRooms, createAdminRoom, updateAdminRoom, deleteAdminRoom } from './adminRooms'
+
+export {
+  getAdminProductSets,
+  createAdminProductSet,
+  updateAdminProductSet,
+  deleteAdminProductSet,
+} from './adminProductSets'
+
+export {
+  getAdminPromotions,
+  createAdminPromotion,
+  updateAdminPromotion,
+  deleteAdminPromotion,
+} from './adminPromotions'
+
+export {
+  getAdminOrders,
+  updateAdminOrderStatus,
+  deleteAdminOrder,
+  getAdminCarts,
+  deleteAdminCart,
+} from './adminOrders'
+
+export { getAdminReviews, updateAdminReview, deleteAdminReview } from './adminReviews'
+
+export {
+  getAdminUsers,
+  getAdminUser,
+  createAdminUser,
+  updateAdminUser,
+  deleteAdminUser,
+} from './adminUsers'
+
+export { triggerAdminReindex } from './adminSearch'
+
 export type {
   // Core
   ApiResult,
@@ -61,6 +117,7 @@ export type {
   VariantSwatch,
   VariantPreview,
   ProductCard,
+  ProductListItem,
   ProductVariant,
   VariantAttributePresentation,
   ProductVariantAttributeOption,
@@ -145,3 +202,40 @@ export type {
   SearchSuggestParams,
   GetWishlistParams,
 } from './types'
+
+export type {
+  AdminListMeta,
+  AdminPaginatedResponse,
+  AdminListParams,
+  AdminCategory,
+  AdminProduct,
+  AdminProductPayload,
+  AdminProductVariantPayload,
+  AdminImage,
+  AdminImagePayload,
+  AdminEntityDeleteResult,
+  AdminProductListItem,
+  AdminProductVariant,
+  AdminRouteSummaryCard,
+  AdminRoom,
+  AdminRoomPayload,
+  AdminProductSet,
+  AdminProductSetPayload,
+  AdminPromotion,
+  AdminPromotionPayload,
+  PromotionDiscountType,
+  PromotionTargetType,
+  AdminOrder,
+  AdminOrderStatus,
+  AdminOrderListParams,
+  AdminCart,
+  AdminCartListParams,
+  AdminReview,
+  AdminReviewPayload,
+  ReviewStatus,
+  AdminReviewListParams,
+  AdminUser,
+  AdminUserCreatePayload,
+  AdminUserUpdatePayload,
+  UserRole,
+} from './adminTypes'

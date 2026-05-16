@@ -7,7 +7,6 @@ import {
   getCategoryProducts,
   getProduct,
   getProductReviews,
-  type CatalogImage,
   type CatalogImagesResponse,
   type Pagination,
   type ProductCard,
@@ -16,6 +15,7 @@ import {
   type ProductVariant,
 } from '@/api'
 import { useAuthStore, useCartStore } from '@/stores'
+import { extractImageEntries, extractImageUrl } from '@/utils/image'
 
 export type VariantAttributePresentation = 'swatch' | 'text'
 
@@ -59,75 +59,12 @@ export function clampQuantity(
   return Math.min(Math.max(Math.trunc(next), min), max)
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null
-}
-
-function extractCatalogImageUrl(image: CatalogImage | string | null | undefined): string | null {
-  if (typeof image === 'string') {
-    return image.trim() || null
-  }
-
-  if (!image) {
-    return null
-  }
-
-  const rawUrl = image.url ?? image.imageUrl ?? image.src ?? null
-
-  if (typeof rawUrl !== 'string') {
-    return null
-  }
-
-  const normalizedUrl = rawUrl.trim()
-  return normalizedUrl || null
-}
-
-function extractCatalogImageEntries(
-  response: CatalogImagesResponse | unknown,
-): Array<CatalogImage | string> {
-  if (Array.isArray(response)) {
-    return response.filter(
-      (entry): entry is CatalogImage | string => typeof entry === 'string' || isRecord(entry),
-    )
-  }
-
-  if (!isRecord(response)) {
-    return []
-  }
-
-  const rawEntries = [response.data, response.images, response.items].find(Array.isArray)
-
-  if (!rawEntries) {
-    return []
-  }
-
-  return rawEntries.filter(
-    (entry): entry is CatalogImage | string => typeof entry === 'string' || isRecord(entry),
-  )
-}
-
 function mapCatalogImagesToUrls(response: CatalogImagesResponse | unknown): string[] {
-  const urls = extractCatalogImageEntries(response)
-    .map(extractCatalogImageUrl)
+  const urls = extractImageEntries(response)
+    .map(extractImageUrl)
     .filter((url): url is string => Boolean(url))
 
   return [...new Set(urls)]
-}
-
-function buildFallbackGalleryImages(
-  variant: ProductVariant | null,
-  product: ProductDetails | null,
-): string[] {
-  const variantImages = (variant?.images ?? []).filter((image): image is string =>
-    Boolean(image?.trim()),
-  )
-
-  if (variantImages.length) {
-    return variantImages
-  }
-
-  const baseImageUrl = product?.baseImageUrl?.trim()
-  return baseImageUrl ? [baseImageUrl] : []
 }
 
 function matchesSelections(
@@ -299,11 +236,7 @@ export function useProductDetailPage() {
   })
 
   const galleryImages = computed(() => {
-    if (remoteGalleryImages.value.length) {
-      return remoteGalleryImages.value
-    }
-
-    return buildFallbackGalleryImages(selectedVariant.value, product.value)
+    return remoteGalleryImages.value
   })
 
   const canAddToCart = computed(() => {
@@ -396,14 +329,11 @@ export function useProductDetailPage() {
   async function loadVariantGalleryImages(variant: ProductVariant | null) {
     const requestId = galleryRequestId.value + 1
     galleryRequestId.value = requestId
+    remoteGalleryImages.value = []
 
     if (!variant?.id) {
-      remoteGalleryImages.value = []
       return
     }
-
-    const fallbackImages = buildFallbackGalleryImages(variant, product.value)
-    remoteGalleryImages.value = fallbackImages
 
     const result = await getCatalogImages({
       page: VARIANT_GALLERY_PAGE,
@@ -416,12 +346,10 @@ export function useProductDetailPage() {
     }
 
     if (!result.ok) {
-      remoteGalleryImages.value = fallbackImages
       return
     }
 
-    const nextImages = mapCatalogImagesToUrls(result.data)
-    remoteGalleryImages.value = nextImages.length ? nextImages : fallbackImages
+    remoteGalleryImages.value = mapCatalogImagesToUrls(result.data)
   }
 
   async function loadMoreReviews() {
@@ -527,7 +455,6 @@ export function useProductDetailPage() {
 
     if (!initialVariant) {
       selectedVariantId.value = ''
-      remoteGalleryImages.value = buildFallbackGalleryImages(null, result.data)
       return
     }
 

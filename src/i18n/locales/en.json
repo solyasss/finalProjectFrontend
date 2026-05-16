@@ -43,7 +43,8 @@
     "navAriaLabel": "Main navigation",
     "nav": {
       "rooms": "Rooms",
-      "categories": "Categories"
+      "categories": "Categories",
+      "admin": "Admin"
     }
   },
   "hamburgerMenu": {
@@ -450,6 +451,334 @@
       "expiryYearRequired": "Expiry year is required",
       "cvvRequired": "CVV is required",
       "shippingAddressRequired": "Shipping address is required"
+    }
+  },
+  "forbiddenPage": {
+    "eyebrow": "Access denied",
+    "title": "You do not have access to this area.",
+    "description": "This admin workspace is limited to signed-in admins. If you need access, contact a teammate who manages permissions.",
+    "deniedFrom": "The page {path} is restricted for your account.",
+    "generic": "Your account is signed in, but it does not have permission to open this page.",
+    "nextSteps": "You can safely return to the storefront or open your account area.",
+    "homeCta": "Go to home",
+    "accountCta": "Open account"
+  },
+  "admin": {
+    "eyebrow": "Admin area",
+    "navAriaLabel": "Admin navigation",
+    "labels": {
+      "deferred": "Soon"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "products": "Products",
+      "categories": "Categories",
+      "images": "Images",
+      "rooms": "Rooms",
+      "productSets": "Product sets",
+      "promotions": "Promotions",
+      "orders": "Orders",
+      "carts": "Carts",
+      "reviews": "Reviews",
+      "users": "Users",
+      "searchIndex": "Search index"
+    },
+    "actions": {
+      "edit": "Edit",
+      "createProduct": "Create product",
+      "editProduct": "Edit product",
+      "saveProduct": "Save product",
+      "deleteProduct": "Delete product",
+      "createCategory": "Create category",
+      "editCategory": "Edit category",
+      "saveCategory": "Save category",
+      "deleteCategory": "Delete category",
+      "createImage": "Create image",
+      "editImage": "Edit image",
+      "saveImage": "Save image",
+      "deleteImage": "Delete image",
+      "addVariant": "Add variant",
+      "removeVariant": "Remove variant",
+      "createRoom": "Create room",
+      "editRoom": "Edit room",
+      "deleteRoom": "Delete room",
+      "createProductSet": "Create product set",
+      "editProductSet": "Edit product set",
+      "deleteProductSet": "Delete product set",
+      "createPromotion": "Create promotion",
+      "editPromotion": "Edit promotion",
+      "deletePromotion": "Delete promotion",
+      "updateOrderStatus": "Update status",
+      "deleteOrder": "Archive order",
+      "deleteCart": "Delete cart",
+      "editReview": "Moderate review",
+      "deleteReview": "Delete review",
+      "createUser": "Create user",
+      "editUser": "Edit user",
+      "deleteUser": "Delete user"
+    },
+    "messages": {
+      "loading": "Loading admin data...",
+      "loadFailed": "We could not load this admin view right now.",
+      "saveFailed": "We could not save your changes right now.",
+      "deleteFailed": "We could not complete this delete action right now.",
+      "forbidden": "You do not have permission to perform this action."
+    },
+    "status": {
+      "active": "Visible",
+      "hidden": "Hidden"
+    },
+    "validation": {
+      "required": "This field is required.",
+      "number": "Enter a valid number.",
+      "json": "Enter valid JSON.",
+      "selectCategory": "Select at least one category.",
+      "variantRequired": "Add at least one product variant.",
+      "imageSourceRequired": "Upload a file or provide an image URL."
+    },
+    "dashboard": {
+      "description": "Open the admin tools that are ready for MVP product operations.",
+      "heroTitle": "Manage the catalog workspace from one place.",
+      "heroDescription": "Use this area to update products, categories, and images while backend authorization remains the source of truth for every request.",
+      "readyLabel": "Ready now",
+      "openSection": "Open section",
+      "nextTitle": "Planned follow-up domains",
+      "nextDescription": "These admin routes are scaffolded for future rollout once contracts and workflows are confirmed."
+    },
+    "deferred": {
+      "message": "This admin area is planned for a later phase and is not part of the MVP release.",
+      "roomsDescription": "Prepare room curation workflows once the backend contract is finalized.",
+      "productSetsDescription": "Add product set management after the MVP catalog surfaces are stable.",
+      "promotionsDescription": "Promotion controls will follow after pricing and merchandising flows are confirmed.",
+      "ordersDescription": "Order operations stay outside the MVP admin release for now.",
+      "cartsDescription": "Cart intervention tools are deferred until the later admin phase.",
+      "reviewsDescription": "Review moderation will be added after the core catalog tools ship.",
+      "usersDescription": "User administration remains deferred beyond MVP scope.",
+      "searchIndexDescription": "Search index controls will be added when privileged reindex actions are defined."
+    },
+    "products": {
+      "description": "Create, update, and remove catalog products for the MVP admin workflow.",
+      "searchLabel": "Search products",
+      "searchPlaceholder": "Filter by product name or slug",
+      "empty": "No products match the current filters.",
+      "noDescription": "No description has been provided yet.",
+      "variantsTitle": "Variants",
+      "variantsDescription": "Each product needs at least one sellable variant with pricing and stock.",
+      "variantLabel": "Variant {index}",
+      "imagesHint": "Add one image URL per line.",
+      "deleteTitle": "Delete product?",
+      "deleteDescription": "This will permanently remove {name} if the backend allows deletion.",
+      "fields": {
+        "name": "Name",
+        "slug": "Slug",
+        "description": "Description",
+        "baseImageUrl": "Base image URL",
+        "categories": "Categories",
+        "sku": "SKU",
+        "color": "Color",
+        "price": "Price",
+        "stock": "Stock",
+        "weightKg": "Weight (kg)",
+        "widthCm": "Width (cm)",
+        "heightCm": "Height (cm)",
+        "depthCm": "Depth (cm)",
+        "images": "Variant images",
+        "attributes": "Variant attributes JSON"
+      },
+      "table": {
+        "categories": "Categories",
+        "updatedAt": "Updated",
+        "visibility": "Visibility"
+      }
+    },
+    "categories": {
+      "description": "Manage product categories used across the storefront catalog.",
+      "searchLabel": "Search categories",
+      "searchPlaceholder": "Filter by category name or slug",
+      "empty": "No categories match the current filters.",
+      "noDescription": "No description has been provided yet.",
+      "parentHint": "Leave empty to create a top-level category.",
+      "deleteTitle": "Delete category?",
+      "deleteDescription": "This will permanently remove {name} if the backend allows deletion.",
+      "fields": {
+        "name": "Name",
+        "slug": "Slug",
+        "description": "Description",
+        "imageUrl": "Image URL",
+        "sortOrder": "Sort order",
+        "parentId": "Parent category ID"
+      },
+      "table": {
+        "sortOrder": "Sort order",
+        "parentId": "Parent ID",
+        "visibility": "Visibility"
+      }
+    },
+    "images": {
+      "description": "Upload and maintain catalog imagery for product variants.",
+      "searchLabel": "Filter by variant ID",
+      "searchPlaceholder": "Enter a variant ID",
+      "empty": "No images match the current filters.",
+      "variantHint": "Connect the image to a specific product variant ID.",
+      "uploadHint": "Choose a file to upload or leave it empty to use the URL field.",
+      "previewAlt": "Preview for image {id}",
+      "noPreview": "No preview available",
+      "imageLabel": "Image #{id}",
+      "primaryBadge": "Primary",
+      "secondaryBadge": "Secondary",
+      "noUrl": "No image URL available.",
+      "deleteTitle": "Delete image?",
+      "deleteDescription": "This will permanently remove image #{id} if the backend allows deletion.",
+      "fields": {
+        "variantId": "Variant ID",
+        "url": "Image URL",
+        "file": "Upload file",
+        "sortOrder": "Sort order",
+        "isPrimary": "Use as primary image"
+      },
+      "table": {
+        "variantId": "Variant ID",
+        "sortOrder": "Sort order",
+        "updatedAt": "Updated"
+      }
+    },
+    "rooms": {
+      "searchLabel": "Search rooms",
+      "searchPlaceholder": "Filter by name or slug...",
+      "empty": "No rooms found.",
+      "noDescription": "No description",
+      "noPreview": "No image",
+      "deleteTitle": "Delete room",
+      "deleteDescription": "Are you sure you want to delete room \"{name}\"?",
+      "table": {
+        "sortOrder": "Sort order",
+        "updatedAt": "Updated"
+      },
+      "fields": {
+        "name": "Name",
+        "slug": "Slug",
+        "description": "Description",
+        "imageUrl": "Image URL",
+        "file": "Image file",
+        "sortOrder": "Sort order"
+      }
+    },
+    "productSets": {
+      "searchLabel": "Search product sets",
+      "searchPlaceholder": "Filter by name or slug...",
+      "empty": "No product sets found.",
+      "noPreview": "No image",
+      "deleteTitle": "Delete product set",
+      "deleteDescription": "Are you sure you want to delete product set \"{name}\"?",
+      "table": {
+        "roomId": "Room ID",
+        "variantCount": "Variants",
+        "updatedAt": "Updated"
+      },
+      "fields": {
+        "name": "Name",
+        "slug": "Slug",
+        "imageUrl": "Image URL",
+        "file": "Image file",
+        "roomId": "Room ID",
+        "variantIds": "Variant IDs (one per line)"
+      }
+    },
+    "promotions": {
+      "searchLabel": "Search promotions",
+      "searchPlaceholder": "Filter by name or slug...",
+      "empty": "No promotions found.",
+      "deleteTitle": "Delete promotion",
+      "deleteDescription": "Are you sure you want to delete promotion \"{name}\"?",
+      "table": {
+        "discountType": "Type",
+        "discountValue": "Value",
+        "targetType": "Target",
+        "startDate": "Start",
+        "endDate": "End"
+      },
+      "fields": {
+        "name": "Name",
+        "slug": "Slug",
+        "description": "Description",
+        "discountType": "Discount type",
+        "discountValue": "Discount value",
+        "targetType": "Target type",
+        "targetIds": "Target IDs (one per line)",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "isActive": "Active"
+      }
+    },
+    "orders": {
+      "filterUserLabel": "Filter by user ID",
+      "filterStatusLabel": "Filter by status",
+      "allStatuses": "All statuses",
+      "empty": "No orders found.",
+      "deleteTitle": "Archive order",
+      "deleteDescription": "Are you sure you want to archive order #{id}?",
+      "table": {
+        "userId": "User ID",
+        "status": "Status",
+        "total": "Total",
+        "createdAt": "Created"
+      }
+    },
+    "carts": {
+      "filterUserLabel": "Filter by user ID",
+      "empty": "No carts found.",
+      "deleteTitle": "Delete cart",
+      "deleteDescription": "Are you sure you want to delete cart #{id}?",
+      "table": {
+        "userId": "User ID",
+        "itemCount": "Items",
+        "createdAt": "Created"
+      }
+    },
+    "reviews": {
+      "searchLabel": "Search reviews",
+      "searchPlaceholder": "Filter by text...",
+      "filterProductLabel": "Filter by product ID",
+      "empty": "No reviews found.",
+      "deleteTitle": "Delete review",
+      "deleteDescription": "Are you sure you want to delete review #{id}?",
+      "table": {
+        "rating": "Rating",
+        "status": "Status",
+        "userId": "User ID",
+        "productId": "Product ID",
+        "updatedAt": "Updated"
+      },
+      "fields": {
+        "rating": "Rating (1-5)",
+        "text": "Review text",
+        "status": "Status"
+      }
+    },
+    "users": {
+      "empty": "No users found.",
+      "deleteTitle": "Delete user",
+      "deleteDescription": "Are you sure you want to delete user \"{email}\"?",
+      "table": {
+        "email": "Email",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "role": "Role",
+        "createdAt": "Created"
+      },
+      "fields": {
+        "email": "Email",
+        "password": "Password",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "role": "Role"
+      }
+    },
+    "searchIndex": {
+      "triggerLabel": "Trigger full reindex",
+      "description": "This will reindex all active products in Elasticsearch. The operation runs in the background.",
+      "successMessage": "Reindex triggered successfully.",
+      "errorMessage": "Failed to trigger reindex."
     }
   },
   "pdp": {

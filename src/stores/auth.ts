@@ -10,6 +10,38 @@ import {
 } from '@/api'
 import type { ApiResult, LoginRequest, LoginResponse, MeResponse } from '@/api'
 
+export const FRONTEND_ROLES = ['ADMIN', 'MANAGER', 'USER', 'UNKNOWN'] as const
+
+export type FrontendRole = (typeof FRONTEND_ROLES)[number]
+
+export function normalizeFrontendRole(role?: string | null): FrontendRole {
+  const normalizedRole = role?.trim().toUpperCase()
+
+  switch (normalizedRole) {
+    case 'ADMIN':
+    case 'MANAGER':
+    case 'USER':
+      return normalizedRole
+    default:
+      return 'UNKNOWN'
+  }
+}
+
+export function hasFrontendRole(role: FrontendRole, expectedRole: FrontendRole): boolean {
+  return role === expectedRole
+}
+
+export function hasAnyFrontendRole(
+  role: FrontendRole,
+  expectedRoles: readonly FrontendRole[],
+): boolean {
+  return expectedRoles.includes(role)
+}
+
+export function isAdminFrontendRole(role: FrontendRole): boolean {
+  return hasFrontendRole(role, 'ADMIN')
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<MeResponse | null>(null)
   const loading = ref(false)
@@ -19,6 +51,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => user.value !== null)
   const firstName = computed(() => user.value?.firstName ?? null)
+  const role = computed<FrontendRole>(() => normalizeFrontendRole(user.value?.role))
+  const isAdmin = computed(() => isAdminFrontendRole(role.value))
 
   async function hydrateUserFromToken(preloadedUser?: MeResponse | null): Promise<boolean> {
     if (preloadedUser) {
@@ -136,6 +170,14 @@ export const useAuthStore = defineStore('auth', () => {
     setAuthToken(null)
   }
 
+  function hasRole(expectedRole: FrontendRole): boolean {
+    return hasFrontendRole(role.value, expectedRole)
+  }
+
+  function hasAnyRole(expectedRoles: readonly FrontendRole[]): boolean {
+    return hasAnyFrontendRole(role.value, expectedRoles)
+  }
+
   setRefreshHandler(async () => {
     const res = await refreshToken()
     if (res.ok && res.data.accessToken) {
@@ -153,6 +195,8 @@ export const useAuthStore = defineStore('auth', () => {
     initialized,
     isAuthenticated,
     firstName,
+    role,
+    isAdmin,
     initialize,
     fetchMe,
     setToken,
@@ -160,5 +204,7 @@ export const useAuthStore = defineStore('auth', () => {
     applyProfileUpdate,
     signIn,
     logout,
+    hasRole,
+    hasAnyRole,
   }
 })

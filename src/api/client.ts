@@ -159,8 +159,13 @@ function buildQueryString(params: Record<string, string | number | boolean | und
   return qs ? `?${qs}` : ''
 }
 
-function buildHeaders(auth: boolean): Headers {
-  const headers = new Headers({ 'Content-Type': 'application/json' })
+function buildHeaders(auth: boolean, body?: unknown): Headers {
+  const headers = new Headers()
+
+  if (body !== undefined && !(body instanceof FormData)) {
+    headers.set('Content-Type', 'application/json')
+  }
+
   // Token is injected here and only here - never exposed elsewhere
   if (auth && _token !== null) {
     headers.set('Authorization', `Bearer ${_token}`)
@@ -225,11 +230,14 @@ async function executeRequest(
   headers: Headers,
   body: unknown,
 ): Promise<Response | null> {
+  const payload =
+    body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : undefined
+
   try {
     return await fetch(url, {
       method,
       headers,
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: payload,
       // cookies are included so the HttpOnly refresh-token cookie is sent automatically
       credentials: 'same-origin',
     })
@@ -263,7 +271,7 @@ export async function request<T>(
 
   const url = getRequestUrl(path, query, baseUrl)
 
-  const response = await executeRequest(url, method, buildHeaders(auth), body)
+  const response = await executeRequest(url, method, buildHeaders(auth, body), body)
 
   if (response === null) {
     return {
@@ -282,7 +290,7 @@ export async function request<T>(
 
     if (refreshed) {
       // Retry the original request once with the new token
-      const retryResponse = await executeRequest(url, method, buildHeaders(auth), body)
+      const retryResponse = await executeRequest(url, method, buildHeaders(auth, body), body)
       if (retryResponse !== null) {
         return parseResponse<T>(retryResponse)
       }

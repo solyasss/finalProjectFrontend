@@ -122,6 +122,7 @@ export interface ProductCard {
   name: string
   slug: string
   description?: string | null
+  price?: string | null
   isActive: boolean
   createdAt: string
   updatedAt: string
@@ -129,6 +130,14 @@ export interface ProductCard {
   baseImageUrl: string | null
   ratingAverage?: number | null
   ratingCount?: number | null
+}
+
+export interface ProductCardVariantPrice {
+  price: string
+}
+
+export interface ProductListItem extends ProductCard {
+  variants?: ProductCardVariantPrice[] | null
 }
 
 export interface ProductVariant {
@@ -446,7 +455,7 @@ export interface ProductListMeta {
 }
 
 export interface ProductListResponse {
-  data: ProductCard[]
+  data: ProductListItem[]
   meta: ProductListMeta
 }
 

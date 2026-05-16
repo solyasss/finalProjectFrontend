@@ -2,9 +2,27 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { getCart, addCartLine, updateCartLine, removeCartLine } from '@/api'
 import type { Cart, AddCartLineRequest } from '@/api'
+import { extractImageUrl, normalizeImageUrls } from '@/utils/image'
 
 function formatUAH(amount: number): string {
   return `${amount.toLocaleString('uk-UA')} ₴`
+}
+
+function normalizeCart(cart: Cart): Cart {
+  return {
+    ...cart,
+    items: cart.items.map((item) => ({
+      ...item,
+      variant: {
+        ...item.variant,
+        images: normalizeImageUrls(item.variant.images),
+        product: {
+          ...item.variant.product,
+          baseImageUrl: extractImageUrl(item.variant.product.baseImageUrl),
+        },
+      },
+    })),
+  }
 }
 
 export const useCartStore = defineStore('cart', () => {
@@ -37,7 +55,8 @@ export const useCartStore = defineStore('cart', () => {
     error.value = null
     const res = await getCart()
     if (res.ok) {
-      cart.value = res.data
+      console.log('Normalized cart:', normalizeCart(res.data))
+      cart.value = normalizeCart(res.data)
     } else {
       error.value = res.error.message
     }
@@ -49,7 +68,7 @@ export const useCartStore = defineStore('cart', () => {
     error.value = null
     const res = await addCartLine(payload)
     if (res.ok) {
-      cart.value = res.data
+      cart.value = normalizeCart(res.data)
     } else {
       error.value = res.error.message
     }
@@ -61,7 +80,7 @@ export const useCartStore = defineStore('cart', () => {
     error.value = null
     const res = await updateCartLine(itemId, quantity)
     if (res.ok) {
-      cart.value = res.data
+      cart.value = normalizeCart(res.data)
     } else {
       error.value = res.error.message
     }
@@ -73,7 +92,7 @@ export const useCartStore = defineStore('cart', () => {
     error.value = null
     const res = await removeCartLine(itemId)
     if (res.ok) {
-      cart.value = res.data
+      cart.value = normalizeCart(res.data)
     } else {
       error.value = res.error.message
     }

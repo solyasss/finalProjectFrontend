@@ -7,10 +7,34 @@ import {
   type ProductSetVariant,
   type RoomSummary,
 } from '@/api'
+import { extractImageUrl, normalizeImageUrls } from '@/utils/image'
 
 function normalizeNumericRouteParam(value: unknown): number | null {
   const id = typeof value === 'string' ? Number.parseInt(value, 10) : Number.NaN
   return Number.isFinite(id) && id > 0 ? id : null
+}
+
+function normalizeRoomSummary(room: RoomSummary): RoomSummary {
+  return {
+    ...room,
+    imageUrl: extractImageUrl(room.imageUrl),
+  }
+}
+
+function normalizeProductSetVariant(variant: ProductSetVariant): ProductSetVariant {
+  return {
+    ...variant,
+    images: normalizeImageUrls(variant.images),
+  }
+}
+
+function normalizeProductSetDetails(productSet: ProductSetDetails): ProductSetDetails {
+  return {
+    ...productSet,
+    imageUrl: extractImageUrl(productSet.imageUrl),
+    room: normalizeRoomSummary(productSet.room),
+    variants: productSet.variants.map(normalizeProductSetVariant),
+  }
 }
 
 export function useProductSetDetailPage() {
@@ -76,7 +100,7 @@ export function useProductSetDetailPage() {
       return
     }
 
-    productSet.value = result.data
+    productSet.value = normalizeProductSetDetails(result.data)
   }
 
   async function goBackToRoom() {

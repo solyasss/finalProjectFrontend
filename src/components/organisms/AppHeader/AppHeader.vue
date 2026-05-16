@@ -50,9 +50,15 @@ const menuItems = computed(() => [
     icon: 'pi pi-map-marker',
   },
   { id: 'rooms', label: t('header.nav.rooms'), icon: 'pi pi-home' },
+  ...(authStore.isAdmin
+    ? [{ id: 'admin', label: t('header.nav.admin'), icon: 'pi pi-shield' }]
+    : []),
 ])
 
-const navItems = computed(() => [{ label: t('header.nav.rooms'), to: { name: 'rooms' } }])
+const navItems = computed(() => [
+  { label: t('header.nav.rooms'), to: { name: 'rooms' } },
+  ...(authStore.isAdmin ? [{ label: t('header.nav.admin'), to: { name: 'admin-dashboard' } }] : []),
+])
 
 function handleMenuSelect(item: { id: string }) {
   if (item.id === 'location') {
@@ -62,6 +68,12 @@ function handleMenuSelect(item: { id: string }) {
 
   if (item.id === 'rooms') {
     router.push({ name: 'rooms' })
+    menuOpen.value = false
+    return
+  }
+
+  if (item.id === 'admin') {
+    router.push({ name: 'admin-dashboard' })
     menuOpen.value = false
   }
 }

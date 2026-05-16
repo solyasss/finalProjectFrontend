@@ -31,6 +31,6 @@ export function updateLocation(_payload: {
   throw new Error('Not implemented: updateLocation')
 }
 
-export function changePassword(body: ChangePasswordRequest): Promise<ApiResult<void>> {
+export function changePassword(_body: ChangePasswordRequest): Promise<ApiResult<void>> {
   throw new Error('Not implemented: changePassword')
 }
