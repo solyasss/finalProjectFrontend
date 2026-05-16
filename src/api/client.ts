@@ -1,7 +1,7 @@
 import type { ApiError, ApiResult } from './types'
 
-const LEGACY_API_BASE_URL = '/api/v1'
-const NEW_API_BASE_URL = '/backend'
+const LEGACY_API_BASE_URL = resolveApiBaseUrl(import.meta.env.VITE_LEGACY_API_BASE_URL, '/api/v1')
+const NEW_API_BASE_URL = resolveApiBaseUrl(import.meta.env.VITE_API_BASE_URL, '/backend')
 
 // In-memory token
 let _token: string | null = null
@@ -42,6 +42,20 @@ type RawApiError = Partial<ApiError> & {
     timestamp?: string
   }
   success?: boolean
+}
+
+function resolveApiBaseUrl(rawBaseUrl: string | undefined, fallbackBaseUrl: string): string {
+  if (rawBaseUrl === undefined) {
+    return fallbackBaseUrl
+  }
+
+  const trimmedBaseUrl = rawBaseUrl.trim()
+
+  if (trimmedBaseUrl === '') {
+    return fallbackBaseUrl
+  }
+
+  return trimmedBaseUrl.endsWith('/') ? trimmedBaseUrl.slice(0, -1) : trimmedBaseUrl
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -238,8 +252,8 @@ async function executeRequest(
       method,
       headers,
       body: payload,
-      // cookies are included so the HttpOnly refresh-token cookie is sent automatically
-      credentials: 'same-origin',
+      // credentials are included so cross-origin deployments can receive and send auth cookies
+      credentials: 'include',
     })
   } catch {
     return null
