@@ -18,7 +18,7 @@ export default defineConfig(({ command }) => ({
         changeOrigin: true,
       },
       '/backend': {
-        target: 'http://127.0.0.1:3000',
+        target: 'http://127.0.0.1:3001',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/backend/, '/api'),
       },
