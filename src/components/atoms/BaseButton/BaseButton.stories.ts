@@ -40,7 +40,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-// ─── Primary (brand yellow) ───────────────────────────────────────────────────
+// ─── Primary (brand accent) ───────────────────────────────────────────────────
 
 export const Primary: Story = {
   args: { label: 'Add to cart' },

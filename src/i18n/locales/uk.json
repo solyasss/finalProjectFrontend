@@ -802,6 +802,7 @@
     "availabilityError": "Зараз не вдалося оновити інформацію про отримання.",
     "availabilityAvailable": "Доступно",
     "availabilityUnavailable": "Недоступно",
+    "additionalInfoTitle": "Додаткова інформація",
     "quantity": "Кількість",
     "quantityDecrease": "Зменшити кількість",
     "quantityIncrease": "Збільшити кількість",

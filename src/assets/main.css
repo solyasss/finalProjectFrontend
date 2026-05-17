@@ -4,8 +4,8 @@
 
 @theme {
   /* Brand colors */
-  --color-brand-yellow: var(--app-color-action-cta, #ffda1a);
-  --color-brand-yellow-hover: var(--app-color-action-cta-hover, #f5c800);
+  --color-brand-accent: var(--app-color-action-cta, #8ea9a8);
+  --color-brand-accent-hover: var(--app-color-action-cta-hover, #809998);
   --color-brand-blue: var(--app-color-brand-primary, #0058a3);
   --color-brand-dark-blue: var(--app-color-brand-primary-hover, #003e74);
   --color-brand-black: var(--app-color-text-primary, #111111);

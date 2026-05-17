@@ -1,5 +1,3 @@
-import { request } from './client'
-import { buildFilterQuery } from './utils'
 import type {
   ApiResult,
   SearchResponse,
@@ -10,13 +8,18 @@ import type {
 
 // TODO: Verify that the backend supports all the query parameters
 export function search(params: SearchParams): Promise<ApiResult<SearchResponse>> {
-  return request('/search', {
-    query: {
-      q: params.q,
-      page: params.page,
-      limit: params.limit,
-      sort: params.sort,
-      ...buildFilterQuery(params.filters),
+  // TODO: Temporary stub until the new search backend endpoint is available/migrated.
+  return Promise.resolve({
+    ok: true,
+    data: {
+      query: params.q,
+      filters: [],
+      products: [],
+      pagination: {
+        total: 0,
+        page: params.page ?? 1,
+        limit: params.limit ?? 0,
+      },
     },
   })
 }
@@ -25,7 +28,16 @@ export function search(params: SearchParams): Promise<ApiResult<SearchResponse>>
 export function searchSuggest(
   params: SearchSuggestParams,
 ): Promise<ApiResult<SearchSuggestResponse>> {
-  return request('/search/suggest', {
-    query: { q: params.q, limit: params.limit },
+  void params.limit
+
+  // TODO: Temporary stub until the new search suggest backend endpoint is available/migrated.
+  return Promise.resolve({
+    ok: true,
+    data: {
+      query: params.q,
+      suggestions: [],
+      categories: [],
+      products: [],
+    },
   })
 }

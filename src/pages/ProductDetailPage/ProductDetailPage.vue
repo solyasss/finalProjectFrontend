@@ -2,7 +2,8 @@
 import { computed } from 'vue'
 import Message from 'primevue/message'
 import { useI18n } from 'vue-i18n'
-import type { DetailsSection } from '@/api'
+import { useRouter } from 'vue-router'
+import type { DetailsSection, ProductCard as RelatedProductCard } from '@/api'
 import BreadcrumbNav from '@/components/molecules/BreadcrumbNav/BreadcrumbNav.vue'
 import { useProductDetailPage } from '@/composables/useProductDetailPage'
 import { useBreadcrumbs } from '@/composables/useBreadcrumbs'
@@ -14,6 +15,7 @@ import ProductCard from '@/components/molecules/ProductCard/ProductCard.vue'
 import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const {
   loading,
@@ -80,6 +82,10 @@ const detailSections = computed<DetailsSection[]>(() => {
 
   return sections
 })
+
+async function handleRelatedProductSelect(product: RelatedProductCard) {
+  await router.push({ name: 'pdp', params: { productId: product.id } })
+}
 </script>
 
 <template>
@@ -148,7 +154,7 @@ const detailSections = computed<DetailsSection[]>(() => {
           </h2>
           <div class="flex gap-4 overflow-x-auto pb-2">
             <div v-for="item in relatedProducts" :key="item.id" class="w-[250px] shrink-0">
-              <ProductCard :product="item" :clickable="true" />
+              <ProductCard :product="item" :clickable="true" @select="handleRelatedProductSelect" />
             </div>
           </div>
         </section>

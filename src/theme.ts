@@ -15,10 +15,10 @@ const foundationPalette = {
     900: '#001a31',
     950: '#000d19',
   },
-  yellow: {
-    500: '#ffda1a',
-    600: '#f5c800',
-    700: '#e6b800',
+  accent: {
+    500: '#8ea9a8',
+    600: '#809998',
+    700: '#728887',
   },
   neutral: {
     0: '#ffffff',
@@ -34,8 +34,8 @@ const foundationPalette = {
     success: '#168733',
     warning: '#f26a2f',
   },
-  accent: {
-    promoBadge: '#8ea9a8',
+  promo: {
+    badge: '#8ea9a8',
   },
 } as const
 
@@ -46,9 +46,9 @@ export const themeColors = {
     primaryActive: foundationPalette.blue[900],
   },
   action: {
-    cta: foundationPalette.yellow[500],
-    ctaHover: foundationPalette.yellow[600],
-    ctaActive: foundationPalette.yellow[700],
+    cta: foundationPalette.accent[500],
+    ctaHover: foundationPalette.accent[600],
+    ctaActive: foundationPalette.accent[700],
   },
   text: {
     primary: foundationPalette.neutral[900],
@@ -64,7 +64,7 @@ export const themeColors = {
   },
   feedback: foundationPalette.status,
   accent: {
-    promoBadge: foundationPalette.accent.promoBadge,
+    promoBadge: foundationPalette.promo.badge,
   },
 } as const
 
@@ -150,7 +150,7 @@ export const BrandPreset = definePreset(Aura, {
       colorScheme: {
         light: {
           root: {
-            // Primary button → Brand yellow with black text
+            // Primary button → CTA color with black text
             primary: {
               background: themeColors.action.cta,
               hoverBackground: themeColors.action.ctaHover,

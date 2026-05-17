@@ -13,6 +13,8 @@ import type {
   FulfillmentOption as ProductFulfillmentOption,
   ProductDetails,
   ProductVariant,
+  FulfillmentType,
+  Money
 } from '@/api'
 
 interface Props {
@@ -27,6 +29,17 @@ interface Props {
   availabilityError?: string | null
   ctaMessage?: CtaMessage | null
 }
+
+const availability = computed(() => props.availability || 
+[
+  {
+    type: 'shipping',
+    available: true,
+    etaText: '3-5 business days',
+    cost: 50,
+    message: 'Delivery Options Will Be Available Soon',
+  },
+])
 
 const props = defineProps<Props>()
 
@@ -56,9 +69,9 @@ const formattedPrice = computed(() => `${props.selectedVariant!.price} ₴`)
 
       <div class="space-y-3">
         <!-- TODO: series not returned by backend API yet.
-             To enable once backend supports it.
-        <p v-if="product.series" ...>{{ product.series }}</p>
-        <p>Available in future release</p>
+            To enable once backend supports it.
+          <p v-if="product.series" ...>{{ product.series }}</p>
+          <p>Available in future release</p>
         -->
         <h1 class="text-3xl font-bold text-color md:text-4xl">
           {{ product.name }}
@@ -102,7 +115,17 @@ const formattedPrice = computed(() => `${props.selectedVariant!.price} ₴`)
       <Message v-if="availabilityError" severity="secondary" variant="simple">
         {{ availabilityError }}
       </Message>
-
+      
+      <FulfillmentOption
+        v-if="!availability.length"
+        :option="{
+          type: 'DELIVERY' as FulfillmentType,
+          available: false,
+          etaText: '',
+          cost: { amountMinor: 0, currency: 'UAH', formatted: '0 ₴' } as Money,
+          message: t('pdp.availabilityError'),
+        }"
+      />
       <FulfillmentOption v-for="option in availability" :key="option.type" :option="option" />
     </section>
 
