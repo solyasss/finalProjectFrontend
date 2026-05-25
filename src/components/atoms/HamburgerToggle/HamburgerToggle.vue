@@ -33,6 +33,8 @@ function handleClick() {
     rounded
     :icon="icon"
     :aria-label="ariaLabel"
+    :aria-expanded="isOpen"
+    aria-controls="hamburger-menu-drawer"
     :disabled="isDisabled"
     class="hamburger-toggle"
     @click="handleClick"

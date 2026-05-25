@@ -31,9 +31,17 @@ const { t } = useI18n()
         v-model="draft.firstName"
         fluid
         :invalid="Boolean(errors.firstName)"
+        :aria-describedby="errors.firstName ? 'reg-first-name-error' : undefined"
+        :aria-invalid="Boolean(errors.firstName) ? 'true' : undefined"
         @blur="emit('blur-field', 'firstName')"
       />
-      <Message v-if="errors.firstName" severity="error" size="small" variant="simple">
+      <Message
+        v-if="errors.firstName"
+        id="reg-first-name-error"
+        severity="error"
+        size="small"
+        variant="simple"
+      >
         {{ errors.firstName }}
       </Message>
     </div>
@@ -47,9 +55,17 @@ const { t } = useI18n()
         v-model="draft.lastName"
         fluid
         :invalid="Boolean(errors.lastName)"
+        :aria-describedby="errors.lastName ? 'reg-last-name-error' : undefined"
+        :aria-invalid="Boolean(errors.lastName) ? 'true' : undefined"
         @blur="emit('blur-field', 'lastName')"
       />
-      <Message v-if="errors.lastName" severity="error" size="small" variant="simple">
+      <Message
+        v-if="errors.lastName"
+        id="reg-last-name-error"
+        severity="error"
+        size="small"
+        variant="simple"
+      >
         {{ errors.lastName }}
       </Message>
     </div>
@@ -68,9 +84,21 @@ const { t } = useI18n()
         :manual-input="false"
         :max-date="new Date()"
         :invalid="Boolean(errors.dateOfBirth)"
+        :pt="{
+          pcInput: {
+            'aria-describedby': errors.dateOfBirth ? 'reg-dob-error' : undefined,
+            'aria-invalid': Boolean(errors.dateOfBirth) ? 'true' : undefined,
+          },
+        }"
         @blur="emit('blur-field', 'dateOfBirth')"
       />
-      <Message v-if="errors.dateOfBirth" severity="error" size="small" variant="simple">
+      <Message
+        v-if="errors.dateOfBirth"
+        id="reg-dob-error"
+        severity="error"
+        size="small"
+        variant="simple"
+      >
         {{ errors.dateOfBirth }}
       </Message>
     </div>

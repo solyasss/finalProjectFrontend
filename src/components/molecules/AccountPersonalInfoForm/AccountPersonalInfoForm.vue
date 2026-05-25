@@ -79,9 +79,17 @@ const dateOfBirthValue = computed<Date | null>({
             v-model="personalDraft.firstName"
             fluid
             :invalid="Boolean(fieldErrors.firstName)"
+            :aria-describedby="fieldErrors.firstName ? 'account-first-name-error' : undefined"
+            :aria-invalid="Boolean(fieldErrors.firstName) ? 'true' : undefined"
             @blur="markTouched('firstName')"
           />
-          <Message v-if="fieldErrors.firstName" severity="error" size="small" variant="simple">
+          <Message
+            v-if="fieldErrors.firstName"
+            id="account-first-name-error"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
             {{ fieldErrors.firstName }}
           </Message>
         </div>
@@ -95,9 +103,17 @@ const dateOfBirthValue = computed<Date | null>({
             v-model="personalDraft.lastName"
             fluid
             :invalid="Boolean(fieldErrors.lastName)"
+            :aria-describedby="fieldErrors.lastName ? 'account-last-name-error' : undefined"
+            :aria-invalid="Boolean(fieldErrors.lastName) ? 'true' : undefined"
             @blur="markTouched('lastName')"
           />
-          <Message v-if="fieldErrors.lastName" severity="error" size="small" variant="simple">
+          <Message
+            v-if="fieldErrors.lastName"
+            id="account-last-name-error"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
             {{ fieldErrors.lastName }}
           </Message>
         </div>
@@ -116,11 +132,23 @@ const dateOfBirthValue = computed<Date | null>({
             :manual-input="false"
             :max-date="new Date()"
             :invalid="Boolean(fieldErrors.dateOfBirth)"
+            :pt="{
+              pcInput: {
+                'aria-describedby': fieldErrors.dateOfBirth ? 'account-dob-error' : undefined,
+                'aria-invalid': Boolean(fieldErrors.dateOfBirth) ? 'true' : undefined,
+              },
+            }"
             disabled
             @blur="markTouched('dateOfBirth')"
           />
           <p class="mt-2 text-sm leading-6 text-muted-color">Available in a future release.</p>
-          <Message v-if="fieldErrors.dateOfBirth" severity="error" size="small" variant="simple">
+          <Message
+            v-if="fieldErrors.dateOfBirth"
+            id="account-dob-error"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
             {{ fieldErrors.dateOfBirth }}
           </Message>
         </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useId } from 'vue'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import InputText from 'primevue/inputtext'
@@ -19,6 +19,7 @@ const emit = defineEmits<{
   (event: 'submit', value: string): void
 }>()
 
+const searchInputId = useId()
 const placeholder = computed(() => props.placeholder ?? t('searchBar.placeholder'))
 const disabled = computed(() => props.disabled ?? false)
 
@@ -29,9 +30,11 @@ function handleSubmit() {
 
 <template>
   <form class="searchbar-form" role="search" @submit.prevent="handleSubmit">
+    <label :for="searchInputId" class="sr-only">{{ t('a11y.searchLabel') }}</label>
     <IconField iconPosition="left" class="searchbar-field">
       <InputIcon class="pi pi-search searchbar-icon" aria-hidden="true" />
       <InputText
+        :id="searchInputId"
         v-model="model"
         type="search"
         fluid
@@ -64,7 +67,7 @@ function handleSubmit() {
 }
 
 .searchbar-input:focus {
-  box-shadow: none;
+  box-shadow: 0 0 0 2px var(--p-primary-color, #0058a3);
 }
 
 .searchbar-input {

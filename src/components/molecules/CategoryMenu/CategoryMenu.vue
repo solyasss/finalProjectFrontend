@@ -32,6 +32,7 @@ type TieredMenuInstance = InstanceType<typeof TieredMenu> & {
 
 const menu = ref<TieredMenuInstance | null>(null)
 const hasInitializedHoverOpen = ref(false)
+const isMenuOpen = ref(false)
 
 const variant = computed<CategoryMenuVariant>(() => props.variant ?? 'default')
 const rootItem = computed<MenuItem | undefined>(() => props.model[0])
@@ -74,6 +75,16 @@ function resetHoverInitialization() {
   hasInitializedHoverOpen.value = false
 }
 
+function onMenuShow() {
+  isMenuOpen.value = true
+  resetHoverInitialization()
+}
+
+function onMenuHide() {
+  isMenuOpen.value = false
+  resetHoverInitialization()
+}
+
 function toggleMenu(event: MouseEvent) {
   resetHoverInitialization()
   menu.value?.toggle(event)
@@ -106,6 +117,7 @@ function onMenuItemHover(event: MouseEvent, item: MenuItem) {
     :class="[buttonBaseClass, props.buttonClass]"
     aria-haspopup="true"
     aria-controls="category-menu"
+    :aria-expanded="isMenuOpen"
     @click="toggleMenu"
   >
     <i
@@ -127,8 +139,8 @@ function onMenuItemHover(event: MouseEvent, item: MenuItem) {
     :model="popupItems"
     :pt="tieredMenuPt"
     popup
-    @before-show="resetHoverInitialization"
-    @before-hide="resetHoverInitialization"
+    @show="onMenuShow"
+    @hide="onMenuHide"
   >
     <template #item="{ item, props: itemProps, hasSubmenu }">
       <a

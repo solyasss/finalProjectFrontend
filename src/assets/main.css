@@ -27,3 +27,9 @@
   /* Font family */
   --font-sans: 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
 }
+
+/* Ensure all custom interactive elements show a visible focus indicator */
+:focus-visible {
+  outline: 2px solid var(--p-primary-color, #0058a3);
+  outline-offset: 2px;
+}

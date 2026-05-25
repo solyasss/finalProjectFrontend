@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
@@ -33,8 +33,18 @@ const { t } = useI18n()
 
 const desktopPopover = ref<InstanceType<typeof Popover> | null>(null)
 const mobileVisible = ref(false)
+const isPopoverOpen = ref(false)
+
+const isChooserOpen = computed(() => isPopoverOpen.value || mobileVisible.value)
 
 const errorMessage = computed(() => (props.errorKey ? t(props.errorKey) : ''))
+
+function onPopoverShow() {
+  isPopoverOpen.value = true
+  nextTick(() => {
+    (document.getElementById('location-search-desktop') as HTMLInputElement | null)?.focus()
+  })
+}
 
 function updateQuery(value: string | undefined) {
   emit('update:query', value ?? '')
@@ -76,6 +86,8 @@ defineExpose({ openChooser, closeChooser })
       type="button"
       text
       :aria-label="t('header.locationLabel')"
+      :aria-expanded="isChooserOpen"
+      aria-haspopup="dialog"
       :pt="{
         root: {
           style: {
@@ -92,7 +104,7 @@ defineExpose({ openChooser, closeChooser })
       </span>
     </Button>
 
-    <Popover ref="desktopPopover">
+    <Popover ref="desktopPopover" @show="onPopoverShow" @hide="isPopoverOpen = false">
       <div class="grid w-[20rem] gap-4 p-1">
         <div class="grid gap-4">
           <p class="text-sm font-semibold text-color">{{ t('header.locationChooserTitle') }}</p>

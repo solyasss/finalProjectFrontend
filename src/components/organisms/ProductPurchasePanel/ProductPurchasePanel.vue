@@ -14,7 +14,7 @@ import type {
   ProductDetails,
   ProductVariant,
   FulfillmentType,
-  Money
+  Money,
 } from '@/api'
 
 interface Props {
@@ -30,16 +30,18 @@ interface Props {
   ctaMessage?: CtaMessage | null
 }
 
-const availability = computed(() => props.availability || 
-[
-  {
-    type: 'shipping',
-    available: true,
-    etaText: '3-5 business days',
-    cost: 50,
-    message: 'Delivery Options Will Be Available Soon',
-  },
-])
+const availability = computed(
+  () =>
+    props.availability || [
+      {
+        type: 'shipping',
+        available: true,
+        etaText: '3-5 business days',
+        cost: 50,
+        message: 'Delivery Options Will Be Available Soon',
+      },
+    ],
+)
 
 const props = defineProps<Props>()
 
@@ -115,7 +117,7 @@ const formattedPrice = computed(() => `${props.selectedVariant!.price} ₴`)
       <Message v-if="availabilityError" severity="secondary" variant="simple">
         {{ availabilityError }}
       </Message>
-      
+
       <FulfillmentOption
         v-if="!availability.length"
         :option="{

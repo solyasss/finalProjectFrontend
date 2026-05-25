@@ -161,7 +161,10 @@ export const BrandPreset = definePreset(Aura, {
               color: themeColors.text.primary,
               hoverColor: themeColors.text.primary,
               activeColor: themeColors.text.primary,
-              focusRing: { color: themeColors.brand.primary, shadow: 'none' },
+              focusRing: {
+                color: themeColors.brand.primary,
+                shadow: '0 0 0 2px #fff, 0 0 0 4px var(--p-primary-color)',
+              },
             },
           },
         },
@@ -177,7 +180,10 @@ export const BrandPreset = definePreset(Aura, {
               color: themeColors.text.primary,
               hoverColor: themeColors.text.primary,
               activeColor: themeColors.text.primary,
-              focusRing: { color: themeColors.brand.primary, shadow: 'none' },
+              focusRing: {
+                color: themeColors.brand.primary,
+                shadow: '0 0 0 2px #fff, 0 0 0 4px var(--p-primary-color)',
+              },
             },
           },
         },

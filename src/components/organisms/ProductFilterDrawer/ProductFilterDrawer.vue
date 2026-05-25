@@ -46,6 +46,8 @@ function handleApplyFilters(value: ProductDiscoverySelectedFilters) {
       icon="pi pi-bars"
       :label="t('listingControls.filtersTitle')"
       :disabled="loading"
+      :aria-expanded="open"
+      aria-controls="product-filter-drawer"
       class="min-h-11"
       @click="setOpen(true)"
     />
@@ -55,6 +57,9 @@ function handleApplyFilters(value: ProductDiscoverySelectedFilters) {
       position="left"
       :header="t('listingControls.filtersTitle')"
       class="w-full max-w-[28rem]"
+      :pt="{
+        root: { id: 'product-filter-drawer' },
+      }"
       @update:visible="setOpen"
     >
       <div class="h-full overflow-y-auto pb-4">
