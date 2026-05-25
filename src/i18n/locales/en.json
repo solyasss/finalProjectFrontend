@@ -635,6 +635,7 @@
       "empty": "No categories match the current filters.",
       "noDescription": "No description has been provided yet.",
       "parentHint": "Leave empty to create a top-level category.",
+      "uploadHint": "Select a file to upload, or enter an image URL below. The selected file takes precedence.",
       "deleteTitle": "Delete category?",
       "deleteDescription": "This will permanently remove {name} if the backend allows deletion.",
       "fields": {
@@ -643,7 +644,8 @@
         "description": "Description",
         "imageUrl": "Image URL",
         "sortOrder": "Sort order",
-        "parentId": "Parent category ID"
+        "parentId": "Parent category ID",
+        "file": "Cover image file"
       },
       "table": {
         "sortOrder": "Sort order",
@@ -657,7 +659,7 @@
       "searchPlaceholder": "Enter a variant ID",
       "empty": "No images match the current filters.",
       "variantHint": "Connect the image to a specific product variant ID.",
-      "uploadHint": "Choose a file to upload or leave it empty to use the URL field.",
+      "uploadHint": "Select an image file to upload.",
       "previewAlt": "Preview for image {id}",
       "noPreview": "No preview available",
       "imageLabel": "Image #{id}",
@@ -669,9 +671,12 @@
       "fields": {
         "variantId": "Variant ID",
         "url": "Image URL",
-        "file": "Upload file",
+        "file": "Image file",
         "sortOrder": "Sort order",
         "isPrimary": "Use as primary image"
+      },
+      "validation": {
+        "fileRequired": "An image file is required."
       },
       "table": {
         "variantId": "Variant ID",
@@ -687,6 +692,7 @@
       "noPreview": "No image",
       "deleteTitle": "Delete room",
       "deleteDescription": "Are you sure you want to delete room \"{name}\"?",
+      "uploadHint": "Select a file to upload, or enter an image URL below. The selected file takes precedence.",
       "table": {
         "sortOrder": "Sort order",
         "updatedAt": "Updated"
@@ -707,6 +713,7 @@
       "noPreview": "No image",
       "deleteTitle": "Delete product set",
       "deleteDescription": "Are you sure you want to delete product set \"{name}\"?",
+      "uploadHint": "Select a file to upload, or enter an image URL below. The selected file takes precedence.",
       "table": {
         "roomId": "Room ID",
         "variantCount": "Variants",
@@ -816,6 +823,10 @@
       "description": "This will reindex all active products in Elasticsearch. The operation runs in the background.",
       "successMessage": "Reindex triggered successfully.",
       "errorMessage": "Failed to trigger reindex."
+    },
+    "upload": {
+      "error": "File upload failed. Please try again.",
+      "uploading": "Uploading file..."
     }
   },
   "pdp": {

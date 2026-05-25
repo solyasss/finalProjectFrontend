@@ -17,10 +17,13 @@ function buildImageFormData(payload: AdminImagePayload): FormData {
   const formData = new FormData()
 
   appendDefinedFormData(formData, 'file', payload.file)
-  appendDefinedFormData(formData, 'url', payload.url?.trim())
   appendDefinedFormData(formData, 'variantId', payload.variantId?.trim())
   appendDefinedFormData(formData, 'sortOrder', payload.sortOrder)
   appendDefinedFormData(formData, 'isPrimary', payload.isPrimary)
+  formData.append(
+    'notifyResponse',
+    payload.notifyResponse !== undefined ? String(payload.notifyResponse) : 'true',
+  )
 
   return formData
 }
@@ -71,7 +74,7 @@ export function updateAdminImage(
 }
 
 export function deleteAdminImage(imageId: number): Promise<ApiResult<AdminEntityDeleteResult>> {
-  return request<AdminEntityDeleteResult>(`/catalog/images/${imageId}`, {
+  return request<AdminEntityDeleteResult>(`/catalog/images/${imageId}/hard`, {
     baseUrl: 'root',
     auth: true,
     method: 'DELETE',

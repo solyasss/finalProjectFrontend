@@ -65,7 +65,7 @@ export function updateAdminCategory(
 export function deleteAdminCategory(
   categoryId: number,
 ): Promise<ApiResult<AdminEntityDeleteResult>> {
-  return request<AdminEntityDeleteResult>(`/catalog/categories/${categoryId}`, {
+  return request<AdminEntityDeleteResult>(`/catalog/categories/${categoryId}/hard`, {
     baseUrl: 'root',
     auth: true,
     method: 'DELETE',

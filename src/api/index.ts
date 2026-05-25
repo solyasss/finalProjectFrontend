@@ -90,6 +90,8 @@ export {
 
 export { triggerAdminReindex } from './adminSearch'
 
+export { uploadTempFile } from './files'
+
 export type {
   // Core
   ApiResult,
@@ -238,4 +240,8 @@ export type {
   AdminUserCreatePayload,
   AdminUserUpdatePayload,
   UserRole,
+  TempFileUploadPayload,
+  TempFileUploadResponse,
+  AdminImageCreatePayload,
+  AdminImageUpdatePayload,
 } from './adminTypes'

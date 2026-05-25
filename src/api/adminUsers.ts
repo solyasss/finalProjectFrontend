@@ -61,7 +61,7 @@ export function updateAdminUser(
 }
 
 export function deleteAdminUser(userId: number): Promise<ApiResult<AdminEntityDeleteResult>> {
-  return request<AdminEntityDeleteResult>(`/users/${userId}`, {
+  return request<AdminEntityDeleteResult>(`/users/${userId}/hard`, {
     baseUrl: 'root',
     auth: true,
     method: 'DELETE',

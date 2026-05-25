@@ -52,7 +52,7 @@ export function updateAdminReview(
 }
 
 export function deleteAdminReview(reviewId: number): Promise<ApiResult<AdminEntityDeleteResult>> {
-  return request<AdminEntityDeleteResult>(`/catalog/reviews/${reviewId}`, {
+  return request<AdminEntityDeleteResult>(`/catalog/reviews/${reviewId}/hard`, {
     baseUrl: 'root',
     auth: true,
     method: 'DELETE',
