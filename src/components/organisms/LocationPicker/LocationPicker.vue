@@ -42,7 +42,7 @@ const errorMessage = computed(() => (props.errorKey ? t(props.errorKey) : ''))
 function onPopoverShow() {
   isPopoverOpen.value = true
   nextTick(() => {
-    (document.getElementById('location-search-desktop') as HTMLInputElement | null)?.focus()
+    ;(document.getElementById('location-search-desktop') as HTMLInputElement | null)?.focus()
   })
 }
 

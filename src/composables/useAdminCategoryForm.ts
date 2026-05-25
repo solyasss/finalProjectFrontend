@@ -1,6 +1,7 @@
 import { reactive, ref } from 'vue'
 import { createAdminCategory, updateAdminCategory, type AdminCategory } from '@/api'
 import type { AdminCategoryPayload } from '@/api/adminTypes'
+import { useAdminTempFileUpload } from './useAdminTempFileUpload'
 import { i18n } from '@/i18n'
 
 export interface AdminCategoryDraft {
@@ -31,13 +32,15 @@ function createDraft(category?: AdminCategory | null): AdminCategoryDraft {
 export function useAdminCategoryForm(options: UseAdminCategoryFormOptions) {
   const t = i18n.global.t
   const draft = reactive<AdminCategoryDraft>(createDraft(options.category))
-  const fieldErrors = reactive<Partial<Record<keyof AdminCategoryDraft, string>>>({})
+  const fieldErrors = reactive<Partial<Record<keyof AdminCategoryDraft | 'file', string>>>({})
   const formError = ref<string | null>(null)
   const submitting = ref(false)
 
+  const { selectedFile, selectFile, clearFile, uploadIfSelected } = useAdminTempFileUpload()
+
   function validate(): boolean {
     formError.value = null
-    Object.keys(fieldErrors).forEach((key) => delete fieldErrors[key as keyof AdminCategoryDraft])
+    Object.keys(fieldErrors).forEach((key) => delete fieldErrors[key as keyof typeof fieldErrors])
 
     if (!draft.name.trim()) {
       fieldErrors.name = t('admin.validation.required')
@@ -77,6 +80,23 @@ export function useAdminCategoryForm(options: UseAdminCategoryFormOptions) {
     submitting.value = true
     formError.value = null
 
+    if (selectedFile.value) {
+      const tempUrl = await uploadIfSelected(
+        (key, msg) => {
+          fieldErrors[key as keyof typeof fieldErrors] = msg
+        },
+        (msg) => {
+          formError.value = msg
+        },
+        t,
+      )
+      if (tempUrl === null) {
+        submitting.value = false
+        return false
+      }
+      draft.imageUrl = tempUrl
+    }
+
     const result =
       options.mode === 'create' || !options.category
         ? await createAdminCategory(buildPayload())
@@ -87,8 +107,8 @@ export function useAdminCategoryForm(options: UseAdminCategoryFormOptions) {
     if (!result.ok) {
       if (result.error.fields) {
         for (const [field, message] of Object.entries(result.error.fields)) {
-          if (field in draft) {
-            fieldErrors[field as keyof AdminCategoryDraft] = message
+          if (field in draft || field === 'file') {
+            fieldErrors[field as keyof typeof fieldErrors] = message
           }
         }
       }
@@ -108,6 +128,9 @@ export function useAdminCategoryForm(options: UseAdminCategoryFormOptions) {
     fieldErrors,
     formError,
     submitting,
+    selectedFile,
+    selectFile,
+    clearFile,
     submit,
   }
 }

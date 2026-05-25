@@ -1,6 +1,7 @@
 import { reactive, ref } from 'vue'
 import { createAdminProductSet, updateAdminProductSet, type AdminProductSet } from '@/api'
 import type { AdminProductSetPayload } from '@/api/adminTypes'
+import { useAdminTempFileUpload } from './useAdminTempFileUpload'
 import { i18n } from '@/i18n'
 
 export interface AdminProductSetDraft {
@@ -9,7 +10,6 @@ export interface AdminProductSetDraft {
   imageUrl: string
   roomId: string
   variantIds: string
-  file: File | null
 }
 
 interface UseAdminProductSetFormOptions {
@@ -24,20 +24,21 @@ function createDraft(productSet?: AdminProductSet | null): AdminProductSetDraft 
     imageUrl: productSet?.imageUrl ?? '',
     roomId: productSet?.roomId != null ? String(productSet.roomId) : '',
     variantIds: productSet?.variantIds?.join('\n') ?? '',
-    file: null,
   }
 }
 
 export function useAdminProductSetForm(options: UseAdminProductSetFormOptions) {
   const t = i18n.global.t
   const draft = reactive<AdminProductSetDraft>(createDraft(options.productSet))
-  const fieldErrors = reactive<Partial<Record<keyof AdminProductSetDraft, string>>>({})
+  const fieldErrors = reactive<Partial<Record<keyof AdminProductSetDraft | 'file', string>>>({})
   const formError = ref<string | null>(null)
   const submitting = ref(false)
 
+  const { selectedFile, selectFile, clearFile, uploadIfSelected } = useAdminTempFileUpload()
+
   function validate(): boolean {
     formError.value = null
-    Object.keys(fieldErrors).forEach((key) => delete fieldErrors[key as keyof AdminProductSetDraft])
+    Object.keys(fieldErrors).forEach((key) => delete fieldErrors[key as keyof typeof fieldErrors])
 
     if (!draft.name.trim()) {
       fieldErrors.name = t('admin.validation.required')
@@ -68,7 +69,6 @@ export function useAdminProductSetForm(options: UseAdminProductSetFormOptions) {
       imageUrl: draft.imageUrl.trim() || undefined,
       roomId: draft.roomId.trim() ? Number(draft.roomId) : undefined,
       variantIds: variantIds.length ? variantIds : undefined,
-      file: draft.file ?? undefined,
     }
   }
 
@@ -77,6 +77,23 @@ export function useAdminProductSetForm(options: UseAdminProductSetFormOptions) {
 
     submitting.value = true
     formError.value = null
+
+    if (selectedFile.value) {
+      const tempUrl = await uploadIfSelected(
+        (key, msg) => {
+          fieldErrors[key as keyof typeof fieldErrors] = msg
+        },
+        (msg) => {
+          formError.value = msg
+        },
+        t,
+      )
+      if (tempUrl === null) {
+        submitting.value = false
+        return false
+      }
+      draft.imageUrl = tempUrl
+    }
 
     const result =
       options.mode === 'create' || !options.productSet
@@ -88,8 +105,8 @@ export function useAdminProductSetForm(options: UseAdminProductSetFormOptions) {
     if (!result.ok) {
       if (result.error.fields) {
         for (const [field, message] of Object.entries(result.error.fields)) {
-          if (field in draft) {
-            fieldErrors[field as keyof AdminProductSetDraft] = message
+          if (field in draft || field === 'file') {
+            fieldErrors[field as keyof typeof fieldErrors] = message
           }
         }
       }
@@ -104,5 +121,5 @@ export function useAdminProductSetForm(options: UseAdminProductSetFormOptions) {
     return true
   }
 
-  return { draft, fieldErrors, formError, submitting, submit }
+  return { draft, fieldErrors, formError, submitting, selectedFile, selectFile, clearFile, submit }
 }

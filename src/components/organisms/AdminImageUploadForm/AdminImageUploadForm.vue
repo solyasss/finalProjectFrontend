@@ -39,36 +39,21 @@ async function handleSubmit() {
   <form class="grid gap-5" @submit.prevent="handleSubmit">
     <Message v-if="form.formError.value" severity="error">{{ form.formError.value }}</Message>
 
-    <!-- Variant ID + URL — 2-col grid -->
-    <div class="grid gap-4 md:grid-cols-2">
-      <div class="grid gap-1">
-        <label class="text-sm font-medium text-color" for="variantId">
-          {{ t('admin.images.fields.variantId') }}
-        </label>
-        <input
-          id="variantId"
-          v-model="form.draft.variantId"
-          class="rounded-lg border border-surface px-3 py-2 text-sm"
-          type="text"
-        />
-        <span class="text-xs text-muted-color">{{ t('admin.images.variantHint') }}</span>
-        <span v-if="form.fieldErrors.variantId" class="text-xs text-red-500">
-          {{ form.fieldErrors.variantId }}
-        </span>
-      </div>
-
-      <div class="grid gap-1">
-        <label class="text-sm font-medium text-color" for="imageUrl">
-          {{ t('admin.images.fields.url') }}
-        </label>
-        <input
-          id="imageUrl"
-          v-model="form.draft.url"
-          class="rounded-lg border border-surface px-3 py-2 text-sm"
-          type="url"
-        />
-        <span class="text-xs text-muted-color">&nbsp;</span>
-      </div>
+    <!-- Variant ID -->
+    <div class="grid gap-1">
+      <label class="text-sm font-medium text-color" for="variantId">
+        {{ t('admin.images.fields.variantId') }}
+      </label>
+      <input
+        id="variantId"
+        v-model="form.draft.variantId"
+        class="rounded-lg border border-surface px-3 py-2 text-sm"
+        type="text"
+      />
+      <span class="text-xs text-muted-color">{{ t('admin.images.variantHint') }}</span>
+      <span v-if="form.fieldErrors.variantId" class="text-xs text-red-500">
+        {{ form.fieldErrors.variantId }}
+      </span>
     </div>
 
     <!-- File upload row — items-end so all bottoms align -->

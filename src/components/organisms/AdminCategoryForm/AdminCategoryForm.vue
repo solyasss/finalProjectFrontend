@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
+import FileUpload from 'primevue/fileupload'
 import Message from 'primevue/message'
 import Textarea from 'primevue/textarea'
 import { useI18n } from 'vue-i18n'
@@ -64,17 +65,34 @@ async function handleSubmit() {
       <Textarea v-model="form.draft.description" rows="4" auto-resize />
     </label>
 
-    <div class="grid gap-4 md:grid-cols-3">
-      <label class="grid gap-2 text-sm">
+    <div class="grid items-start gap-4 md:grid-cols-3">
+      <div class="grid self-start gap-2 text-sm">
         <span class="font-medium text-color">{{ t('admin.categories.fields.imageUrl') }}</span>
+        <FileUpload
+          mode="basic"
+          accept="image/*"
+          :auto="false"
+          :show-upload-button="false"
+          :pt="{
+            root: { class: 'text-sm' },
+            pcChooseButton: { root: { class: 'border-0 shadow-none' } },
+          }"
+          @select="form.selectFile($event.files[0] ?? null)"
+          @clear="form.clearFile()"
+        />
         <input
           v-model="form.draft.imageUrl"
           class="rounded-lg border border-surface px-3 py-2"
           type="url"
+          :placeholder="t('admin.categories.fields.imageUrl')"
         />
-      </label>
+        <span class="text-xs text-muted-color">{{ t('admin.categories.uploadHint') }}</span>
+        <span v-if="form.fieldErrors.file" class="text-xs text-red-500">{{
+          form.fieldErrors.file
+        }}</span>
+      </div>
 
-      <label class="grid gap-2 text-sm">
+      <label class="grid self-start gap-2 text-sm">
         <span class="font-medium text-color">{{ t('admin.categories.fields.sortOrder') }}</span>
         <input
           v-model="form.draft.sortOrder"
@@ -86,7 +104,7 @@ async function handleSubmit() {
         }}</span>
       </label>
 
-      <label class="grid gap-2 text-sm">
+      <label class="grid self-start gap-2 text-sm">
         <span class="font-medium text-color">{{ t('admin.categories.fields.parentId') }}</span>
         <input
           v-model="form.draft.parentId"
