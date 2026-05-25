@@ -68,6 +68,7 @@ function handleSelect(item: HamburgerMenuItem) {
       :header="drawerTitle"
       :pt="{
         root: {
+          id: 'hamburger-menu-drawer',
           class: 'h-dvh w-screen max-w-screen rounded-none',
         },
       }"

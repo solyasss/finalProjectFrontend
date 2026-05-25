@@ -46,6 +46,7 @@ function handleSelect() {
   <Card
     :pt="{
       root: {
+        class: 'focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2',
         style: {
           height: '100%',
           overflow: 'hidden',
@@ -57,11 +58,15 @@ function handleSelect() {
       body: { style: { padding: '0', height: '100%' } },
       content: { style: { padding: '0', height: '100%' } },
     }"
-    @click="handleSelect"
   >
     <template #content>
       <article
-        class="group grid h-full grid-rows-[auto_1fr] border border-surface bg-surface-0 transition-shadow hover:shadow-md"
+        class="group grid h-full grid-rows-[auto_1fr] border border-surface bg-surface-0 transition-shadow hover:shadow-md focus-visible:outline-none"
+        :role="isClickable ? 'button' : undefined"
+        :tabindex="isClickable ? 0 : undefined"
+        @click="handleSelect"
+        @keydown.enter.prevent="handleSelect"
+        @keydown.space.prevent="handleSelect"
       >
         <div class="relative aspect-square w-full overflow-hidden bg-surface-100">
           <Image

@@ -55,7 +55,7 @@ async function handleSubmit() {
         </p>
       </div>
 
-      <Message v-if="formError" severity="error">{{ formError }}</Message>
+      <Message v-if="formError" severity="error" role="alert">{{ formError }}</Message>
 
       <div class="grid gap-5">
         <div>
@@ -69,9 +69,17 @@ async function handleSubmit() {
             type="email"
             autocomplete="email"
             :invalid="Boolean(fieldErrors.email)"
+            :aria-describedby="fieldErrors.email ? 'login-email-error' : undefined"
+            :aria-invalid="Boolean(fieldErrors.email) ? 'true' : undefined"
             @blur="handleBlur('email')"
           />
-          <Message v-if="fieldErrors.email" severity="error" size="small" variant="simple">
+          <Message
+            v-if="fieldErrors.email"
+            id="login-email-error"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
             {{ fieldErrors.email }}
           </Message>
         </div>
@@ -88,9 +96,17 @@ async function handleSubmit() {
             :feedback="false"
             autocomplete="current-password"
             :invalid="Boolean(fieldErrors.password)"
+            :aria-describedby="fieldErrors.password ? 'login-password-error' : undefined"
+            :aria-invalid="Boolean(fieldErrors.password) ? 'true' : undefined"
             @blur="handleBlur('password')"
           />
-          <Message v-if="fieldErrors.password" severity="error" size="small" variant="simple">
+          <Message
+            v-if="fieldErrors.password"
+            id="login-password-error"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
             {{ fieldErrors.password }}
           </Message>
         </div>

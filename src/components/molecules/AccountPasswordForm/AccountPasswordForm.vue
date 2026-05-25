@@ -47,11 +47,16 @@ async function handleSubmit() {
             :feedback="false"
             autocomplete="current-password"
             :invalid="Boolean(fieldErrors.currentPassword)"
+            :aria-describedby="
+              fieldErrors.currentPassword ? 'account-current-password-error' : undefined
+            "
+            :aria-invalid="Boolean(fieldErrors.currentPassword) ? 'true' : undefined"
             disabled
             @blur="markTouched('currentPassword')"
           />
           <Message
             v-if="fieldErrors.currentPassword"
+            id="account-current-password-error"
             severity="error"
             size="small"
             variant="simple"
@@ -72,10 +77,18 @@ async function handleSubmit() {
             :feedback="false"
             autocomplete="new-password"
             :invalid="Boolean(fieldErrors.newPassword)"
+            :aria-describedby="fieldErrors.newPassword ? 'account-new-password-error' : undefined"
+            :aria-invalid="Boolean(fieldErrors.newPassword) ? 'true' : undefined"
             disabled
             @blur="markTouched('newPassword')"
           />
-          <Message v-if="fieldErrors.newPassword" severity="error" size="small" variant="simple">
+          <Message
+            v-if="fieldErrors.newPassword"
+            id="account-new-password-error"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
             {{ fieldErrors.newPassword }}
           </Message>
         </div>
@@ -92,11 +105,16 @@ async function handleSubmit() {
             :feedback="false"
             autocomplete="new-password"
             :invalid="Boolean(fieldErrors.confirmPassword)"
+            :aria-describedby="
+              fieldErrors.confirmPassword ? 'account-confirm-password-error' : undefined
+            "
+            :aria-invalid="Boolean(fieldErrors.confirmPassword) ? 'true' : undefined"
             disabled
             @blur="markTouched('confirmPassword')"
           />
           <Message
             v-if="fieldErrors.confirmPassword"
+            id="account-confirm-password-error"
             severity="error"
             size="small"
             variant="simple"

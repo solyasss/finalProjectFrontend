@@ -37,9 +37,17 @@ const { t } = useI18n()
         :feedback="false"
         :invalid="Boolean(errors.password)"
         autocomplete="new-password"
+        :aria-describedby="errors.password ? 'reg-password-error' : undefined"
+        :aria-invalid="Boolean(errors.password) ? 'true' : undefined"
         @blur="emit('blur-field', 'password')"
       />
-      <Message v-if="errors.password" severity="error" size="small" variant="simple">
+      <Message
+        v-if="errors.password"
+        id="reg-password-error"
+        severity="error"
+        size="small"
+        variant="simple"
+      >
         {{ errors.password }}
       </Message>
     </div>
@@ -56,9 +64,17 @@ const { t } = useI18n()
         :feedback="false"
         :invalid="Boolean(errors.confirmPassword)"
         autocomplete="new-password"
+        :aria-describedby="errors.confirmPassword ? 'reg-confirm-password-error' : undefined"
+        :aria-invalid="Boolean(errors.confirmPassword) ? 'true' : undefined"
         @blur="emit('blur-field', 'confirmPassword')"
       />
-      <Message v-if="errors.confirmPassword" severity="error" size="small" variant="simple">
+      <Message
+        v-if="errors.confirmPassword"
+        id="reg-confirm-password-error"
+        severity="error"
+        size="small"
+        variant="simple"
+      >
         {{ errors.confirmPassword }}
       </Message>
     </div>
@@ -70,6 +86,8 @@ const { t } = useI18n()
           v-model="draft.acceptTerms"
           binary
           :invalid="Boolean(errors.acceptTerms)"
+          :aria-describedby="errors.acceptTerms ? 'reg-terms-error' : undefined"
+          :aria-invalid="Boolean(errors.acceptTerms) ? 'true' : undefined"
           @blur="emit('blur-field', 'acceptTerms')"
         />
         <label for="register-terms" class="cursor-pointer text-sm leading-6 text-color">
@@ -87,7 +105,13 @@ const { t } = useI18n()
           {{ t('authRegister.termsLinkLabel') }}
         </RouterLink>
       </p>
-      <Message v-if="errors.acceptTerms" severity="error" size="small" variant="simple">
+      <Message
+        v-if="errors.acceptTerms"
+        id="reg-terms-error"
+        severity="error"
+        size="small"
+        variant="simple"
+      >
         {{ errors.acceptTerms }}
       </Message>
     </div>

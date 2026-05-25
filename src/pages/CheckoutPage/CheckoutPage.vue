@@ -79,7 +79,7 @@ onMounted(() => {
         </p>
       </div>
 
-      <Message v-if="checkoutStore.error" severity="error">
+      <Message v-if="checkoutStore.error" severity="error" role="alert">
         {{ checkoutStore.error }}
       </Message>
 
@@ -158,9 +158,17 @@ onMounted(() => {
                     v-model="checkoutStore.shippingAddress"
                     :placeholder="t('checkoutPage.shippingAddressPlaceholder')"
                     :invalid="!!validationErrors.shippingAddress"
+                    :aria-describedby="
+                      validationErrors.shippingAddress ? 'checkout-shipping-error' : undefined
+                    "
+                    :aria-invalid="!!validationErrors.shippingAddress ? 'true' : undefined"
                     class="w-full"
                   />
-                  <p v-if="validationErrors.shippingAddress" class="text-sm text-red-500">
+                  <p
+                    v-if="validationErrors.shippingAddress"
+                    id="checkout-shipping-error"
+                    class="text-sm text-red-500"
+                  >
                     {{ validationErrors.shippingAddress }}
                   </p>
                 </div>
@@ -175,9 +183,17 @@ onMounted(() => {
                     v-model="checkoutStore.cardDetails.cardholderName"
                     :placeholder="t('checkoutPage.cardholderNamePlaceholder')"
                     :invalid="!!validationErrors.cardholderName"
+                    :aria-describedby="
+                      validationErrors.cardholderName ? 'checkout-cardholder-error' : undefined
+                    "
+                    :aria-invalid="!!validationErrors.cardholderName ? 'true' : undefined"
                     class="w-full"
                   />
-                  <p v-if="validationErrors.cardholderName" class="text-sm text-red-500">
+                  <p
+                    v-if="validationErrors.cardholderName"
+                    id="checkout-cardholder-error"
+                    class="text-sm text-red-500"
+                  >
                     {{ validationErrors.cardholderName }}
                   </p>
                 </div>
@@ -192,18 +208,26 @@ onMounted(() => {
                     v-model="checkoutStore.cardDetails.cardNumber"
                     :placeholder="t('checkoutPage.cardNumberPlaceholder')"
                     :invalid="!!validationErrors.cardNumber"
+                    :aria-describedby="
+                      validationErrors.cardNumber ? 'checkout-cardnumber-error' : undefined
+                    "
+                    :aria-invalid="!!validationErrors.cardNumber ? 'true' : undefined"
                     class="w-full"
                   />
-                  <p v-if="validationErrors.cardNumber" class="text-sm text-red-500">
+                  <p
+                    v-if="validationErrors.cardNumber"
+                    id="checkout-cardnumber-error"
+                    class="text-sm text-red-500"
+                  >
                     {{ validationErrors.cardNumber }}
                   </p>
                 </div>
 
                 <!-- Expiry date -->
-                <div class="grid gap-1.5">
-                  <span class="text-sm font-medium text-color">
+                <fieldset class="grid gap-1.5 border-0 m-0 p-0">
+                  <legend class="text-sm font-medium text-color">
                     {{ t('checkoutPage.expiry') }}
-                  </span>
+                  </legend>
                   <div class="grid grid-cols-2 gap-3">
                     <div class="grid gap-1.5">
                       <label for="expiryMonth" class="sr-only">
@@ -214,9 +238,17 @@ onMounted(() => {
                         v-model="checkoutStore.cardDetails.expiryMonth"
                         :placeholder="t('checkoutPage.expiryMonth')"
                         :invalid="!!validationErrors.expiryMonth"
+                        :aria-describedby="
+                          validationErrors.expiryMonth ? 'checkout-expiry-month-error' : undefined
+                        "
+                        :aria-invalid="!!validationErrors.expiryMonth ? 'true' : undefined"
                         class="w-full"
                       />
-                      <p v-if="validationErrors.expiryMonth" class="text-sm text-red-500">
+                      <p
+                        v-if="validationErrors.expiryMonth"
+                        id="checkout-expiry-month-error"
+                        class="text-sm text-red-500"
+                      >
                         {{ validationErrors.expiryMonth }}
                       </p>
                     </div>
@@ -229,14 +261,22 @@ onMounted(() => {
                         v-model="checkoutStore.cardDetails.expiryYear"
                         :placeholder="t('checkoutPage.expiryYear')"
                         :invalid="!!validationErrors.expiryYear"
+                        :aria-describedby="
+                          validationErrors.expiryYear ? 'checkout-expiry-year-error' : undefined
+                        "
+                        :aria-invalid="!!validationErrors.expiryYear ? 'true' : undefined"
                         class="w-full"
                       />
-                      <p v-if="validationErrors.expiryYear" class="text-sm text-red-500">
+                      <p
+                        v-if="validationErrors.expiryYear"
+                        id="checkout-expiry-year-error"
+                        class="text-sm text-red-500"
+                      >
                         {{ validationErrors.expiryYear }}
                       </p>
                     </div>
                   </div>
-                </div>
+                </fieldset>
 
                 <!-- CVV -->
                 <div class="grid gap-1.5">
@@ -248,9 +288,15 @@ onMounted(() => {
                     v-model="checkoutStore.cardDetails.cvv"
                     :placeholder="t('checkoutPage.cvvPlaceholder')"
                     :invalid="!!validationErrors.cvv"
+                    :aria-describedby="validationErrors.cvv ? 'checkout-cvv-error' : undefined"
+                    :aria-invalid="!!validationErrors.cvv ? 'true' : undefined"
                     class="w-full"
                   />
-                  <p v-if="validationErrors.cvv" class="text-sm text-red-500">
+                  <p
+                    v-if="validationErrors.cvv"
+                    id="checkout-cvv-error"
+                    class="text-sm text-red-500"
+                  >
                     {{ validationErrors.cvv }}
                   </p>
                 </div>

@@ -35,6 +35,7 @@ function handleSelect() {
   <Card
     :pt="{
       root: {
+        class: 'focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2',
         style: {
           height: '100%',
           overflow: 'hidden',

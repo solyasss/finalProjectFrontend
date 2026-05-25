@@ -22,7 +22,9 @@ const iconSize = computed(() => (props.size === 'detail' ? '1rem' : '0.75rem'))
     :model-value="displayValue"
     readonly
     :pt="{
-      root: { style: { gap: '0.125rem' } },
+      root: { style: { gap: '0.125rem' }, 'aria-hidden': 'true' },
+      option: { tabindex: '-1' },
+      hiddenOptionInput: { tabindex: '-1' },
     }"
   >
     <template #onicon>

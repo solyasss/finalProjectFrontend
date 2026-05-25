@@ -32,9 +32,17 @@ const { t } = useI18n()
         type="email"
         autocomplete="email"
         :invalid="Boolean(errors.email)"
+        :aria-describedby="errors.email ? 'reg-email-error' : undefined"
+        :aria-invalid="Boolean(errors.email) ? 'true' : undefined"
         @blur="emit('blur-field', 'email')"
       />
-      <Message v-if="errors.email" severity="error" size="small" variant="simple">
+      <Message
+        v-if="errors.email"
+        id="reg-email-error"
+        severity="error"
+        size="small"
+        variant="simple"
+      >
         {{ errors.email }}
       </Message>
     </div>
