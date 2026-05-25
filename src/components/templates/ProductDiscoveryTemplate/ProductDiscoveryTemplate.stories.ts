@@ -3,7 +3,7 @@ import type { FilterDefinition, ProductCard, SortOption } from '@/api'
 import type {
   ProductDiscoveryFilterChip,
   ProductDiscoverySelectedFilters,
-} from '@/composables/useProductDiscoveryListing'
+} from '@/composables/usePlpListing'
 import ProductDiscoveryTemplate from './ProductDiscoveryTemplate.vue'
 
 type SortControlOption = {

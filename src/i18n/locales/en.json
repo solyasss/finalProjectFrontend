@@ -218,7 +218,11 @@
     "prompt": "Enter a search query to see matching products.",
     "loading": "Searching products...",
     "error": "We could not load search results right now.",
-    "empty": "No matching products were found."
+    "empty": "No matching products were found.",
+    "selectCategory": "Select Category"
+  },
+  "filters": {
+    "category": "Category"
   },
   "listingControls": {
     "filtersTitle": "Filters",

@@ -23,7 +23,7 @@ const removeAriaLabel = computed(() =>
 <template>
   <button
     type="button"
-    class="inline-flex min-h-12 items-center gap-2 rounded-full border border-surface bg-surface-0 px-4 py-2 text-sm font-medium text-color transition-colors hover:bg-highlight disabled:cursor-not-allowed disabled:opacity-60"
+    class="inline-flex min-h-12 items-center gap-2 rounded-full border border-surface bg-surface-0 px-4 py-2 text-sm font-medium text-color transition-colors hover:bg-highlight cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
     :aria-label="removeAriaLabel"
     :disabled="props.disabled"
     @click="emit('remove')"

@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ProductDiscoveryTemplate from '@/components/templates/ProductDiscoveryTemplate/ProductDiscoveryTemplate.vue'
-import { useProductDiscoveryListing } from '@/composables/useProductDiscoveryListing'
+import { useSearchListing } from '@/composables/useSearchListing'
+import { useCatalogStore } from '@/stores'
 
 const { t } = useI18n()
 
-const listing = useProductDiscoveryListing({ mode: 'search' })
+const catalogStore = useCatalogStore()
+
+const listing = useSearchListing()
 const {
   loading,
   error,
@@ -21,6 +24,10 @@ const {
   sourceValue,
   showPromptState,
 } = listing
+
+onMounted(() => {
+  catalogStore.fetchCategories()
+})
 
 const searchTitle = computed(() =>
   t('search.resultsTitle', { query: sourceValue.value || t('search.prompt') }),
@@ -49,6 +56,7 @@ const resultCount = computed(() => pagination.value?.total ?? products.value.len
     :empty-message="t('search.empty')"
     :show-prompt-state="showPromptState"
     :prompt-message="t('search.prompt')"
+    :category-tree="catalogStore.categoriesTree"
     @apply-filters="listing.applyFilters"
     @page-change="listing.setPage"
     @update:sort="listing.setSort"

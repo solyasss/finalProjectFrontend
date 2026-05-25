@@ -3,12 +3,12 @@ import { ref } from 'vue'
 import Button from 'primevue/button'
 import Drawer from 'primevue/drawer'
 import { useI18n } from 'vue-i18n'
-import type { FilterDefinition } from '@/api'
+import type { CategoryTreeNode, FilterDefinition } from '@/api'
 import ProductFilters from '@/components/organisms/ProductFilters/ProductFilters.vue'
 import type {
   ProductDiscoveryFilterChip,
   ProductDiscoverySelectedFilters,
-} from '@/composables/useProductDiscoveryListing'
+} from '@/composables/usePlpListing'
 
 interface Props {
   filters: FilterDefinition[]
@@ -16,6 +16,7 @@ interface Props {
   activeChips: ProductDiscoveryFilterChip[]
   resultCount: number
   loading?: boolean
+  categoryTree?: CategoryTreeNode[]
 }
 
 defineProps<Props>()
@@ -69,6 +70,7 @@ function handleApplyFilters(value: ProductDiscoverySelectedFilters) {
           :active-chips="activeChips"
           :result-count="resultCount"
           :loading="loading"
+          :category-tree="categoryTree"
           class="h-full max-h-none"
           @apply-filters="handleApplyFilters"
         />

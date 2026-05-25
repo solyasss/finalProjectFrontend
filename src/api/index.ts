@@ -187,6 +187,8 @@ export type {
   CreateProductReviewResponse,
   // TODO: ProductReviewsSummaryResponse — not supported by backend API yet.
   // TODO: ProductQuestionsResponse — not supported by backend API yet.
+  SearchVariantItem,
+  SearchApiResponse,
   SearchResponse,
   SearchSuggestResponse,
   WishlistResponse,

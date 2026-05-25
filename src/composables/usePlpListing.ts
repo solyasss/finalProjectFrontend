@@ -3,26 +3,27 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter, type LocationQueryRaw, type LocationQueryValue } from 'vue-router'
 import {
   getCategoryProducts,
-  // TODO: search is not supported by the backend API yet.
-  // To enable once backend supports search endpoint.
-  // search,
   type FilterDefinition,
   type Pagination,
   type ProductCard,
-  type ProductListItem,
   type ProductFilters,
+  type ProductListItem,
   type ProductListResponse,
-  // TODO: SearchResponse not supported yet.
-  // type SearchResponse,
   type SortOption,
 } from '@/api'
 import { useCatalogStore } from '@/stores'
 
-const DEFAULT_LIMIT = 12
-const FILTER_QUERY_PREFIX = 'filters['
-const FILTER_QUERY_SUFFIX = ']'
-const SORT_OPTIONS: SortOption[] = ['relevance', 'price_asc', 'price_desc', 'rating', 'newest']
-const FALLBACK_FILTER_TYPES: Record<string, FilterDefinition['type']> = {
+export const DEFAULT_LIMIT = 12
+export const FILTER_QUERY_PREFIX = 'filters['
+export const FILTER_QUERY_SUFFIX = ']'
+export const SORT_OPTIONS: SortOption[] = [
+  'relevance',
+  'price_asc',
+  'price_desc',
+  'rating',
+  'newest',
+]
+export const FALLBACK_FILTER_TYPES: Record<string, FilterDefinition['type']> = {
   availability: 'BOOLEAN',
   price: 'RANGE',
 }
@@ -45,24 +46,11 @@ export interface ProductDiscoveryFilterChip {
   displayLabel: string
 }
 
-interface ProductDiscoveryListingOptions {
-  // TODO: 'search' mode not supported by backend API yet.
-  // To enable once backend supports search endpoint.
-  mode: 'plp' | 'search'
-}
-
-interface ListingResponseMeta {
-  products: ProductCard[]
-  filters: FilterDefinition[]
-  pagination: Pagination | null
-  title: string
-}
-
-function isSortOption(value: string): value is SortOption {
+export function isSortOption(value: string): value is SortOption {
   return SORT_OPTIONS.includes(value as SortOption)
 }
 
-function parseRangeValue(value: string): string | null {
+export function parseRangeValue(value: string): string | null {
   if (!/^\d+-\d+$/.test(value)) {
     return null
   }
@@ -78,7 +66,7 @@ function parseRangeValue(value: string): string | null {
   return `${min}-${max}`
 }
 
-function parseSelectedFilters(
+export function parseSelectedFilters(
   query: Record<string, unknown>,
   filterDefinitions: FilterDefinition[],
 ): ProductDiscoverySelectedFilters {
@@ -140,7 +128,7 @@ function parseSelectedFilters(
   return selectedFilters
 }
 
-function buildApiFilters(selectedFilters: ProductDiscoverySelectedFilters): ProductFilters {
+export function buildApiFilters(selectedFilters: ProductDiscoverySelectedFilters): ProductFilters {
   const apiFilters: ProductFilters = {}
 
   for (const [key, value] of Object.entries(selectedFilters)) {
@@ -166,7 +154,7 @@ function buildApiFilters(selectedFilters: ProductDiscoverySelectedFilters): Prod
   return apiFilters
 }
 
-function buildFilterChips(
+export function buildFilterChips(
   filters: FilterDefinition[],
   selectedFilters: ProductDiscoverySelectedFilters,
 ): ProductDiscoveryFilterChip[] {
@@ -212,7 +200,7 @@ function buildFilterChips(
   })
 }
 
-function extractFilterQuerySignature(query: Record<string, unknown>): string {
+export function extractFilterQuerySignature(query: Record<string, unknown>): string {
   const entries = Object.entries(query)
     .filter(([key]) => key.startsWith(FILTER_QUERY_PREFIX))
     .map(([key, value]) => {
@@ -227,7 +215,7 @@ function extractFilterQuerySignature(query: Record<string, unknown>): string {
   return entries.join('|')
 }
 
-function normalizePagination(meta: ProductListResponse['meta'] | undefined): Pagination {
+export function normalizePagination(meta: ProductListResponse['meta'] | undefined): Pagination {
   const total = Number(meta?.totalItems)
   const page = Number(meta?.currentPage)
   const limit = Number(meta?.itemsPerPage)
@@ -239,6 +227,27 @@ function normalizePagination(meta: ProductListResponse['meta'] | undefined): Pag
   }
 }
 
+export function getQueryStringValue(
+  value: LocationQueryValue | LocationQueryValue[] | undefined,
+): string {
+  if (typeof value === 'string') {
+    return value
+  }
+
+  if (Array.isArray(value)) {
+    return value.find((entry): entry is string => typeof entry === 'string') ?? ''
+  }
+
+  return ''
+}
+
+interface ListingResponseMeta {
+  products: ProductCard[]
+  filters: FilterDefinition[]
+  pagination: Pagination | null
+  title: string
+}
+
 function normalizeProductCard(product: ProductListItem): ProductCard {
   const firstVariant = product.variants?.[0] ?? null
 
@@ -248,7 +257,20 @@ function normalizeProductCard(product: ProductListItem): ProductCard {
   }
 }
 
-export function useProductDiscoveryListing(_options: ProductDiscoveryListingOptions) {
+function normalizeCategoryResponse(
+  data: ProductListResponse,
+  categoryName: string,
+): ListingResponseMeta {
+  return {
+    title: categoryName,
+    products: data.data.map(normalizeProductCard),
+    // TODO: filters not returned by /catalog/products — not supported yet.
+    filters: [],
+    pagination: normalizePagination(data.meta),
+  }
+}
+
+export function usePlpListing() {
   const { t } = useI18n()
   const route = useRoute()
   const router = useRouter()
@@ -261,14 +283,8 @@ export function useProductDiscoveryListing(_options: ProductDiscoveryListingOpti
   const pagination = ref<Pagination | null>(null)
   const title = ref('')
 
-  const sourceValue = computed(() => {
-    // TODO: search mode removed — not supported by backend API yet.
-    // if (options.mode === 'search') { ... }
-    return String(route.params.categorySlug ?? '')
-  })
-
+  const sourceValue = computed(() => String(route.params.categorySlug ?? ''))
   const hasSource = computed(() => Boolean(sourceValue.value))
-  // TODO: showPromptState was for search mode — not supported yet.
   const showPromptState = computed(() => false)
 
   const currentPage = computed(() => {
@@ -301,7 +317,6 @@ export function useProductDiscoveryListing(_options: ProductDiscoveryListingOpti
       return null
     }
 
-    // Ensure categories are loaded so we can resolve slug → id
     await catalogStore.fetchCategories()
 
     const categorySlug = sourceValue.value
@@ -320,17 +335,12 @@ export function useProductDiscoveryListing(_options: ProductDiscoveryListingOpti
     error.value = null
 
     const apiFilters = buildApiFilters(parseSelectedFilters(route.query, filters.value))
-    const requestParams = {
+    const result = await getCategoryProducts(category.id, {
       page: currentPage.value,
       limit: DEFAULT_LIMIT,
       sort: sort.value || undefined,
       filters: apiFilters,
-    }
-
-    // TODO: search mode removed — not supported by backend API yet.
-    // To enable once backend supports search endpoint.
-
-    const result = await getCategoryProducts(category.id, requestParams)
+    })
 
     loading.value = false
 
@@ -344,30 +354,12 @@ export function useProductDiscoveryListing(_options: ProductDiscoveryListingOpti
     }
 
     const normalized = normalizeCategoryResponse(result.data, category.name)
-
     title.value = normalized.title
     products.value = normalized.products
     filters.value = normalized.filters
     pagination.value = normalized.pagination
     return normalized
   }
-
-  function normalizeCategoryResponse(
-    data: ProductListResponse,
-    categoryName: string,
-  ): ListingResponseMeta {
-    return {
-      title: categoryName,
-      products: data.data.map(normalizeProductCard),
-      // TODO: filters not returned by /catalog/products — not supported yet.
-      filters: [],
-      pagination: normalizePagination(data.meta),
-    }
-  }
-
-  // TODO: normalizeSearchResponse removed — search not supported by backend API yet.
-  // To enable once backend supports search endpoint.
-  // function normalizeSearchResponse(data: SearchResponse): ListingResponseMeta { ... }
 
   async function updateQuery(
     nextSort: SortOption | '',
@@ -404,10 +396,7 @@ export function useProductDiscoveryListing(_options: ProductDiscoveryListingOpti
   }
 
   async function setSort(nextSort: SortOption | '') {
-    if (sort.value === nextSort) {
-      return
-    }
-
+    if (sort.value === nextSort) return
     await updateQuery(nextSort, selectedFilters.value)
   }
 
@@ -416,10 +405,7 @@ export function useProductDiscoveryListing(_options: ProductDiscoveryListingOpti
   }
 
   async function setPage(nextPage: number) {
-    if (currentPage.value === nextPage || nextPage < 1) {
-      return
-    }
-
+    if (currentPage.value === nextPage || nextPage < 1) return
     await updateQuery(sort.value, selectedFilters.value, nextPage)
   }
 
@@ -477,10 +463,7 @@ export function useProductDiscoveryListing(_options: ProductDiscoveryListingOpti
   }
 
   async function clearAllFilters() {
-    if (!Object.keys(selectedFilters.value).length) {
-      return
-    }
-
+    if (!Object.keys(selectedFilters.value).length) return
     await updateQuery(sort.value, {})
   }
 
@@ -532,16 +515,4 @@ export function useProductDiscoveryListing(_options: ProductDiscoveryListingOpti
     selectProduct,
     reload,
   }
-}
-
-function getQueryStringValue(value: LocationQueryValue | LocationQueryValue[] | undefined): string {
-  if (typeof value === 'string') {
-    return value
-  }
-
-  if (Array.isArray(value)) {
-    return value.find((entry): entry is string => typeof entry === 'string') ?? ''
-  }
-
-  return ''
 }

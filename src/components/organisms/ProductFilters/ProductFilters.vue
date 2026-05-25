@@ -3,13 +3,16 @@ import { computed, ref, watch } from 'vue'
 import Button from 'primevue/button'
 import Checkbox from 'primevue/checkbox'
 import { useI18n } from 'vue-i18n'
-import type { FilterDefinition } from '@/api'
+import type { MenuItem } from 'primevue/menuitem'
+import type { CategoryTreeNode, FilterDefinition } from '@/api'
+import CategoryMenu from '@/components/molecules/CategoryMenu/CategoryMenu.vue'
 import FilterChip from '@/components/molecules/FilterChip/FilterChip.vue'
 import type {
   ProductDiscoveryFilterChip,
   ProductDiscoveryRangeDraft,
+  ProductDiscoverySelectedFilterValue,
   ProductDiscoverySelectedFilters,
-} from '@/composables/useProductDiscoveryListing'
+} from '@/composables/usePlpListing'
 
 interface Props {
   filters: FilterDefinition[]
@@ -17,6 +20,7 @@ interface Props {
   activeChips: ProductDiscoveryFilterChip[]
   resultCount: number
   loading?: boolean
+  categoryTree?: CategoryTreeNode[]
 }
 
 const props = defineProps<Props>()
@@ -41,7 +45,10 @@ watch(
       }
 
       const selectedValue = selectedFilters[filter.key]
-      const [min = '', max = ''] = typeof selectedValue === 'string' ? selectedValue.split('-') : []
+      const defaultMin = String(filter.range?.min ?? '')
+      const defaultMax = String(filter.range?.max ?? '')
+      const [min = defaultMin, max = defaultMax] =
+        typeof selectedValue === 'string' ? selectedValue.split('-') : []
 
       rangeDrafts.value[filter.key] = { min, max }
     }
@@ -49,7 +56,61 @@ watch(
   { immediate: true, deep: true },
 )
 
-const draftChips = computed(() => buildDraftChips(props.filters, draftFilters.value))
+function flattenCategoryTree(nodes: CategoryTreeNode[]): CategoryTreeNode[] {
+  return nodes.flatMap((node) => [node, ...flattenCategoryTree(node.children ?? [])])
+}
+
+function convertNodeToMenuItem(node: CategoryTreeNode): MenuItem {
+  const children = node.children?.filter(Boolean) ?? []
+  return {
+    key: String(node.id),
+    label: node.name,
+    command: () => {
+      draftFilters.value = { ...draftFilters.value, categoryIds: String(node.id) }
+    },
+    items: children.length > 0 ? children.map(convertNodeToMenuItem) : undefined,
+  }
+}
+
+function normalizeCategoryId(
+  raw: ProductDiscoverySelectedFilterValue | undefined,
+): string | undefined {
+  if (!raw) return undefined
+  if (Array.isArray(raw)) return raw[0] ? String(raw[0]) : undefined
+  return String(raw)
+}
+
+const selectedCategoryLabel = computed<string>(() => {
+  const selectedId = normalizeCategoryId(draftFilters.value?.categoryIds)
+  if (!selectedId) return t('search.selectCategory', 'Select Category')
+  const match = flattenCategoryTree(props.categoryTree ?? []).find(
+    (n) => String(n.id) === selectedId,
+  )
+  return match?.name ?? t('search.allCategories', 'All Categories')
+})
+
+const categoryMenuModel = computed<MenuItem[]>(() => {
+  if (!props.categoryTree?.length) return []
+  return [
+    {
+      key: 'categories-root',
+      label: selectedCategoryLabel.value,
+      items: props.categoryTree.map(convertNodeToMenuItem),
+    },
+  ]
+})
+
+const draftChips = computed<ProductDiscoveryFilterChip[]>(() => {
+  const chips = buildDraftChips(props.filters, draftFilters.value)
+  if (draftFilters.value.categoryIds) {
+    chips.unshift({
+      key: 'categoryIds',
+      label: t('filters.category', 'Category'),
+      displayLabel: selectedCategoryLabel.value,
+    })
+  }
+  return chips
+})
 
 function isOptionSelected(key: string, value: string) {
   const selectedValue = draftFilters.value[key]
@@ -234,6 +295,17 @@ function buildDraftChips(
     </p>
 
     <div class="grid min-h-0 gap-4 overflow-y-auto pr-1">
+      <section
+        v-if="categoryMenuModel.length && !draftFilters.categoryIds"
+        class="grid gap-3 rounded-2xl border border-surface bg-surface-0 p-4"
+      >
+        <header class="space-y-1">
+          <h3 class="text-sm font-semibold text-color">{{ t('filters.category', 'Category') }}</h3>
+        </header>
+        <div class="flex w-full">
+          <CategoryMenu :model="categoryMenuModel" button-class="justify-start" />
+        </div>
+      </section>
       <section
         v-for="filter in props.filters"
         :key="filter.key"

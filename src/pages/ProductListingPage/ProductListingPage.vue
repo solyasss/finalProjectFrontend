@@ -2,11 +2,11 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ProductDiscoveryTemplate from '@/components/templates/ProductDiscoveryTemplate/ProductDiscoveryTemplate.vue'
-import { useProductDiscoveryListing } from '@/composables/useProductDiscoveryListing'
+import { usePlpListing } from '@/composables/usePlpListing'
 
 const { t } = useI18n()
 
-const listing = useProductDiscoveryListing({ mode: 'plp' })
+const listing = usePlpListing()
 const {
   loading,
   error,

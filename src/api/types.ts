@@ -558,6 +558,44 @@ export interface CreateProductReviewResponse {
 // To enable once backend supports it.
 // export interface ProductQuestionsResponse { ... }
 
+export interface SearchVariantItem {
+  _type: string
+  id: string // UUID of the variant
+  productId: number
+  name: string
+  slug: string
+  description: string | null
+  baseImageUrl: string | null
+  categoryIds: number[]
+  ratingAverage: number | null
+  sku: string
+  price: number
+  color: string | null
+  inStock: boolean
+  attributes: Record<string, string | number | boolean | null>
+}
+
+export interface SearchFilterOption {
+  value: string
+  label: string
+  count: number
+}
+
+export interface SearchFilterDefinition {
+  key: string
+  label: string
+  type: FilterType
+  options?: SearchFilterOption[]
+  range?: { min: number; max: number }
+}
+
+export interface SearchApiResponse {
+  query: string
+  totalFound: number
+  filters: SearchFilterDefinition[]
+  items: SearchVariantItem[]
+}
+
 export interface SearchResponse {
   query: string
   filters: FilterDefinition[]
