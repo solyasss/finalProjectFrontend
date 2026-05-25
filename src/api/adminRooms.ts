@@ -54,7 +54,7 @@ export function updateAdminRoom(
 }
 
 export function deleteAdminRoom(roomId: number): Promise<ApiResult<AdminEntityDeleteResult>> {
-  return request<AdminEntityDeleteResult>(`/catalog/rooms/${roomId}`, {
+  return request<AdminEntityDeleteResult>(`/catalog/rooms/${roomId}/hard`, {
     baseUrl: 'root',
     auth: true,
     method: 'DELETE',

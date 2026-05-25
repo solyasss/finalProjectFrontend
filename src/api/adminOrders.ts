@@ -51,7 +51,7 @@ export function updateAdminOrderStatus(
 }
 
 export function deleteAdminOrder(orderId: number): Promise<ApiResult<AdminEntityDeleteResult>> {
-  return request<AdminEntityDeleteResult>(`/sales/orders/${orderId}`, {
+  return request<AdminEntityDeleteResult>(`/sales/orders/${orderId}/hard`, {
     baseUrl: 'root',
     auth: true,
     method: 'DELETE',
@@ -82,7 +82,7 @@ export async function getAdminCarts(
 }
 
 export function deleteAdminCart(cartId: number): Promise<ApiResult<AdminEntityDeleteResult>> {
-  return request<AdminEntityDeleteResult>(`/sales/carts/${cartId}`, {
+  return request<AdminEntityDeleteResult>(`/sales/carts/${cartId}/hard`, {
     baseUrl: 'root',
     auth: true,
     method: 'DELETE',

@@ -75,7 +75,7 @@ export function updateAdminPromotion(
 export function deleteAdminPromotion(
   promotionId: number,
 ): Promise<ApiResult<AdminEntityDeleteResult>> {
-  return request<AdminEntityDeleteResult>(`/sales/promotions/${promotionId}`, {
+  return request<AdminEntityDeleteResult>(`/sales/promotions/${promotionId}/hard`, {
     baseUrl: 'root',
     auth: true,
     method: 'DELETE',

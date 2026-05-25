@@ -1,4 +1,4 @@
-import { appendDefinedFormData, normalizeAdminPaginatedResponse } from './admin'
+import { normalizeAdminPaginatedResponse } from './admin'
 import { request } from './client'
 import type {
   AdminEntityDeleteResult,
@@ -8,21 +8,6 @@ import type {
   AdminProductSetPayload,
 } from './adminTypes'
 import type { ApiResult } from './types'
-
-function buildProductSetFormData(payload: AdminProductSetPayload): FormData {
-  const formData = new FormData()
-  appendDefinedFormData(formData, 'name', payload.name)
-  appendDefinedFormData(formData, 'slug', payload.slug)
-  appendDefinedFormData(formData, 'file', payload.file)
-  appendDefinedFormData(formData, 'imageUrl', payload.imageUrl)
-  appendDefinedFormData(formData, 'roomId', payload.roomId)
-
-  if (payload.variantIds?.length) {
-    payload.variantIds.forEach((id) => formData.append('variantIds[]', id))
-  }
-
-  return formData
-}
 
 export async function getAdminProductSets(
   params?: AdminListParams,
@@ -54,7 +39,7 @@ export function createAdminProductSet(
     baseUrl: 'root',
     auth: true,
     method: 'POST',
-    body: buildProductSetFormData(payload),
+    body: payload,
   })
 }
 
@@ -66,12 +51,12 @@ export function updateAdminProductSet(
     baseUrl: 'root',
     auth: true,
     method: 'PATCH',
-    body: buildProductSetFormData(payload),
+    body: payload,
   })
 }
 
 export function deleteAdminProductSet(setId: number): Promise<ApiResult<AdminEntityDeleteResult>> {
-  return request<AdminEntityDeleteResult>(`/catalog/product-sets/${setId}`, {
+  return request<AdminEntityDeleteResult>(`/catalog/product-sets/${setId}/hard`, {
     baseUrl: 'root',
     auth: true,
     method: 'DELETE',

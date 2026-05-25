@@ -62,7 +62,7 @@ export function updateAdminProduct(
 }
 
 export function deleteAdminProduct(productId: number): Promise<ApiResult<AdminEntityDeleteResult>> {
-  return request<AdminEntityDeleteResult>(`/catalog/products/${productId}`, {
+  return request<AdminEntityDeleteResult>(`/catalog/products/${productId}/hard`, {
     baseUrl: 'root',
     auth: true,
     method: 'DELETE',

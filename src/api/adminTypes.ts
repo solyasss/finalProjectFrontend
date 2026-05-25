@@ -68,10 +68,37 @@ export interface AdminImage {
 
 export interface AdminImagePayload {
   file?: File | null
-  url?: string
   variantId?: string
   sortOrder?: number
   isPrimary?: boolean
+  notifyResponse?: boolean
+}
+
+export interface AdminImageCreatePayload {
+  file: File
+  variantId: string
+  sortOrder?: number
+  isPrimary?: boolean
+  notifyResponse?: boolean
+}
+
+export interface AdminImageUpdatePayload {
+  file?: File
+  variantId?: string
+  sortOrder?: number
+  isPrimary?: boolean
+  notifyResponse?: boolean
+}
+
+// Temp file upload
+export interface TempFileUploadPayload {
+  file: File
+  title?: string
+  context?: string
+}
+
+export interface TempFileUploadResponse {
+  imageUrl: string
 }
 
 export interface AdminRouteSummaryCard {
@@ -135,7 +162,6 @@ export interface AdminProductSet {
 export interface AdminProductSetPayload {
   name?: string
   slug?: string
-  file?: File | null
   imageUrl?: string
   roomId?: number
   variantIds?: string[]
