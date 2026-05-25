@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import Message from 'primevue/message'
 import Paginator from 'primevue/paginator'
 import { useI18n } from 'vue-i18n'
-import type { FilterDefinition, ProductCard, SortOption } from '@/api'
+import type { FilterDefinition, ProductCard, SortOption, CategoryTreeNode } from '@/api'
 import SortControl from '@/components/molecules/SortControl/SortControl.vue'
 import ProductFilterDrawer from '@/components/organisms/ProductFilterDrawer/ProductFilterDrawer.vue'
 import ProductFilters from '@/components/organisms/ProductFilters/ProductFilters.vue'
@@ -12,7 +12,7 @@ import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTempl
 import type {
   ProductDiscoveryFilterChip,
   ProductDiscoverySelectedFilters,
-} from '@/composables/useProductDiscoveryListing'
+} from '@/composables/usePlpListing'
 
 interface SortControlOption {
   label: string
@@ -38,6 +38,7 @@ interface Props {
   emptyMessage: string
   showPromptState?: boolean
   promptMessage?: string
+  categoryTree?: CategoryTreeNode[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -52,6 +53,7 @@ const props = withDefaults(defineProps<Props>(), {
   sortOptions: () => [],
   showPromptState: false,
   promptMessage: '',
+  categoryTree: () => [],
 })
 
 const emit = defineEmits<{
@@ -113,6 +115,7 @@ function handlePageChange(event: { page: number }) {
             :active-chips="props.activeFilterChips"
             :result-count="props.resultCount"
             :loading="props.loading"
+            :category-tree="props.categoryTree"
             @apply-filters="emit('apply-filters', $event)"
           />
         </aside>
@@ -126,9 +129,11 @@ function handlePageChange(event: { page: number }) {
                 :active-chips="props.activeFilterChips"
                 :result-count="props.resultCount"
                 :loading="props.loading"
+                :category-tree="props.categoryTree"
                 @apply-filters="emit('apply-filters', $event)"
               />
             </div>
+            <slot name="controls-start" />
             <div v-if="showSort" class="flex justify-end md:ml-auto">
               <SortControl
                 :model-value="props.sort"
