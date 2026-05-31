@@ -58,6 +58,7 @@ function handleSelectItem(index: number) {
           :action-icon="item.actionIcon"
           :action-aria-label="item.actionAriaLabel"
           :action-placement="item.actionPlacement"
+          hide-action-button-on-mobile
           image-fit="cover"
           clickable
           fill-height
@@ -72,6 +73,7 @@ function handleSelectItem(index: number) {
         :action-icon="bottomItem.actionIcon"
         :action-aria-label="bottomItem.actionAriaLabel"
         :action-placement="bottomItem.actionPlacement"
+        hide-action-button-on-mobile
         image-fit="cover"
         clickable
         fill-height

@@ -103,7 +103,7 @@ function handleMenuSelect(item: { id: string }) {
             class="text-color flex h-10 items-center text-[2.25rem] font-bold leading-none no-underline"
             :aria-label="t('header.logoAriaLabel')"
           >
-            BN
+            HH
           </RouterLink>
 
           <nav class="hidden items-center gap-6 md:flex" :aria-label="t('header.navAriaLabel')">
@@ -142,7 +142,11 @@ function handleMenuSelect(item: { id: string }) {
             @select-city="selectCity($event, 'manual')"
           />
 
-          <RouterLink v-if="!authStore.isAuthenticated" to="/register" class="no-underline">
+          <RouterLink
+            v-if="!authStore.isAuthenticated"
+            :to="{ name: 'login', query: { redirect: '/account' } }"
+            class="no-underline"
+          >
             <Button
               type="button"
               text
@@ -177,7 +181,7 @@ function handleMenuSelect(item: { id: string }) {
               >
                 <i class="pi pi-user text-base" aria-hidden="true" />
                 <span class="hidden md:inline">{{
-                  t('header.accountGreeting', { name: authStore.firstName })
+                  t('header.accountGreeting', { name: authStore.firstName || 'User' })
                 }}</span>
               </span>
             </Button>

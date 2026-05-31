@@ -8,8 +8,10 @@ export {
   getCategories,
   getCatalogImages,
   getCategoryProducts,
+  getProducts,
   getRooms,
   getRoom,
+  getProductSets,
   getProductSet,
 } from './catalog'
 // TODO: compareProducts is not supported by the backend API yet.
@@ -22,6 +24,8 @@ export {
   // TODO: getProductReviewsSummary — not supported by backend API yet.
   // TODO: getProductQuestions — not supported by backend API yet.
 } from './products'
+
+export { getActivePromotions } from './promotions'
 
 export { search, searchSuggest } from './search'
 
@@ -132,6 +136,7 @@ export type {
   FulfillmentType,
   FulfillmentOption,
   ProductDetails,
+  Promotion,
   ProductBreadcrumbItem,
   // Catalog
   Category,
@@ -172,8 +177,10 @@ export type {
   // TODO: QuestionItem — not supported by backend API yet.
   // Response shapes
   CategoriesResponse,
+  CategoriesTreeResponse,
   ProductListResponse,
   RoomListResponse,
+  ProductSetListResponse,
   // TODO: ProductCompareResponse — not supported by backend API yet.
   ProductDetailsResponse,
   RoomDetailsResponse,

@@ -34,6 +34,6 @@ const formattedAverage = computed(() => {
   <div v-if="hasRating" class="flex items-center gap-2 text-sm text-muted-color">
     <StarRating :value="average ?? 0" :size="size" />
     <span class="text-color font-medium">{{ formattedAverage }}</span>
-    <span>{{ t('productCard.reviewCount', { count }) }}</span>
+    <span class="hidden md:block">{{ t('productCard.reviewCount', { count }) }}</span>
   </div>
 </template>

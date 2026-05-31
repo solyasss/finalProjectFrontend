@@ -22,6 +22,12 @@
     "notFound": "Page Not Found",
     "forbidden": "Access Denied",
     "termsAndConditions": "Terms and Conditions",
+    "deliveryPayment": "Delivery & Payment",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use",
+    "faq": "FAQ",
+    "contacts": "Contacts",
+    "returns": "Returns",
     "admin": "Admin",
     "adminDashboard": "Dashboard",
     "adminProducts": "Products",
@@ -103,7 +109,7 @@
     "primaryAction": "CREATE ACCOUNT AND START!",
     "secondaryAction": "CATALOGUE",
     "promoPrefix": "CATCH THE MOMENT {'|'} ",
-    "promoHighlight": "Up to 60% off",
+    "promoHighlight": "Up to 60% off ",
     "promoBadgeFallback": "TOP",
     "promoSuffix": "on selected product categories!"
   },
@@ -127,8 +133,7 @@
     "navHeading": "Navigation",
     "supportHeading": "Support",
     "socialHeading": "Social",
-    "copyright": "© 2026 Olya Home. All rights reserved.",
-    "legalLinks": "Privacy Policy · Terms of Use",
+    "copyright": "© 2026 Happy House. All rights reserved.",
     "nav": {
       "catalogue": "Catalogue",
       "newArrivals": "New Arrivals",
@@ -140,6 +145,10 @@
       "returns": "Returns",
       "contacts": "Contacts",
       "faq": "FAQ"
+    },
+    "legal": {
+      "privacyPolicy": "Privacy Policy",
+      "termsOfUse": "Terms of Use"
     }
   },
   "productCard": {
@@ -298,6 +307,84 @@
       "usageBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean lacinia bibendum nulla sed consectetur. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.",
       "liabilityTitle": "Limitations of Liability",
       "liabilityBody": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit tempus porttitor. Sed posuere consectetur est at lobortis. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Etiam porta sem malesuada magna mollis euismod."
+    }
+  },
+  "faqPage": {
+    "eyebrow": "Support",
+    "title": "Frequently Asked Questions",
+    "description": "Simple placeholder answers for the most common shopping and delivery questions.",
+    "sections": {
+      "ordersTitle": "Orders",
+      "ordersBody": "You can place an order online and review the final details during checkout. A fuller FAQ will be added later.",
+      "deliveryTitle": "Delivery",
+      "deliveryBody": "Delivery timing and options may vary by city and product type. Final delivery details will appear here after the content is approved.",
+      "supportTitle": "Support",
+      "supportBody": "If you need help with an item or order, please contact our support team. This section currently uses placeholder copy."
+    }
+  },
+  "contactsPage": {
+    "eyebrow": "Support",
+    "title": "Contacts",
+    "description": "Basic placeholder contact details for showroom visits and support requests.",
+    "sections": {
+      "showroomTitle": "Showroom",
+      "showroomBody": "Happy House Showroom, 12 Interior Street, Kyiv. This is temporary placeholder information until final business details are confirmed.",
+      "supportTitle": "Customer support",
+      "supportBody": "Email: hello{'@'}happyhouse.example · Phone: +380 00 000 00 00. Replace with approved contact channels later.",
+      "hoursTitle": "Opening hours",
+      "hoursBody": "Monday to Saturday, 10:00–19:00. Sunday hours and holiday schedules will be added in the final content pass."
+    }
+  },
+  "returnsPage": {
+    "eyebrow": "Support",
+    "title": "Returns",
+    "description": "Simple placeholder guidance for return timing, item condition, and next steps.",
+    "sections": {
+      "windowTitle": "Return window",
+      "windowBody": "Most items can be returned within a standard return period after delivery. The exact policy text will be added later.",
+      "conditionTitle": "Item condition",
+      "conditionBody": "Returned items should be unused and in their original condition whenever possible. Packaging requirements will be clarified in the final copy.",
+      "processTitle": "How to start",
+      "processBody": "To request a return, contact support and share your order details. A complete step-by-step process will replace this placeholder text."
+    }
+  },
+  "deliveryPaymentPage": {
+    "eyebrow": "Support",
+    "title": "Delivery & Payment",
+    "description": "Simple placeholder details about delivery timing, payment options, and order notes.",
+    "sections": {
+      "deliveryTitle": "Delivery options",
+      "deliveryBody": "Delivery methods may vary by city, product size, and stock location. Final shipping options and timing will be confirmed in the approved content update.",
+      "paymentTitle": "Payment methods",
+      "paymentBody": "Orders may support common payment methods such as card payments and other standard checkout options. The final list of available methods will be published later.",
+      "notesTitle": "Important notes",
+      "notesBody": "Large or made-to-order items may require additional coordination before dispatch. Exact delivery and payment conditions will replace this placeholder copy when ready."
+    }
+  },
+  "privacyPolicyPage": {
+    "eyebrow": "Legal",
+    "title": "Privacy Policy",
+    "description": "Generic placeholder information about how customer data may be collected, used, and managed.",
+    "sections": {
+      "collectionTitle": "What information may be collected",
+      "collectionBody": "We may collect basic account, order, and communication details needed to support shopping and customer service. This placeholder copy will be replaced with the final privacy policy text.",
+      "usageTitle": "How information may be used",
+      "usageBody": "Information may be used to process orders, improve service, and respond to customer requests. The exact legal wording and data-processing details will be added later.",
+      "controlTitle": "Your choices",
+      "controlBody": "Customers may later receive clear instructions for reviewing, updating, or requesting removal of personal information where applicable. Final rights and contact details will be added in the approved version."
+    }
+  },
+  "termsOfUsePage": {
+    "eyebrow": "Legal",
+    "title": "Terms of Use",
+    "description": "Generic placeholder terms covering basic use of the website and shopping experience.",
+    "sections": {
+      "acceptanceTitle": "Acceptance",
+      "acceptanceBody": "By using this website, customers acknowledge that store policies and service terms may apply to browsing, shopping, and account activity. Final approved language will replace this placeholder text.",
+      "ordersTitle": "Orders and availability",
+      "ordersBody": "Product details, pricing, and availability may change over time. The final terms will explain how orders, confirmations, and possible updates are handled.",
+      "updatesTitle": "Policy updates",
+      "updatesBody": "These placeholder terms may be updated when the final legal content is ready. Future revisions and effective dates will be shown in the approved version."
     }
   },
   "authLogin": {

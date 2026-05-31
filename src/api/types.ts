@@ -222,6 +222,23 @@ export interface ProductDetails {
   categories: Category[]
 }
 
+export interface Promotion {
+  id: number
+  name: string
+  slug: string
+  description?: string | null
+  discountType: 'PERCENTAGE' | 'FIXED_AMOUNT'
+  discountValue: number
+  targetType: 'GLOBAL' | 'CATEGORY' | 'VARIANT'
+  targetIds?: string[]
+  startDate: string
+  endDate: string
+  isActive?: boolean
+  createdAt?: string
+  updatedAt?: string
+  deletedAt?: string | null
+}
+
 export interface ProductBreadcrumbItem {
   label: string
   slug?: string | null
@@ -277,6 +294,7 @@ export interface ProductSetSummary {
   deletedAt?: string | null
   imageUrl?: string | null
   roomId?: number
+  room?: Pick<RoomSummary, 'id'>
   variantIds?: string[]
 }
 
@@ -445,7 +463,19 @@ export interface QuestionItem {
 }
 
 // Responses
-export type CategoriesResponse = CategoryTreeNode[]
+export interface CategoryListMeta {
+  totalItems: number
+  itemsPerPage: number
+  currentPage: number
+  totalPages: number
+}
+
+export interface CategoriesResponse {
+  data: Category[]
+  meta: CategoryListMeta
+}
+
+export type CategoriesTreeResponse = CategoryTreeNode[]
 
 export interface ProductListMeta {
   totalItems: number
@@ -469,6 +499,18 @@ export interface RoomListMeta {
 export interface RoomListResponse {
   data: Room[]
   meta: RoomListMeta
+}
+
+export interface ProductSetListMeta {
+  totalItems: number
+  itemsPerPage: number
+  currentPage: number
+  totalPages: number
+}
+
+export interface ProductSetListResponse {
+  data: ProductSetSummary[]
+  meta: ProductSetListMeta
 }
 
 export type RoomDetailsResponse = RoomDetails
@@ -593,7 +635,8 @@ export interface SearchApiResponse {
   query: string
   totalFound: number
   filters: SearchFilterDefinition[]
-  items: SearchVariantItem[]
+  items?: SearchVariantItem[]
+  products?: SearchVariantItem[]
 }
 
 export interface SearchResponse {

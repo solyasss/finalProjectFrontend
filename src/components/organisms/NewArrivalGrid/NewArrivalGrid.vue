@@ -38,10 +38,10 @@ function handleSelectItem(index: number) {
       {{ title }}
     </h2>
     <section
-      class="grid min-h-0 flex-1 grid-rows-[1fr_2fr] gap-4 overflow-hidden"
+      class="grid min-h-0 flex-1 grid-rows-[1fr_1fr] gap-4 overflow-hidden sm:grid-rows-[1fr_2fr]"
       :aria-label="t('newArrivalGrid.sectionAriaLabel')"
     >
-      <div class="grid min-h-0 grid-cols-[1fr_2fr] gap-4">
+      <div class="grid min-h-0 grid-cols-2 gap-4 sm:grid-cols-[1fr_2fr]">
         <div
           v-for="(item, index) in visibleItems.slice(0, 2)"
           :key="`${item.image.alt}-${index}`"
@@ -58,7 +58,7 @@ function handleSelectItem(index: number) {
         </div>
       </div>
 
-      <div class="grid min-h-0 grid-cols-[2fr_1fr] gap-4">
+      <div class="grid min-h-0 grid-cols-2 gap-4 sm:grid-cols-[2fr_1fr]">
         <div
           v-for="(item, index) in visibleItems.slice(2, 4)"
           :key="`${item.image.alt}-${index + 2}`"
