@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import Button from 'primevue/button'
 import Carousel from 'primevue/carousel'
+import Skeleton from 'primevue/skeleton'
 import { useI18n } from 'vue-i18n'
 import PromoProductCard from '@/components/molecules/PromoProductCard/PromoProductCard.vue'
 
@@ -21,6 +22,7 @@ interface Props {
   promoPrefix?: string
   promoHighlight?: string
   promoSuffix?: string
+  isPromoLoading?: boolean
 }
 
 const props = defineProps<Props>()
@@ -42,6 +44,7 @@ const items = computed<PromoItem[]>(() => props.items ?? [])
 const promoPrefix = computed(() => props.promoPrefix ?? t('homeHeroCta.promoPrefix'))
 const promoHighlight = computed(() => props.promoHighlight ?? t('homeHeroCta.promoHighlight'))
 const promoSuffix = computed(() => props.promoSuffix ?? t('homeHeroCta.promoSuffix'))
+const promoSkeletonCardIndexes = [0, 1, 2]
 
 function handleSelectItem(index: number) {
   emit('select-item', index)
@@ -112,7 +115,11 @@ function handleSelectItem(index: number) {
     </div>
 
     <!-- Mobile (< md): 1-item carousel -->
-    <div class="w-full md:hidden">
+    <div v-if="props.isPromoLoading" class="w-full md:hidden">
+      <Skeleton width="100%" height="20rem" borderRadius="1.5rem" />
+    </div>
+
+    <div v-else class="w-full md:hidden">
       <Carousel :value="items" :num-visible="1" :num-scroll="1">
         <template #item="{ data, index }">
           <div class="overflow-hidden rounded-[1.5rem] px-1">
@@ -132,7 +139,17 @@ function handleSelectItem(index: number) {
     </div>
 
     <!-- md+: 3-column grid, width controlled by parent layout -->
-    <div class="hidden md:grid md:grid-cols-3 md:gap-6 xl:gap-8">
+    <div v-if="props.isPromoLoading" class="hidden md:grid md:grid-cols-3 md:gap-6 xl:gap-8">
+      <div
+        v-for="cardIndex in promoSkeletonCardIndexes"
+        :key="`hero-promo-skeleton-${cardIndex}`"
+        class="overflow-hidden rounded-[1.5rem]"
+      >
+        <Skeleton width="100%" height="20rem" borderRadius="1.5rem" />
+      </div>
+    </div>
+
+    <div v-else class="hidden md:grid md:grid-cols-3 md:gap-6 xl:gap-8">
       <div
         v-for="(item, index) in items"
         :key="`${item.title}-${index}`"
