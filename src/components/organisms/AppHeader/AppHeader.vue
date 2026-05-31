@@ -181,7 +181,7 @@ function handleMenuSelect(item: { id: string }) {
               >
                 <i class="pi pi-user text-base" aria-hidden="true" />
                 <span class="hidden md:inline">{{
-                  t('header.accountGreeting', { name: authStore.firstName || "User" })
+                  t('header.accountGreeting', { name: authStore.firstName || 'User' })
                 }}</span>
               </span>
             </Button>
