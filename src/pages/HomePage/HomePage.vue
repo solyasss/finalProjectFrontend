@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Skeleton from 'primevue/skeleton'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import CollectionOverlayCard from '@/components/molecules/CollectionOverlayCard/CollectionOverlayCard.vue'
@@ -14,15 +15,20 @@ const { t } = useI18n()
 const router = useRouter()
 const {
   bestSetItems,
+  bestSetSectionState,
   collectionItems,
+  collectionSectionState,
   newArrivalItems,
+  newArrivalSectionState,
   openBestSetItem,
   openCollectionItem,
   openPromoItem,
   openRecommendationItem,
   openNewArrivalItem,
   promoItems,
+  promoSectionState,
   recommendationItems,
+  recommendationSectionState,
 } = useHomePage()
 
 const DEFAULT_PLP_ROUTE = { name: 'plp' as const, params: { categorySlug: 'living-room' } }
@@ -47,6 +53,10 @@ const sectionResponsiveOptions = [
     numScroll: 1,
   },
 ]
+
+const carouselSkeletonCardIndexes = [0, 1, 2, 3, 4]
+const newArrivalTopSkeletonIndexes = [0, 1]
+const newArrivalBottomSkeletonIndexes = [0, 1]
 </script>
 
 <template>
@@ -55,6 +65,7 @@ const sectionResponsiveOptions = [
     <main class="bg-surface-0 flex flex-col items-center gap-12 w-full mb-12">
       <HomeHero
         :items="promoItems"
+        :is-promo-loading="promoSectionState !== 'ready'"
         @primary-click="handleCreateAccountClick"
         @secondary-click="handleCatalogueClick"
         @select-item="openPromoItem"
@@ -62,13 +73,31 @@ const sectionResponsiveOptions = [
       <div class="flex flex-col items-center w-[75%] gap-12">
         <div class="mx-auto h-[28rem] w-full sm:h-250">
           <HomeCollectionCta
+            v-if="collectionSectionState === 'ready'"
             :title="t('homePage.collectionsTitle')"
             :items="collectionItems"
             @select-item="openCollectionItem"
           />
+          <section
+            v-else
+            class="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-6"
+            :aria-label="t('homePage.collectionsTitle')"
+          >
+            <h2 class="text-color m-0 text-3xl font-bold uppercase leading-tight md:text-4xl">
+              {{ t('homePage.collectionsTitle') }}
+            </h2>
+            <div class="grid min-h-0 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-4 md:gap-6">
+              <div class="grid min-h-0 grid-cols-2 gap-4 md:gap-6">
+                <Skeleton width="100%" height="100%" borderRadius="1.5rem" />
+                <Skeleton width="100%" height="100%" borderRadius="1.5rem" />
+              </div>
+              <Skeleton width="100%" height="100%" borderRadius="1.5rem" />
+            </div>
+          </section>
         </div>
         <div class="w-full">
           <CarouselSection
+            v-if="recommendationSectionState === 'ready'"
             :title="t('homePage.recommendationTitle')"
             :items="recommendationItems"
             item-key="id"
@@ -85,9 +114,29 @@ const sectionResponsiveOptions = [
               <CollectionOverlayCard v-bind="item" clickable smaller-text @select="select" />
             </template>
           </CarouselSection>
+          <section
+            v-else
+            class="flex h-full min-h-0 w-full flex-col gap-6"
+            :aria-label="t('homePage.recommendationTitle')"
+          >
+            <h2 class="text-color m-0 text-3xl font-bold uppercase leading-tight md:text-4xl">
+              {{ t('homePage.recommendationTitle') }}
+            </h2>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+              <div
+                v-for="cardIndex in carouselSkeletonCardIndexes"
+                :key="`recommendation-skeleton-${cardIndex}`"
+                class="flex flex-col gap-3"
+              >
+                <Skeleton width="100%" height="18rem" borderRadius="1.5rem" />
+                <Skeleton width="70%" height="1rem" />
+              </div>
+            </div>
+          </section>
         </div>
         <div class="w-full">
           <CarouselSection
+            v-if="bestSetSectionState === 'ready'"
             :title="t('homePage.bestSetsTitle')"
             :items="bestSetItems"
             item-key="id"
@@ -104,13 +153,66 @@ const sectionResponsiveOptions = [
               <CollectionOverlayCard v-bind="item" clickable smaller-text @select="select" />
             </template>
           </CarouselSection>
+          <section
+            v-else
+            class="flex h-full min-h-0 w-full flex-col gap-6"
+            :aria-label="t('homePage.bestSetsTitle')"
+          >
+            <h2 class="text-color m-0 text-3xl font-bold uppercase leading-tight md:text-4xl">
+              {{ t('homePage.bestSetsTitle') }}
+            </h2>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+              <div
+                v-for="cardIndex in carouselSkeletonCardIndexes"
+                :key="`best-set-skeleton-${cardIndex}`"
+                class="flex flex-col gap-3"
+              >
+                <Skeleton width="100%" height="18rem" borderRadius="1.5rem" />
+                <Skeleton width="70%" height="1rem" />
+              </div>
+            </div>
+          </section>
         </div>
         <div class="mx-auto h-[28rem] w-full sm:h-250">
           <NewArrivalGrid
+            v-if="newArrivalSectionState === 'ready'"
             :title="t('homePage.newArrivalsTitle')"
             :items="newArrivalItems"
             @select-item="openNewArrivalItem"
           />
+          <div
+            v-else
+            class="flex h-full min-h-0 w-full flex-col"
+            :aria-label="t('homePage.newArrivalsTitle')"
+          >
+            <h2
+              class="text-color mb-6 flex-none text-3xl font-bold uppercase leading-tight md:text-4xl"
+            >
+              {{ t('homePage.newArrivalsTitle') }}
+            </h2>
+            <section
+              class="grid min-h-0 flex-1 grid-rows-[1fr_1fr] gap-4 overflow-hidden sm:grid-rows-[1fr_2fr]"
+            >
+              <div class="grid min-h-0 grid-cols-2 gap-4 sm:grid-cols-[1fr_2fr]">
+                <Skeleton
+                  v-for="cardIndex in newArrivalTopSkeletonIndexes"
+                  :key="`new-arrival-top-skeleton-${cardIndex}`"
+                  width="100%"
+                  height="100%"
+                  borderRadius="1.5rem"
+                />
+              </div>
+              <div class="grid min-h-0 grid-cols-2 gap-4 sm:grid-cols-[2fr_1fr]">
+                <Skeleton
+                  v-for="cardIndex in newArrivalBottomSkeletonIndexes"
+                  :key="`new-arrival-bottom-skeleton-${cardIndex}`"
+                  width="100%"
+                  height="100%"
+                  borderRadius="1.5rem"
+                />
+              </div>
+            </section>
+          </div>
         </div>
       </div>
     </main>

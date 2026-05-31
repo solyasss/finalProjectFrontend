@@ -16,6 +16,7 @@ interface Props {
   title?: string
   imageSrc?: string
   items?: PromoItem[]
+  isPromoLoading?: boolean
 }
 
 const props = defineProps<Props>()
@@ -55,6 +56,7 @@ const items = computed<PromoItem[]>(() => props.items ?? [])
           <div class="w-full lg:max-w-xl">
             <HomeHeroCta
               :items="items"
+              :is-promo-loading="props.isPromoLoading"
               @primary-click="emit('primary-click')"
               @secondary-click="emit('secondary-click')"
               @select-item="emit('select-item', $event)"

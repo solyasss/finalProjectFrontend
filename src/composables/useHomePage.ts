@@ -52,8 +52,7 @@ interface HomeRecommendationItem {
 }
 
 interface HomeRecommendationTarget {
-  productId?: number
-  fallbackCategorySlug?: string
+  productId: number
 }
 
 interface HomeBestSetItem {
@@ -102,113 +101,8 @@ const HOME_COLLECTION_FALLBACK_IMAGE = '/HomeHero.jpg'
 const HOME_RECOMMENDATION_FALLBACK_IMAGE = '/HomeHero.jpg'
 const HOME_BEST_SET_FALLBACK_IMAGE = '/HomeHero.jpg'
 const HOME_COLLECTION_IMAGE_SIZE = 900
-const HOME_COLLECTION_FALLBACK_CATEGORIES: HomepageCollectionCategory[] = [
-  {
-    name: 'Подушки',
-    slug: 'sofas',
-    isActive: true,
-    imageUrl:
-      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    name: 'Ковдра',
-    slug: 'bedroom',
-    isActive: true,
-    imageUrl:
-      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    name: 'Ліжко',
-    slug: 'beds',
-    isActive: true,
-    imageUrl:
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
-  },
-]
-const HOME_RECOMMENDATION_FALLBACK_ITEMS: HomeRecommendationItem[] = [
-  {
-    id: 1,
-    imageSrc:
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Neutral sofa in a bright living room',
-    title: 'СКАНДІ НАБІР',
-  },
-  {
-    id: 2,
-    imageSrc:
-      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Folded blanket in a cozy room',
-    title: 'SOFT HOME',
-  },
-  {
-    id: 3,
-    imageSrc:
-      'https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Dining collection styled in warm tones',
-    title: 'DINING SET',
-  },
-  {
-    id: 4,
-    imageSrc:
-      'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Living room styling set with chairs and decor',
-    title: 'LIVING SET',
-  },
-  {
-    id: 5,
-    imageSrc:
-      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Neutral sofa in a bright living room',
-    title: 'СКАНДІ НАБІР',
-  },
-  {
-    id: 6,
-    imageSrc:
-      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Folded blanket in a cozy room',
-    title: 'SOFT HOME',
-  },
-  {
-    id: 7,
-    imageSrc:
-      'https://images.unsplash.com/photo-1600489000022-c2086d79f9d4?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Dining collection styled in warm tones',
-    title: 'DINING SET',
-  },
-  {
-    id: 8,
-    imageSrc:
-      'https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Living room styling set with chairs and decor',
-    title: 'LIVING SET',
-  },
-  {
-    id: 9,
-    imageSrc:
-      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Soft beige bedroom with layered textiles',
-    title: 'COZY BEDROOM',
-  },
-  {
-    id: 10,
-    imageSrc:
-      'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80',
-    imageAlt: 'Contemporary pendant light in a styled interior',
-    title: 'LIGHTING EDIT',
-  },
-]
-const HOME_RECOMMENDATION_FALLBACK_TARGETS: HomeRecommendationTarget[] = [
-  { fallbackCategorySlug: 'living-room' },
-  { fallbackCategorySlug: 'bedroom' },
-  { fallbackCategorySlug: 'lighting' },
-  { fallbackCategorySlug: 'living-room' },
-  { fallbackCategorySlug: 'living-room' },
-  { fallbackCategorySlug: 'bedroom' },
-  { fallbackCategorySlug: 'lighting' },
-  { fallbackCategorySlug: 'living-room' },
-  { fallbackCategorySlug: 'bedroom' },
-  { fallbackCategorySlug: 'lighting' },
-]
+
+type HomePageSectionState = 'loading' | 'ready' | 'error'
 
 interface ResolvedPromotionCard {
   item: HomePromoItem
@@ -408,21 +302,6 @@ function parseHomepageCollectionCategories(payload: unknown): HomepageCollection
   })
 }
 
-function buildHomepageCollectionCategories(
-  primaryCategories: HomepageCollectionCategory[],
-): HomepageCollectionCategory[] {
-  const primaryCategorySlugs = new Set(primaryCategories.map((category) => category.slug.trim()))
-  const uniqueFallbackCategories = HOME_COLLECTION_FALLBACK_CATEGORIES.filter(
-    (category) => !primaryCategorySlugs.has(category.slug),
-  )
-
-  return [
-    ...primaryCategories,
-    ...uniqueFallbackCategories,
-    ...HOME_COLLECTION_FALLBACK_CATEGORIES,
-  ].slice(0, HOME_COLLECTION_LIMIT)
-}
-
 function buildResolvedCollectionCard(
   category: HomepageCollectionCategory,
   index: number,
@@ -486,13 +365,6 @@ function buildResolvedNewArrivalCard(product: ProductListItem): ResolvedNewArriv
   }
 }
 
-function buildFallbackRecommendationCards(): ResolvedRecommendationCard[] {
-  return HOME_RECOMMENDATION_FALLBACK_ITEMS.map((item, index) => ({
-    item,
-    target: HOME_RECOMMENDATION_FALLBACK_TARGETS[index] ?? { fallbackCategorySlug: 'living-room' },
-  }))
-}
-
 function buildResolvedPromotionCard(
   promotion: Promotion,
   item: SearchVariantItem,
@@ -527,7 +399,9 @@ function resolveSearchResultItems(searchResponse: SearchApiResponse): SearchVari
   return []
 }
 
-async function resolvePromotionProducts(promotions: Promotion[]): Promise<ResolvedPromotionCard[]> {
+async function resolvePromotionProducts(
+  promotions: Promotion[],
+): Promise<ResolvedPromotionCard[] | null> {
   const variantIdsByPromotion = promotions.map(resolvePromotionTargetVariantId)
   const pendingVariantIds = new Set(
     variantIdsByPromotion.filter((variantId): variantId is string => Boolean(variantId)),
@@ -541,7 +415,7 @@ async function resolvePromotionProducts(promotions: Promotion[]): Promise<Resolv
   const firstSearchPageResult = await loadPromotionSearchPage(1)
 
   if (!firstSearchPageResult.ok) {
-    return []
+    return null
   }
 
   const totalPages = Math.max(
@@ -554,7 +428,7 @@ async function resolvePromotionProducts(promotions: Promotion[]): Promise<Resolv
       page === 1 ? firstSearchPageResult : await loadPromotionSearchPage(page)
 
     if (!searchPageResult.ok) {
-      continue
+      return null
     }
 
     const searchItems = resolveSearchResultItems(searchPageResult.data)
@@ -639,6 +513,11 @@ export function useHomePage() {
   const bestSetTargets = ref<HomeBestSetTarget[]>([])
   const newArrivalItems = ref<HomeNewArrivalItem[]>([])
   const newArrivalTargets = ref<HomeNewArrivalTarget[]>([])
+  const promoSectionState = ref<HomePageSectionState>('loading')
+  const collectionSectionState = ref<HomePageSectionState>('loading')
+  const recommendationSectionState = ref<HomePageSectionState>('loading')
+  const bestSetSectionState = ref<HomePageSectionState>('loading')
+  const newArrivalSectionState = ref<HomePageSectionState>('loading')
 
   function setRecommendationCards(cards: ResolvedRecommendationCard[]) {
     recommendationItems.value = cards.map((card) => card.item)
@@ -653,14 +532,16 @@ export function useHomePage() {
   async function loadCollectionItems() {
     const categoriesResult = await getCategories()
 
-    const homepageCategories = categoriesResult.ok
-      ? parseHomepageCollectionCategories(categoriesResult.data)
-      : []
+    if (!categoriesResult.ok) {
+      collectionItems.value = []
+      collectionTargets.value = []
+      collectionSectionState.value = 'error'
+      return
+    }
 
-    const homeCollections = buildHomepageCollectionCategories(
-      homepageCategories.filter(isHomepageCollectionCategory).slice(0, HOME_COLLECTION_LIMIT),
-    )
+    const homeCollections = parseHomepageCollectionCategories(categoriesResult.data)
       .filter(isHomepageCollectionCategory)
+      .slice(0, HOME_COLLECTION_LIMIT)
       .map((category, index) => buildResolvedCollectionCard(category, index))
 
     collectionItems.value = homeCollections.map(
@@ -669,20 +550,33 @@ export function useHomePage() {
     collectionTargets.value = homeCollections.map(
       (collection: ResolvedCollectionCard) => collection.target,
     )
+    collectionSectionState.value = 'ready'
   }
 
   async function loadPromoItems() {
     const promotionsResult = await getActivePromotions()
     const resolvedPromoCards: ResolvedPromotionCard[] = []
 
-    if (promotionsResult.ok) {
-      const qualifyingPromotions = promotionsResult.data.filter(isHomepageVariantPromotion)
+    if (!promotionsResult.ok) {
+      promoItems.value = []
+      promoTargets.value = []
+      promoSectionState.value = 'error'
+      return
+    }
 
-      if (qualifyingPromotions.length) {
-        resolvedPromoCards.push(
-          ...(await resolvePromotionProducts(qualifyingPromotions)).slice(0, HOME_PROMO_LIMIT),
-        )
+    const qualifyingPromotions = promotionsResult.data.filter(isHomepageVariantPromotion)
+
+    if (qualifyingPromotions.length) {
+      const resolvedPromotionProductsResult = await resolvePromotionProducts(qualifyingPromotions)
+
+      if (!resolvedPromotionProductsResult) {
+        promoItems.value = []
+        promoTargets.value = []
+        promoSectionState.value = 'error'
+        return
       }
+
+      resolvedPromoCards.push(...resolvedPromotionProductsResult.slice(0, HOME_PROMO_LIMIT))
     }
 
     const fillerCards = await loadPromoFallbackFillers(
@@ -693,13 +587,15 @@ export function useHomePage() {
 
     promoItems.value = homeCards.map((card) => card.item)
     promoTargets.value = homeCards.map((card) => card.target)
+    promoSectionState.value = 'ready'
   }
 
   async function loadRecommendationItems() {
     const productsResult = await getProducts({ limit: HOME_RECOMMENDATION_LIMIT })
 
     if (!productsResult.ok) {
-      setRecommendationCards(buildFallbackRecommendationCards())
+      setRecommendationCards([])
+      recommendationSectionState.value = 'error'
       return
     }
 
@@ -707,12 +603,8 @@ export function useHomePage() {
       .slice(0, HOME_RECOMMENDATION_LIMIT)
       .map(buildResolvedRecommendationCard)
 
-    if (!resolvedRecommendationCards.length) {
-      setRecommendationCards(buildFallbackRecommendationCards())
-      return
-    }
-
     setRecommendationCards(resolvedRecommendationCards)
+    recommendationSectionState.value = 'ready'
   }
 
   async function loadBestSetItems() {
@@ -720,6 +612,7 @@ export function useHomePage() {
 
     if (!productSetsResult.ok) {
       setBestSetCards([])
+      bestSetSectionState.value = 'error'
       return
     }
 
@@ -728,6 +621,7 @@ export function useHomePage() {
       .map(buildResolvedBestSetCard)
 
     setBestSetCards(resolvedBestSetCards)
+    bestSetSectionState.value = 'ready'
   }
 
   async function loadNewArrivalItems() {
@@ -737,12 +631,16 @@ export function useHomePage() {
     })
 
     if (!productsResult.ok) {
+      newArrivalItems.value = []
+      newArrivalTargets.value = []
+      newArrivalSectionState.value = 'error'
       return
     }
 
     const cards = productsResult.data.data.map(buildResolvedNewArrivalCard)
     newArrivalItems.value = cards.map((card) => card.item)
     newArrivalTargets.value = cards.map((card) => card.target)
+    newArrivalSectionState.value = 'ready'
   }
 
   async function openPromoItem(index: number) {
@@ -779,21 +677,9 @@ export function useHomePage() {
       return
     }
 
-    if (target.productId) {
-      await router.push({
-        name: 'pdp',
-        params: { productId: target.productId },
-      })
-      return
-    }
-
-    if (!target.fallbackCategorySlug) {
-      return
-    }
-
     await router.push({
-      name: 'plp',
-      params: { categorySlug: target.fallbackCategorySlug },
+      name: 'pdp',
+      params: { productId: target.productId },
     })
   }
 
@@ -841,14 +727,19 @@ export function useHomePage() {
 
   return {
     bestSetItems,
+    bestSetSectionState,
     collectionItems,
+    collectionSectionState,
     newArrivalItems,
+    newArrivalSectionState,
     openBestSetItem,
     openCollectionItem,
     openNewArrivalItem,
     openRecommendationItem,
     promoItems,
+    promoSectionState,
     openPromoItem,
     recommendationItems,
+    recommendationSectionState,
   }
 }
