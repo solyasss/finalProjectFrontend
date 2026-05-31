@@ -30,7 +30,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <section class="grid gap-6" :aria-label="title">
+  <section class="flex h-full min-h-0 w-full flex-col gap-6" :aria-label="title">
     <h2 class="text-color m-0 text-3xl font-bold uppercase leading-tight md:text-4xl">
       {{ title }}
     </h2>

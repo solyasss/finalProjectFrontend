@@ -46,6 +46,21 @@ function normalizeSearchItem(item: SearchVariantItem): ProductCard {
   }
 }
 
+function resolveSearchProducts(data: {
+  items?: SearchVariantItem[]
+  products?: SearchVariantItem[]
+}) {
+  if (Array.isArray(data.items)) {
+    return data.items
+  }
+
+  if (Array.isArray(data.products)) {
+    return data.products
+  }
+
+  return []
+}
+
 export function useSearchListing() {
   const { t } = useI18n()
   const route = useRoute()
@@ -128,7 +143,7 @@ export function useSearchListing() {
       options: f.options?.map((o) => ({ value: o.value, label: o.label, count: o.count })) ?? null,
       range: f.range ? { min: f.range.min, max: f.range.max, step: 1 } : null,
     }))
-    const normalizedProducts = data.items.map(normalizeSearchItem)
+    const normalizedProducts = resolveSearchProducts(data).map(normalizeSearchItem)
 
     title.value = data.query
     products.value = normalizedProducts

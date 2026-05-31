@@ -51,7 +51,7 @@ function handleSelectItem(index: number) {
 <template>
   <!-- TODO: Improve Mobile Render -->
   <section class="grid w-full grid-cols-1 gap-4 text-left" :aria-label="t('homeHeroCta.ariaLabel')">
-    <div class="mb-2 flex flex-col flex-wrap items-start gap-6 md:flex-row md:items-start">
+    <div class="mb-2 flex flex-col flex-wrap items-center gap-6 md:flex-row md:items-start">
       <div>
         <Button
           type="button"
