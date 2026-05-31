@@ -15,6 +15,7 @@ interface Props {
   actionPlacement?: 'bottom' | 'right' | 'none'
   imageFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down'
   fillHeight?: boolean
+  hideActionButtonOnMobile?: boolean
 }
 
 const props = defineProps<Props>()
@@ -34,8 +35,28 @@ const imageFit = computed(() => props.imageFit ?? 'fill')
 const showBottomFooter = computed(() => actionPlacement.value === 'bottom')
 const showRightRail = computed(() => actionPlacement.value === 'right')
 const showImageOnly = computed(() => actionPlacement.value === 'none')
+const hideActionButtonOnMobile = computed(() => props.hideActionButtonOnMobile ?? false)
 const imageSrc = computed(() => props.image.url)
 const imageAlt = computed(() => props.image.alt)
+const bottomFooterClass = computed(() =>
+  hideActionButtonOnMobile.value
+    ? 'grid grid-cols-1 items-center gap-3 bg-slate-50 px-4 py-3 sm:grid-cols-[minmax(0,1fr)_auto]'
+    : 'grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 bg-slate-50 px-4 py-3',
+)
+const rightRailContentClass = computed(() =>
+  hideActionButtonOnMobile.value
+    ? 'grid h-full min-h-0 grid-cols-1 bg-slate-50 sm:grid-cols-[minmax(0,1fr)_auto]'
+    : 'grid h-full min-h-0 grid-cols-[minmax(0,1fr)_auto] bg-slate-50',
+)
+const rightRailActionContainerClass = computed(() =>
+  hideActionButtonOnMobile.value
+    ? 'hidden items-center justify-center px-4 sm:flex sm:px-5'
+    : 'flex items-center justify-center px-4 sm:px-5',
+)
+const showMobileRightRailFooter = computed(
+  () => hideActionButtonOnMobile.value && showRightRail.value && Boolean(props.title),
+)
+const titleClass = 'text-color m-0 text-center text-lg font-bold max-sm:text-sm'
 
 const cardRootStyle = computed(() => ({
   display: 'grid',
@@ -87,42 +108,47 @@ function handleClick() {
   >
     <template #content>
       <div class="grid h-full min-h-0 w-full overflow-hidden rounded-3xl">
-        <div
-          v-if="showRightRail"
-          class="grid h-full min-h-0 grid-cols-[minmax(0,1fr)_auto] bg-slate-50"
-        >
-          <Image
-            :src="imageSrc"
-            :alt="imageAlt"
-            :pt="{
-              root: { style: imageRootStyle },
-              image: { style: imageStyle },
-            }"
-          />
-
-          <div class="flex items-center justify-center px-4 sm:px-5">
-            <Button
-              type="button"
-              rounded
-              :icon="actionIcon"
-              :aria-label="actionAriaLabel"
-              :disabled="!isClickable"
+        <div v-if="showRightRail" class="grid h-full min-h-0 bg-slate-50">
+          <div :class="rightRailContentClass">
+            <Image
+              :src="imageSrc"
+              :alt="imageAlt"
               :pt="{
-                root: {
-                  style: {
-                    height: '2.75rem',
-                    width: '2.75rem',
-                    minHeight: '2.75rem',
-                    minWidth: '2.75rem',
-                    border: 'none',
-                    background: 'var(--p-surface-900)',
-                    color: 'var(--p-surface-0)',
-                    flexShrink: '0',
-                  },
-                },
+                root: { style: imageRootStyle },
+                image: { style: imageStyle },
               }"
-              @click.stop="handleClick"
             />
+
+            <div :class="rightRailActionContainerClass">
+              <Button
+                type="button"
+                rounded
+                :icon="actionIcon"
+                :aria-label="actionAriaLabel"
+                :disabled="!isClickable"
+                :pt="{
+                  root: {
+                    style: {
+                      height: '2.75rem',
+                      width: '2.75rem',
+                      minHeight: '2.75rem',
+                      minWidth: '2.75rem',
+                      border: 'none',
+                      background: 'var(--p-surface-900)',
+                      color: 'var(--p-surface-0)',
+                      flexShrink: '0',
+                    },
+                  },
+                }"
+                @click.stop="handleClick"
+              />
+            </div>
+          </div>
+
+          <div v-if="showMobileRightRailFooter" class="grid items-center px-4 py-3 sm:hidden">
+            <h3 :class="titleClass">
+              {{ title }}
+            </h3>
           </div>
         </div>
 
@@ -137,10 +163,8 @@ function handleClick() {
               }"
             />
 
-            <div
-              class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 bg-slate-50 px-4 py-3"
-            >
-              <h3 class="text-color m-0 text-center text-xl font-bold max-sm:text-lg">
+            <div :class="bottomFooterClass">
+              <h3 :class="titleClass">
                 {{ title }}
               </h3>
 
@@ -150,6 +174,7 @@ function handleClick() {
                 :icon="actionIcon"
                 :aria-label="actionAriaLabel"
                 :disabled="!isClickable"
+                :class="hideActionButtonOnMobile ? 'hidden sm:inline-flex' : undefined"
                 :pt="{
                   root: {
                     style: {

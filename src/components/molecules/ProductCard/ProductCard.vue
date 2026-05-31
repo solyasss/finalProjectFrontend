@@ -100,7 +100,7 @@ function handleSelect() {
           </div>
         </div>
 
-        <div class="grid content-start gap-3 p-4">
+        <div class="flex flex-col content-start gap-3 p-4">
           <div class="space-y-2">
             <h3 class="text-color line-clamp-2 text-sm font-bold leading-5">
               {{ product.name }}
@@ -110,17 +110,19 @@ function handleSelect() {
             </p>
           </div>
 
-          <PriceTag v-if="formattedPrice" :current-price="formattedPrice" size="compact" />
-          <p v-else class="text-surface-500 text-xs italic">
-            <em>{{ t('productCard.priceAvailableInFutureRelease') }}</em>
-          </p>
+          <div class="flex flex-col gap-2 mt-auto">
+            <PriceTag v-if="formattedPrice" :current-price="formattedPrice" size="compact" />
+            <p v-else class="text-surface-500 text-xs italic">
+              <em>{{ t('productCard.priceAvailableInFutureRelease') }}</em>
+            </p>
 
-          <RatingDisplay
-            v-if="hasRating"
-            :average="product.ratingAverage ?? undefined"
-            :count="product.ratingCount ?? undefined"
-            size="card"
-          />
+            <RatingDisplay
+              v-if="hasRating"
+              :average="product.ratingAverage ?? undefined"
+              :count="product.ratingCount ?? undefined"
+              size="card"
+            />
+          </div>
         </div>
       </article>
     </template>

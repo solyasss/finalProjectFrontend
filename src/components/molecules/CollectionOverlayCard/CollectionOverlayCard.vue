@@ -9,6 +9,7 @@ interface Props {
   imageAlt: string
   title: string
   clickable?: boolean
+  smallerText?: boolean
 }
 
 const props = defineProps<Props>()
@@ -61,7 +62,10 @@ function handleClick() {
         rounded
         :label="title"
         :disabled="!isClickable"
-        class="collection-overlay-card__pill"
+        :class="[
+          'collection-overlay-card__pill',
+          { 'collection-overlay-card__pill--smaller-text': smallerText },
+        ]"
         :pt="{
           root: {
             style: {
@@ -70,12 +74,11 @@ function handleClick() {
               left: '50%',
               transform: 'translateX(-50%)',
               maxWidth: 'calc(100% - 2rem)',
-              whiteSpace: 'nowrap',
               border: 'none',
               background: 'var(--color-brand-white)',
               color: 'var(--color-gray-900)',
               fontWeight: '700',
-              lineHeight: '1',
+              lineHeight: '1.2',
             },
           },
         }"
@@ -88,14 +91,32 @@ function handleClick() {
 <style scoped>
 /* font-size and padding kept in scoped CSS - inline style cannot be targeted by @media queries */
 .collection-overlay-card__pill {
-  font-size: 1.25rem;
+  font-size: var(--collection-overlay-card-pill-font-size, 1.125rem);
   padding: 0.75rem 1.5rem;
+}
+
+.collection-overlay-card__pill :deep(.p-button-label) {
+  display: -webkit-box;
+  overflow: hidden;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.collection-overlay-card__pill--smaller-text {
+  --collection-overlay-card-pill-font-size: 1rem;
 }
 
 @media (max-width: 639px) {
   .collection-overlay-card__pill {
-    font-size: 1rem;
+    --collection-overlay-card-pill-font-size: 0.875rem;
     padding: 0.625rem 1rem;
+  }
+
+  .collection-overlay-card__pill--smaller-text {
+    --collection-overlay-card-pill-font-size: 0.75rem;
   }
 }
 </style>

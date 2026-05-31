@@ -183,10 +183,45 @@ const router = createRouter({
       ],
     },
     {
+      path: '/delivery-payment',
+      name: 'delivery-payment',
+      component: () => import('@/pages/DeliveryPaymentPage/DeliveryPaymentPage.vue'),
+      meta: { titleKey: 'pages.deliveryPayment' },
+    },
+    {
+      path: '/privacy-policy',
+      name: 'privacy-policy',
+      component: () => import('@/pages/PrivacyPolicyPage/PrivacyPolicyPage.vue'),
+      meta: { titleKey: 'pages.privacyPolicy' },
+    },
+    {
+      path: '/terms-of-use',
+      name: 'terms-of-use',
+      component: () => import('@/pages/TermsOfUsePage/TermsOfUsePage.vue'),
+      meta: { titleKey: 'pages.termsOfUse' },
+    },
+    {
       path: '/terms-and-conditions',
       name: 'terms-and-conditions',
-      component: () => import('@/pages/TermsAndConditionsPage/TermsAndConditionsPage.vue'),
-      meta: { titleKey: 'pages.termsAndConditions' },
+      redirect: { name: 'terms-of-use' },
+    },
+    {
+      path: '/faq',
+      name: 'faq',
+      component: () => import('@/pages/FaqPage/FaqPage.vue'),
+      meta: { titleKey: 'pages.faq' },
+    },
+    {
+      path: '/contacts',
+      name: 'contacts',
+      component: () => import('@/pages/ContactsPage/ContactsPage.vue'),
+      meta: { titleKey: 'pages.contacts' },
+    },
+    {
+      path: '/returns',
+      name: 'returns',
+      component: () => import('@/pages/ReturnsPage/ReturnsPage.vue'),
+      meta: { titleKey: 'pages.returns' },
     },
     {
       path: '/:pathMatch(.*)*',
@@ -222,7 +257,7 @@ router.beforeEach(async (to) => {
 
 router.afterEach((to) => {
   const titleKey = to.meta.titleKey
-  document.title = titleKey ? `${i18n.global.t(titleKey)} | BN` : 'BN'
+  document.title = titleKey ? `${i18n.global.t(titleKey)} | HH` : 'HH'
 })
 
 export default router
