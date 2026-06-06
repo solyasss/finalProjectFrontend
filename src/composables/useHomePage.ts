@@ -83,7 +83,7 @@ interface HomeNewArrivalTarget {
 interface HomepageCollectionCategory {
   name: string
   slug: string
-  isActive: boolean
+  isActive?: boolean
   imageUrl?: unknown
 }
 
@@ -263,7 +263,7 @@ function buildCollectionItem(
 }
 
 function isHomepageCollectionCategory(category: HomepageCollectionCategory): boolean {
-  if (!category.isActive) {
+  if (category.isActive === false) {
     return false
   }
 
@@ -279,14 +279,14 @@ function parseHomepageCollectionCategory(payload: unknown): HomepageCollectionCa
     return null
   }
 
-  if (typeof payload.isActive !== 'boolean') {
+  if ('isActive' in payload && typeof payload.isActive !== 'boolean') {
     return null
   }
 
   return {
     name: payload.name,
     slug: payload.slug,
-    isActive: payload.isActive,
+    isActive: typeof payload.isActive === 'boolean' ? payload.isActive : undefined,
     imageUrl: payload.imageUrl,
   }
 }

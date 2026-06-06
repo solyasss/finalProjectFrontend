@@ -87,7 +87,9 @@ function handlePrevStep(previousStep: RegistrationStep, activateCallback: (value
 </script>
 
 <template>
-  <div class="overflow-hidden h-full md:rounded-4xl border border-surface bg-surface-0 shadow-2xl">
+  <div
+    class="h-full overflow-x-hidden border border-surface bg-surface-0 shadow-2xl md:h-fit md:rounded-4xl"
+  >
     <div v-if="isSuccess" class="grid gap-5 px-5 py-6 sm:px-8 sm:py-8">
       <div class="space-y-3">
         <p class="text-sm font-bold uppercase tracking-[0.18em] text-muted-color">
@@ -111,12 +113,12 @@ function handlePrevStep(previousStep: RegistrationStep, activateCallback: (value
       </RouterLink>
     </div>
 
-    <div v-else class="grid gap-6 px-5 py-6 sm:px-8 sm:py-8">
+    <div v-else class="grid min-w-0 gap-6 px-4 py-5 sm:px-8 sm:py-8">
       <div class="space-y-3">
         <p class="text-sm font-bold uppercase tracking-[0.18em] text-muted-color">
           {{ t('authRegister.eyebrow') }}
         </p>
-        <h2 class="text-3xl font-bold leading-tight text-color">
+        <h2 class="text-2xl font-bold leading-tight text-color sm:text-3xl">
           {{ t('authRegister.pageTitle') }}
         </h2>
         <p class="max-w-xl text-sm leading-6 text-muted-color md:text-base">
@@ -126,9 +128,14 @@ function handlePrevStep(previousStep: RegistrationStep, activateCallback: (value
 
       <Message v-if="formError" severity="error">{{ formError }}</Message>
 
-      <Stepper v-model:value="activeStep" linear class="registration-stepper">
-        <StepList>
-          <Step v-for="step in stepItems" :key="step.value" :value="step.value">
+      <Stepper v-model:value="activeStep" linear class="registration-stepper min-w-0">
+        <StepList class="overflow-x-auto pb-1">
+          <Step
+            v-for="step in stepItems"
+            :key="step.value"
+            :value="step.value"
+            class="shrink-0 whitespace-nowrap text-xs sm:text-sm"
+          >
             {{ step.label }}
           </Step>
         </StepList>
@@ -140,9 +147,9 @@ function handlePrevStep(previousStep: RegistrationStep, activateCallback: (value
             :value="step.value"
             v-slot="{ activateCallback }"
           >
-            <div class="space-y-6 pt-6">
+            <div class="min-w-0 space-y-6 pt-6">
               <div class="space-y-2">
-                <h3 class="text-2xl font-bold leading-tight text-color">
+                <h3 class="text-xl font-bold leading-tight text-color sm:text-2xl">
                   {{ getStepMeta(step.value).title }}
                 </h3>
                 <p class="text-sm leading-6 text-muted-color">

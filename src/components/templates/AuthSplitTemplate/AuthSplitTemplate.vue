@@ -1,12 +1,14 @@
 <template>
-  <section class="h-screen bg-surface-0 text-color">
-    <div class="flex flex-row h-full w-full">
+  <section class="min-h-screen bg-surface-0 text-color lg:h-screen">
+    <div class="flex min-h-screen w-full flex-col lg:h-full lg:flex-row">
       <aside class="hidden lg:block lg:basis-[40%]">
         <slot name="visual" />
       </aside>
 
-      <main class="flex flex-1 lg:flex-0 items-center md:px-6 lg:basis-[30%] lg:px-10">
-        <div class="w-full h-full md:h-fit">
+      <main
+        class="flex w-full items-start justify-center px-4 py-4 sm:px-6 sm:py-6 lg:max-w-[40rem] lg:items-center lg:px-10 lg:py-0"
+      >
+        <div class="w-full max-w-2xl md:h-fit">
           <slot />
         </div>
       </main>

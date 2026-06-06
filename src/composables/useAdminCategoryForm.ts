@@ -9,7 +9,7 @@ export interface AdminCategoryDraft {
   slug: string
   description: string
   imageUrl: string
-  sortOrder: string
+  sortOrder: string | number
   parentId: string
 }
 
@@ -27,6 +27,10 @@ function createDraft(category?: AdminCategory | null): AdminCategoryDraft {
     sortOrder: category?.sortOrder ? String(category.sortOrder) : '',
     parentId: category?.parentId ? String(category.parentId) : '',
   }
+}
+
+function normalizeSortOrderInput(sortOrder: AdminCategoryDraft['sortOrder']): string {
+  return String(sortOrder).trim()
 }
 
 export function useAdminCategoryForm(options: UseAdminCategoryFormOptions) {
@@ -50,7 +54,9 @@ export function useAdminCategoryForm(options: UseAdminCategoryFormOptions) {
       fieldErrors.slug = t('admin.validation.required')
     }
 
-    if (draft.sortOrder.trim() && !Number.isFinite(Number(draft.sortOrder))) {
+    const normalizedSortOrder = normalizeSortOrderInput(draft.sortOrder)
+
+    if (normalizedSortOrder && !Number.isFinite(Number(normalizedSortOrder))) {
       fieldErrors.sortOrder = t('admin.validation.number')
     }
 
@@ -62,12 +68,14 @@ export function useAdminCategoryForm(options: UseAdminCategoryFormOptions) {
   }
 
   function buildPayload(): AdminCategoryPayload {
+    const normalizedSortOrder = normalizeSortOrderInput(draft.sortOrder)
+
     return {
       name: draft.name.trim(),
       slug: draft.slug.trim(),
       description: draft.description.trim() || undefined,
       imageUrl: draft.imageUrl.trim() || undefined,
-      sortOrder: draft.sortOrder.trim() ? Number(draft.sortOrder) : undefined,
+      sortOrder: normalizedSortOrder ? Number(normalizedSortOrder) : undefined,
       parentId: draft.parentId.trim() ? Number(draft.parentId) : undefined,
     }
   }

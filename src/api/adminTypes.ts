@@ -1,4 +1,11 @@
-import type { Category, Pagination, ProductDetails, ProductListItem, ProductVariant } from './types'
+import type {
+  Category,
+  Pagination,
+  ProductDetails,
+  ProductListItem,
+  ProductVariant,
+  UserAddress,
+} from './types'
 
 export interface AdminListMeta {
   totalItems: number
@@ -204,16 +211,51 @@ export interface AdminPromotionPayload {
 // --- Orders ---
 export type AdminOrderStatus = 'PENDING' | 'PAID' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED'
 
+export interface AdminOrderShippingAddress extends Partial<UserAddress> {
+  [key: string]: string | number | boolean | null | undefined
+}
+
+export interface AdminOrderItemProduct {
+  id?: number
+  name?: string
+  slug?: string
+  description?: string | null
+  baseImageUrl?: string | null
+  [key: string]: unknown
+}
+
+export interface AdminOrderItemVariant {
+  id?: string
+  sku?: string
+  color?: string | null
+  price?: string | number
+  stock?: number
+  images?: string[]
+  product?: AdminOrderItemProduct | null
+  [key: string]: unknown
+}
+
+export interface AdminOrderItem {
+  id?: number
+  quantity?: number
+  priceAtPurchase?: string | number
+  variantId?: string
+  variant?: AdminOrderItemVariant | null
+  product?: AdminOrderItemProduct | null
+  [key: string]: unknown
+}
+
 export interface AdminOrder {
   id: number
   userId: number
   status: AdminOrderStatus
   totalAmount: number | string
-  shippingAddress?: string | null
+  shippingAddress?: string | AdminOrderShippingAddress | null
   createdAt: string
   updatedAt: string
   deletedAt?: string | null
-  items?: unknown[]
+  items?: AdminOrderItem[]
+  [key: string]: unknown
 }
 
 export interface AdminOrderListParams extends AdminListParams {

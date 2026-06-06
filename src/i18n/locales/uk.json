@@ -852,6 +852,33 @@
       "empty": "Замовлень не знайдено.",
       "deleteTitle": "Архівувати замовлення",
       "deleteDescription": "Ви впевнені, що хочете архівувати замовлення #{id}?",
+      "itemFallback": "Товар у замовленні",
+      "itemCount": "Товарів: {count}",
+      "itemsEmpty": "Для цього замовлення немає деталей товарів.",
+      "sections": {
+        "orderDetails": "Деталі замовлення",
+        "shipping": "Адреса доставки",
+        "items": "Товари в замовленні"
+      },
+      "fields": {
+        "orderId": "ID замовлення",
+        "userId": "ID користувача",
+        "totalAmount": "Загальна сума",
+        "createdAt": "Створено",
+        "updatedAt": "Оновлено",
+        "shippingAddress": "Адреса доставки",
+        "itemId": "ID позиції",
+        "variantId": "ID варіанту",
+        "sku": "SKU",
+        "color": "Колір",
+        "quantity": "Кількість",
+        "priceAtPurchase": "Ціна під час купівлі",
+        "currentPrice": "Поточна ціна варіанту",
+        "stock": "Залишок",
+        "productId": "ID товару",
+        "productSlug": "Slug товару",
+        "images": "Зображення варіанту"
+      },
       "table": {
         "userId": "ID користувача",
         "status": "Статус",

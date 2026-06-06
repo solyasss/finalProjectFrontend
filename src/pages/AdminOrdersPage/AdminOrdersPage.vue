@@ -77,7 +77,7 @@ function handleStatusSaved() {
     :limit="listing.pagination.value.limit"
     v-model:dialog-visible="statusDialogVisible"
     :dialog-header="t('admin.actions.updateOrderStatus')"
-    :dialog-width="'min(32rem, calc(100vw - 2rem))'"
+    :dialog-width="'min(56rem, calc(100vw - 2rem))'"
     v-model:delete-visible="deleteVisible"
     :delete-title="t('admin.orders.deleteTitle')"
     :delete-description="t('admin.orders.deleteDescription', { id: deleteTarget?.id ?? '' })"

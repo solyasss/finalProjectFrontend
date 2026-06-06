@@ -1,4 +1,4 @@
-import { appendDefinedFormData, normalizeAdminPaginatedResponse } from './admin'
+import { normalizeAdminPaginatedResponse } from './admin'
 import { request } from './client'
 import type {
   AdminCart,
@@ -39,14 +39,11 @@ export function updateAdminOrderStatus(
   orderId: number,
   status: AdminOrderStatus,
 ): Promise<ApiResult<AdminOrder>> {
-  const formData = new FormData()
-  appendDefinedFormData(formData, 'status', status)
-
   return request<AdminOrder>(`/sales/orders/${orderId}/status`, {
     baseUrl: 'root',
     auth: true,
     method: 'PATCH',
-    body: formData,
+    body: { status },
   })
 }
 
