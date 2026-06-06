@@ -9,7 +9,7 @@ export interface AdminRoomDraft {
   slug: string
   description: string
   imageUrl: string
-  sortOrder: string
+  sortOrder: string | number
 }
 
 interface UseAdminRoomFormOptions {
@@ -25,6 +25,10 @@ function createDraft(room?: AdminRoom | null): AdminRoomDraft {
     imageUrl: room?.imageUrl ?? '',
     sortOrder: room?.sortOrder != null ? String(room.sortOrder) : '',
   }
+}
+
+function normalizeSortOrderInput(sortOrder: AdminRoomDraft['sortOrder']): string {
+  return String(sortOrder).trim()
 }
 
 export function useAdminRoomForm(options: UseAdminRoomFormOptions) {
@@ -48,7 +52,9 @@ export function useAdminRoomForm(options: UseAdminRoomFormOptions) {
       fieldErrors.slug = t('admin.validation.required')
     }
 
-    if (draft.sortOrder.trim() && !Number.isFinite(Number(draft.sortOrder))) {
+    const normalizedSortOrder = normalizeSortOrderInput(draft.sortOrder)
+
+    if (normalizedSortOrder && !Number.isFinite(Number(normalizedSortOrder))) {
       fieldErrors.sortOrder = t('admin.validation.number')
     }
 
@@ -56,12 +62,14 @@ export function useAdminRoomForm(options: UseAdminRoomFormOptions) {
   }
 
   function buildPayload(): AdminRoomPayload {
+    const normalizedSortOrder = normalizeSortOrderInput(draft.sortOrder)
+
     return {
       name: draft.name.trim(),
       slug: draft.slug.trim(),
       description: draft.description.trim() || undefined,
       imageUrl: draft.imageUrl.trim() || undefined,
-      sortOrder: draft.sortOrder.trim() ? Number(draft.sortOrder) : undefined,
+      sortOrder: normalizedSortOrder ? Number(normalizedSortOrder) : undefined,
     }
   }
 

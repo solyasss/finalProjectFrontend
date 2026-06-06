@@ -852,6 +852,33 @@
       "empty": "No orders found.",
       "deleteTitle": "Archive order",
       "deleteDescription": "Are you sure you want to archive order #{id}?",
+      "itemFallback": "Order item",
+      "itemCount": "{count} items",
+      "itemsEmpty": "No item details are available for this order.",
+      "sections": {
+        "orderDetails": "Order details",
+        "shipping": "Shipping address",
+        "items": "Items in order"
+      },
+      "fields": {
+        "orderId": "Order ID",
+        "userId": "User ID",
+        "totalAmount": "Total amount",
+        "createdAt": "Created",
+        "updatedAt": "Updated",
+        "shippingAddress": "Shipping address",
+        "itemId": "Item ID",
+        "variantId": "Variant ID",
+        "sku": "SKU",
+        "color": "Color",
+        "quantity": "Quantity",
+        "priceAtPurchase": "Price at purchase",
+        "currentPrice": "Current variant price",
+        "stock": "Stock",
+        "productId": "Product ID",
+        "productSlug": "Product slug",
+        "images": "Variant images"
+      },
       "table": {
         "userId": "User ID",
         "status": "Status",

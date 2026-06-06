@@ -4,7 +4,7 @@ import { i18n } from '@/i18n'
 
 export interface AdminImageDraft {
   variantId: string
-  sortOrder: string
+  sortOrder: string | number
   isPrimary: boolean
   file: File | null
   notifyResponse: boolean
@@ -23,6 +23,10 @@ function createDraft(image?: AdminImage | null): AdminImageDraft {
     file: null,
     notifyResponse: true,
   }
+}
+
+function normalizeSortOrderInput(sortOrder: AdminImageDraft['sortOrder']): string {
+  return String(sortOrder).trim()
 }
 
 export function useAdminImageForm(options: UseAdminImageFormOptions) {
@@ -48,7 +52,9 @@ export function useAdminImageForm(options: UseAdminImageFormOptions) {
       fieldErrors.file = t('admin.images.validation.fileRequired')
     }
 
-    if (draft.sortOrder.trim() && !Number.isFinite(Number(draft.sortOrder))) {
+    const normalizedSortOrder = normalizeSortOrderInput(draft.sortOrder)
+
+    if (normalizedSortOrder && !Number.isFinite(Number(normalizedSortOrder))) {
       fieldErrors.sortOrder = t('admin.validation.number')
     }
 
@@ -56,10 +62,12 @@ export function useAdminImageForm(options: UseAdminImageFormOptions) {
   }
 
   function buildPayload(): AdminImagePayload {
+    const normalizedSortOrder = normalizeSortOrderInput(draft.sortOrder)
+
     return {
       file: draft.file,
       variantId: draft.variantId.trim(),
-      sortOrder: draft.sortOrder.trim() ? Number(draft.sortOrder) : undefined,
+      sortOrder: normalizedSortOrder ? Number(normalizedSortOrder) : undefined,
       isPrimary: draft.isPrimary,
       notifyResponse: draft.notifyResponse,
     }
