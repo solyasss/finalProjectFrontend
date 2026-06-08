@@ -119,6 +119,7 @@ export interface VariantPreview {
 
 export interface ProductCard {
   id: number
+  variantId?: string
   name: string
   slug: string
   description?: string | null
