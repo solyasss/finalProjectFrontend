@@ -32,6 +32,7 @@ interface ListingResponseMeta {
 function normalizeSearchItem(item: SearchVariantItem): ProductCard {
   return {
     id: item.productId,
+    variantId: item.id,
     name: item.name,
     slug: item.slug,
     description: item.description,
@@ -266,7 +267,11 @@ export function useSearchListing() {
   }
 
   async function selectProduct(product: ProductCard) {
-    await router.push({ name: 'pdp', params: { productId: product.id } })
+    await router.push({
+      name: 'pdp',
+      params: { productId: product.id },
+      query: product.variantId ? { variant: product.variantId } : undefined,
+    })
   }
 
   async function reload() {

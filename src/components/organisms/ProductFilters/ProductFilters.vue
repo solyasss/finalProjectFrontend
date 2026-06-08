@@ -45,16 +45,23 @@ watch(
       }
 
       const selectedValue = selectedFilters[filter.key]
-      const defaultMin = String(filter.range?.min ?? '')
-      const defaultMax = String(filter.range?.max ?? '')
-      const [min = defaultMin, max = defaultMax] =
-        typeof selectedValue === 'string' ? selectedValue.split('-') : []
-
-      rangeDrafts.value[filter.key] = { min, max }
+      rangeDrafts.value[filter.key] = parseRangeDraft(selectedValue)
     }
   },
   { immediate: true, deep: true },
 )
+
+function parseRangeDraft(
+  selectedValue: ProductDiscoverySelectedFilterValue | undefined,
+): ProductDiscoveryRangeDraft {
+  if (typeof selectedValue !== 'string') {
+    return { min: '', max: '' }
+  }
+
+  const [min = '', max = ''] = selectedValue.split('-')
+
+  return { min, max }
+}
 
 function flattenCategoryTree(nodes: CategoryTreeNode[]): CategoryTreeNode[] {
   return nodes.flatMap((node) => [node, ...flattenCategoryTree(node.children ?? [])])
@@ -359,6 +366,7 @@ function buildDraftChips(
                 type="number"
                 inputmode="numeric"
                 min="0"
+                :placeholder="filter.range?.min != null ? String(filter.range.min) : ''"
                 class="min-h-12 rounded-2xl border border-surface bg-surface-0 px-3 text-color"
                 :disabled="props.loading"
               />
@@ -370,6 +378,7 @@ function buildDraftChips(
                 type="number"
                 inputmode="numeric"
                 min="0"
+                :placeholder="filter.range?.max != null ? String(filter.range.max) : ''"
                 class="min-h-12 rounded-2xl border border-surface bg-surface-0 px-3 text-color"
                 :disabled="props.loading"
               />

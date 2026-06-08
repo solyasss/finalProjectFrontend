@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import Button from 'primevue/button'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRouter, type RouteLocationRaw } from 'vue-router'
 import SearchBar from '@/components/molecules/SearchBar/SearchBar.vue'
 import HamburgerMenu from '@/components/organisms/HamburgerMenu/HamburgerMenu.vue'
 import HeaderCategoryMenu from '@/components/organisms/HeaderCategoryMenu/HeaderCategoryMenu.vue'
@@ -40,6 +40,18 @@ function toggleLocale() {
 function handleSearch(query: string) {
   if (!query.trim()) return
   router.push({ name: 'search', query: { q: query.trim() } })
+}
+
+function navigateToRoute(target: RouteLocationRaw) {
+  router.push(target)
+}
+
+function handleAccountNavigation() {
+  const target = authStore.isAuthenticated
+    ? { name: 'account' }
+    : { name: 'login', query: { redirect: '/account' } }
+
+  navigateToRoute(target)
 }
 
 const menuItems = computed(() => [
@@ -142,80 +154,50 @@ function handleMenuSelect(item: { id: string }) {
             @select-city="selectCity($event, 'manual')"
           />
 
-          <RouterLink
-            v-if="!authStore.isAuthenticated"
-            :to="{ name: 'login', query: { redirect: '/account' } }"
-            class="no-underline"
-          >
-            <Button
-              type="button"
-              text
-              :aria-label="t('header.accountAriaLabel')"
-              :pt="{
-                root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
-              }"
-            >
-              <span class="text-muted-color flex items-center gap-2 text-sm">
-                <i class="pi pi-user text-base" aria-hidden="true" />
-                <span class="hidden md:inline">{{ t('header.accountLabel') }}</span>
-              </span>
-            </Button>
-          </RouterLink>
-
-          <RouterLink
-            v-else
-            to="/account"
-            class="no-underline"
+          <Button
+            type="button"
+            text
             :aria-label="t('header.accountAriaLabel')"
+            :pt="{
+              root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
+            }"
+            @click="handleAccountNavigation"
           >
-            <Button
-              type="button"
-              text
-              :aria-label="t('header.accountAriaLabel')"
-              :pt="{
-                root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
-              }"
+            <span
+              class="text-muted-color flex items-center gap-2 text-sm transition-colors hover:text-color"
             >
-              <span
-                class="text-muted-color flex items-center gap-2 text-sm transition-colors hover:text-color"
-              >
-                <i class="pi pi-user text-base" aria-hidden="true" />
-                <span class="hidden md:inline">{{
-                  t('header.accountGreeting', { name: authStore.firstName || 'User' })
-                }}</span>
-              </span>
-            </Button>
-          </RouterLink>
+              <i class="pi pi-user text-base" aria-hidden="true" />
+              <span class="hidden md:inline">{{
+                authStore.isAuthenticated
+                  ? t('header.accountGreeting', { name: authStore.firstName || 'User' })
+                  : t('header.accountLabel')
+              }}</span>
+            </span>
+          </Button>
 
-          <RouterLink to="/cart" class="no-underline" :aria-label="t('header.cartAriaLabel')">
-            <Button
-              type="button"
-              text
-              :aria-label="t('header.cartAriaLabel')"
-              :pt="{
-                root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
-              }"
-            >
-              <i class="pi pi-shopping-bag text-muted-color text-base" aria-hidden="true" />
-            </Button>
-          </RouterLink>
+          <Button
+            type="button"
+            text
+            :aria-label="t('header.cartAriaLabel')"
+            :pt="{
+              root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
+            }"
+            @click="navigateToRoute({ name: 'cart' })"
+          >
+            <i class="pi pi-shopping-bag text-muted-color text-base" aria-hidden="true" />
+          </Button>
 
-          <RouterLink
-            to="/favorites"
-            class="no-underline"
+          <Button
+            type="button"
+            text
             :aria-label="t('header.favoritesAriaLabel')"
+            :pt="{
+              root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
+            }"
+            @click="navigateToRoute({ name: 'favorites' })"
           >
-            <Button
-              type="button"
-              text
-              :aria-label="t('header.favoritesAriaLabel')"
-              :pt="{
-                root: { style: { border: 'none', color: 'var(--p-text-muted-color)' } },
-              }"
-            >
-              <i class="pi pi-heart text-muted-color text-base" aria-hidden="true" />
-            </Button>
-          </RouterLink>
+            <i class="pi pi-heart text-muted-color text-base" aria-hidden="true" />
+          </Button>
 
           <Button
             type="button"
