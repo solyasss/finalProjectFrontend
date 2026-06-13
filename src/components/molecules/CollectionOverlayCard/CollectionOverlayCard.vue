@@ -106,7 +106,7 @@ function handleClick() {
 }
 
 .collection-overlay-card__pill--smaller-text {
-  --collection-overlay-card-pill-font-size: 1rem;
+  --collection-overlay-card-pill-font-size: 0.75rem;
 }
 
 @media (max-width: 639px) {
@@ -116,7 +116,7 @@ function handleClick() {
   }
 
   .collection-overlay-card__pill--smaller-text {
-    --collection-overlay-card-pill-font-size: 0.75rem;
+    --collection-overlay-card-pill-font-size: 0.5833rem;
   }
 }
 </style>

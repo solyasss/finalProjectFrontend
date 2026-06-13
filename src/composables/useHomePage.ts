@@ -74,6 +74,7 @@ interface HomeNewArrivalItem {
     width: number
     height: number
   }
+  title: string
 }
 
 interface HomeNewArrivalTarget {
@@ -355,6 +356,7 @@ function buildNewArrivalItem(product: ProductListItem): HomeNewArrivalItem {
       width: HOME_NEW_ARRIVAL_IMAGE_SIZE,
       height: HOME_NEW_ARRIVAL_IMAGE_SIZE,
     },
+    title: normalizeRecommendationTitle(product.name),
   }
 }
 

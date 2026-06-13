@@ -123,7 +123,8 @@
     "sectionAriaLabel": "New arrivals grid"
   },
   "productCutoutCard": {
-    "openCollectionAriaLabel": "Open collection"
+    "openCollectionAriaLabel": "Open collection",
+    "openProductAriaLabel": "Open product"
   },
   "searchBar": {
     "placeholder": "Search"
