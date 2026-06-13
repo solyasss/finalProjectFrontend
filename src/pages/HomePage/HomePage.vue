@@ -3,11 +3,11 @@ import Skeleton from 'primevue/skeleton'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import CollectionOverlayCard from '@/components/molecules/CollectionOverlayCard/CollectionOverlayCard.vue'
+import ProductCutoutCard from '@/components/molecules/ProductCutoutCard/ProductCutoutCard.vue'
 import { useHomePage } from '@/composables/useHomePage'
 import HomeHero from '@/components/organisms/HomeHero/HomeHero.vue'
 import CarouselSection from '@/components/organisms/CarouselSection/CarouselSection.vue'
 import HomeCollectionCta from '@/components/organisms/HomeCollectionCta/HomeCollectionCta.vue'
-import NewArrivalGrid from '@/components/organisms/NewArrivalGrid/NewArrivalGrid.vue'
 import TopPromoBar from '@/components/organisms/TopPromoBar/TopPromoBar.vue'
 import DefaultTemplate from '@/components/templates/DefaultTemplate/DefaultTemplate.vue'
 
@@ -54,9 +54,12 @@ const sectionResponsiveOptions = [
   },
 ]
 
-const carouselSkeletonCardIndexes = [0, 1, 2, 3, 4]
-const newArrivalTopSkeletonIndexes = [0, 1]
-const newArrivalBottomSkeletonIndexes = [0, 1]
+const carouselSkeletonCardIndexes = [0, 1, 2, 3]
+const newArrivalSkeletonIndexes = [0, 1, 2, 3]
+
+function getProductActionAriaLabel(productTitle: string) {
+  return `${t('productCutoutCard.openProductAriaLabel')}: ${productTitle}`
+}
 </script>
 
 <template>
@@ -101,7 +104,7 @@ const newArrivalBottomSkeletonIndexes = [0, 1]
             :title="t('homePage.recommendationTitle')"
             :items="recommendationItems"
             item-key="id"
-            :num-visible="5"
+            :num-visible="4"
             :num-scroll="1"
             :show-indicators="false"
             :show-navigators="true"
@@ -122,7 +125,7 @@ const newArrivalBottomSkeletonIndexes = [0, 1]
             <h2 class="text-color m-0 text-3xl font-bold uppercase leading-tight md:text-4xl">
               {{ t('homePage.recommendationTitle') }}
             </h2>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <div
                 v-for="cardIndex in carouselSkeletonCardIndexes"
                 :key="`recommendation-skeleton-${cardIndex}`"
@@ -140,7 +143,7 @@ const newArrivalBottomSkeletonIndexes = [0, 1]
             :title="t('homePage.bestSetsTitle')"
             :items="bestSetItems"
             item-key="id"
-            :num-visible="5"
+            :num-visible="4"
             :num-scroll="1"
             :show-indicators="false"
             :show-navigators="true"
@@ -161,7 +164,7 @@ const newArrivalBottomSkeletonIndexes = [0, 1]
             <h2 class="text-color m-0 text-3xl font-bold uppercase leading-tight md:text-4xl">
               {{ t('homePage.bestSetsTitle') }}
             </h2>
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <div
                 v-for="cardIndex in carouselSkeletonCardIndexes"
                 :key="`best-set-skeleton-${cardIndex}`"
@@ -173,16 +176,10 @@ const newArrivalBottomSkeletonIndexes = [0, 1]
             </div>
           </section>
         </div>
-        <div class="mx-auto h-[28rem] w-full sm:h-250">
-          <NewArrivalGrid
+        <div class="mx-auto w-full">
+          <section
             v-if="newArrivalSectionState === 'ready'"
-            :title="t('homePage.newArrivalsTitle')"
-            :items="newArrivalItems"
-            @select-item="openNewArrivalItem"
-          />
-          <div
-            v-else
-            class="flex h-full min-h-0 w-full flex-col"
+            class="flex w-full flex-col"
             :aria-label="t('homePage.newArrivalsTitle')"
           >
             <h2
@@ -190,27 +187,36 @@ const newArrivalBottomSkeletonIndexes = [0, 1]
             >
               {{ t('homePage.newArrivalsTitle') }}
             </h2>
-            <section
-              class="grid min-h-0 flex-1 grid-rows-[1fr_1fr] gap-4 overflow-hidden sm:grid-rows-[1fr_2fr]"
+            <div class="grid aspect-square w-full grid-cols-2 gap-4 overflow-hidden">
+              <ProductCutoutCard
+                v-for="(item, index) in newArrivalItems.slice(0, 4)"
+                :key="`${item.title}-${index}`"
+                :image="item.image"
+                :title="item.title"
+                :action-aria-label="getProductActionAriaLabel(item.title)"
+                action-placement="bottom"
+                hide-action-button-on-mobile
+                image-fit="cover"
+                clickable
+                fill-height
+                @select="openNewArrivalItem(index)"
+              />
+            </div>
+          </section>
+          <div v-else class="flex w-full flex-col" :aria-label="t('homePage.newArrivalsTitle')">
+            <h2
+              class="text-color mb-6 flex-none text-3xl font-bold uppercase leading-tight md:text-4xl"
             >
-              <div class="grid min-h-0 grid-cols-2 gap-4 sm:grid-cols-[1fr_2fr]">
-                <Skeleton
-                  v-for="cardIndex in newArrivalTopSkeletonIndexes"
-                  :key="`new-arrival-top-skeleton-${cardIndex}`"
-                  width="100%"
-                  height="100%"
-                  borderRadius="1.5rem"
-                />
-              </div>
-              <div class="grid min-h-0 grid-cols-2 gap-4 sm:grid-cols-[2fr_1fr]">
-                <Skeleton
-                  v-for="cardIndex in newArrivalBottomSkeletonIndexes"
-                  :key="`new-arrival-bottom-skeleton-${cardIndex}`"
-                  width="100%"
-                  height="100%"
-                  borderRadius="1.5rem"
-                />
-              </div>
+              {{ t('homePage.newArrivalsTitle') }}
+            </h2>
+            <section class="grid aspect-square w-full grid-cols-2 gap-4 overflow-hidden">
+              <Skeleton
+                v-for="cardIndex in newArrivalSkeletonIndexes"
+                :key="`new-arrival-skeleton-${cardIndex}`"
+                width="100%"
+                height="100%"
+                borderRadius="1.5rem"
+              />
             </section>
           </div>
         </div>
