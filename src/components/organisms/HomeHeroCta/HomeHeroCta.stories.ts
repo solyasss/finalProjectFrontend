@@ -7,7 +7,6 @@ const meta: Meta<typeof HomeHeroCta> = {
   tags: ['autodocs'],
   argTypes: {
     primaryActionLabel: { control: 'text' },
-    secondaryActionLabel: { control: 'text' },
     items: { control: 'object' },
     promoPrefix: { control: 'text' },
     promoHighlight: { control: 'text' },
@@ -15,7 +14,6 @@ const meta: Meta<typeof HomeHeroCta> = {
   },
   args: {
     primaryActionLabel: 'СТВОРИТИ АКАУНТ ТА ПОЧАТИ!',
-    secondaryActionLabel: 'КАТАЛОГ',
     promoPrefix: 'ЛОВИ МОМЕНТ |',
     promoHighlight: 'Знижки до 60%',
     promoSuffix: 'на вибрані категорії товарів!',

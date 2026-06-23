@@ -17,7 +17,6 @@ interface PromoItem {
 
 interface Props {
   primaryActionLabel?: string
-  secondaryActionLabel?: string
   items?: PromoItem[]
   promoPrefix?: string
   promoHighlight?: string
@@ -30,15 +29,11 @@ const { t } = useI18n()
 
 const emit = defineEmits<{
   (event: 'primary-click'): void
-  (event: 'secondary-click'): void
   (event: 'select-item', index: number): void
 }>()
 
 const primaryActionLabel = computed(
   () => props.primaryActionLabel ?? t('homeHeroCta.primaryAction'),
-)
-const secondaryActionLabel = computed(
-  () => props.secondaryActionLabel ?? t('homeHeroCta.secondaryAction'),
 )
 const items = computed<PromoItem[]>(() => props.items ?? [])
 const promoPrefix = computed(() => props.promoPrefix ?? t('homeHeroCta.promoPrefix'))
@@ -80,36 +75,6 @@ function handleSelectItem(index: number) {
             },
           }"
           @click="emit('primary-click')"
-        />
-      </div>
-
-      <div class="hidden md:block">
-        <Button
-          type="button"
-          :label="secondaryActionLabel"
-          icon="pi pi-chevron-down"
-          icon-pos="right"
-          :pt="{
-            root: {
-              style: {
-                minHeight: '3rem',
-                border: '1px solid var(--p-text-color)',
-                borderRadius: '9999px',
-                background: 'transparent',
-                color: 'var(--p-text-color)',
-                padding: '0.875rem 2rem',
-                fontSize: '0.95rem',
-                fontWeight: '500',
-                textTransform: 'uppercase',
-              },
-            },
-            label: {
-              style: {
-                fontWeight: '500',
-              },
-            },
-          }"
-          @click="emit('secondary-click')"
         />
       </div>
     </div>
